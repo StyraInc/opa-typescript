@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    groups:
+      eslint:
+        patterns:
+          - "@typescript-eslint/*"
+          - "eslint-*"
+          - "eslint"
+          - "prettier"
+      jest:
+        patterns:
+          - "@jest/*"
+          - "jest"
+          - "ts-jest"
