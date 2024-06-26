@@ -1,0 +1,11 @@
+{
+  "name": "ts-packages",
+  "packageManager": "yarn@4.3.1",
+  "private": true,
+  "dependencies": {
+    "@changesets/cli": "^2.27.6"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
