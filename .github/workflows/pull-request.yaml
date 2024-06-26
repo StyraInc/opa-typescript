@@ -32,8 +32,6 @@ jobs:
       - name: setup and build
         run: |
           npm ci
-          npm run build
-        working-directory: packages/${{ matrix.pkg }}
+          npm run -w packages/${{ matrix.pkg }} build
       - name: test
-        run: npm test
-        working-directory: packages/${{ matrix.pkg }}
+        run: npm run -w packages/${{ matrix.pkg }} test
