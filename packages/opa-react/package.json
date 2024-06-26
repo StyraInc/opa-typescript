@@ -1,6 +1,5 @@
 {
   "name": "opa-react",
-  "packageManager": "yarn@4.3.1",
   "version": "0.0.1",
   "description": "react hooks and components for frontend authorization based on @styra/opa",
   "scripts": {
