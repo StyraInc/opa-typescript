@@ -1,5 +1,5 @@
-import { PropsWithChildren, createContext, useMemo } from "react";
-import { Input, ToInput, RequestOptions } from "@styra/opa";
+import { type PropsWithChildren, createContext, useMemo } from "react";
+import { type Input, type ToInput, type RequestOptions } from "@styra/opa";
 
 interface SDK {
   evaluate<In extends Input | ToInput, Res>(

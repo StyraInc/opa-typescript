@@ -1,4 +1,4 @@
-export { default as Authz } from "./authz";
-export { default } from "./opa-provider";
-export type * from "./use-authz";
-export { default as useAuthz } from "./use-authz";
+export { default as Authz } from "./authz.js";
+export { default } from "./opa-provider.js";
+export type * from "./use-authz.js";
+export { default as useAuthz } from "./use-authz.js";
