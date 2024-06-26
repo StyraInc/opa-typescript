@@ -29,9 +29,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "21.x"
-      - run: corepack enable
       - name: setup and test
         run: |
-          yarn
-          yarn test
+          npm ci
+          npm test
         working-directory: packages/${{ matrix.pkg }}
