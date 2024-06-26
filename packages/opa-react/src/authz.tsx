@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
-import useAuthz from "./use-authz";
-import { Input } from "@styra/opa";
+import useAuthz from "./use-authz.js";
+import { type Input } from "@styra/opa";
 
 type AuthzProps = {
   input?: Input;
