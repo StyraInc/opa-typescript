@@ -1,5 +1,13 @@
 # @styra/opa-react
 
+## 0.0.2
+
+### Patch Changes
+
+- ab7c009: Fix package.json (add "browser" next to "main")
+
+  Before, create-react-app (or webpack, rather) failed to resolve @styra/opa-react.
+
 ## 0.0.1
 
 ### Patch Changes
