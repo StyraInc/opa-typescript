@@ -46,5 +46,8 @@
     "lodash.merge": "^4.6.2",
     "use-deep-compare-effect": "^1.8.1",
     "zod": "^3.23.8"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
