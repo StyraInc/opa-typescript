@@ -1,7 +1,7 @@
 {
   "name": "ts-packages",
   "scripts": {
-    "publish": "changeset publish"
+    "publish": "npm run build --ws && changeset publish"
   },
   "private": true,
   "workspaces": ["./packages/opa-react"],
