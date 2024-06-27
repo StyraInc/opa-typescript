@@ -1,12 +1,12 @@
 {
-  "name": "opa-react",
-  "version": "0.0.1",
+  "name": "@styra/opa-react",
+  "version": "0.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/StyraInc/ts-packages.git",
     "directory": "packages/opa-react"
   },
-  "description": "react hooks and components for frontend authorization based on @styra/opa",
+  "description": "Styra-supported React hooks and components for frontend authorization based on @styra/opa",
   "scripts": {
     "clean": "rm -rf ./dist/*",
     "build": "npm run build:cjs && npm run build:esm",
