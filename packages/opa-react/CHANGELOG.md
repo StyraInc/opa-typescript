@@ -1,5 +1,11 @@
 # @styra/opa-react
 
+## 0.0.3
+
+### Patch Changes
+
+- 770d833: fix dist/ missing in package
+
 ## 0.0.2
 
 ### Patch Changes
