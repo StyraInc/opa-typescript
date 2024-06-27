@@ -1,5 +1,11 @@
 # @styra/opa-react
 
+## 0.0.4
+
+### Patch Changes
+
+- 906a90c: build packages when publishing
+
 ## 0.0.3
 
 ### Patch Changes
