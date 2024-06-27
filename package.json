@@ -1,9 +1,10 @@
 {
   "name": "ts-packages",
+  "scripts": {
+    "publish": "changeset publish"
+  },
   "private": true,
-  "workspaces": [
-    "./packages/opa-react"
-  ],
+  "workspaces": ["./packages/opa-react"],
   "type": "module",
   "engineStrict": true,
   "engines": {
