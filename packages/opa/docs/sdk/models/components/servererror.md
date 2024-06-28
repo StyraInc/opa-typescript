@@ -1,0 +1,12 @@
+# ServerError
+
+
+## Fields
+
+| Field                                                           | Type                                                            | Required                                                        | Description                                                     | Example                                                         |
+| --------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- |
+| `code`                                                          | *string*                                                        | :heavy_check_mark:                                              | N/A                                                             |                                                                 |
+| `decisionId`                                                    | *string*                                                        | :heavy_minus_sign:                                              | N/A                                                             | b84cf736-213c-4932-a8e4-bb5c648f1b4d                            |
+| `errors`                                                        | [components.Errors](../../../sdk/models/components/errors.md)[] | :heavy_minus_sign:                                              | N/A                                                             |                                                                 |
+| `message`                                                       | *string*                                                        | :heavy_check_mark:                                              | N/A                                                             |                                                                 |
+| `httpStatusCode`                                                | *string*                                                        | :heavy_minus_sign:                                              | N/A                                                             | 200                                                             |
