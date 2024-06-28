@@ -1,0 +1,5 @@
+LICENSE
+/src/helpers
+/src/index.ts
+/.eslintrc.js
+/.npmignore
