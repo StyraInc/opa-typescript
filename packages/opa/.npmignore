@@ -1,7 +1,11 @@
-**/*
+/*
+/docs/**/*.md
 !/**/*.ts
 !/**/*.js
 !/**/*.map
 
 /.eslintrc.js
 /cjs
+/.github
+/.speakeasy
+/.typedoc

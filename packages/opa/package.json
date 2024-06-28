@@ -11,6 +11,9 @@
     "directory": "packages/opa"
   },
   "scripts": {
+    "test": "node --import tsx --test tests/**/*.ts",
+    "attw": "attw --pack",
+    "docs": "typedoc --out docs",
     "lint": "eslint --max-warnings=0 src",
     "build": "tsc",
     "prepare": "npm run build"

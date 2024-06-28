@@ -4,8 +4,10 @@
   "name": "Styra TypeScript Packages",
   "entryPointStrategy": "packages",
   "includeVersion": false,
+  "favicon": ".typedoc/favicon.ico",
   "navigationLinks": {
     "Styra OPA SDKs": "https://docs.styra.com/sdk/",
     "GitHub": "https://github.com/StyraInc/ts-packages"
-  }
+  },
+  "plugin": ["typedoc-plugin-replace-text", "typedoc-plugin-extras"]
 }
