@@ -1,0 +1,41 @@
+{
+  "name": "@styra/opa",
+  "version": "1.1.3",
+  "author": "Styra",  
+  "license": "Apache-2.0",
+  "main": "./index.js",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StyraInc/ts-packages.git",
+    "directory": "packages/opa"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings=0 src",
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "zod": ">= 3"
+  },
+  "devDependencies": {
+    "@types/jsonpath": "^0.2.4",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "eslint": "^8.57.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-markdown": "^4.0.1",
+    "prettier": "3.2.5",
+    "testcontainers": "^10.7.2",
+    "tsx": "^4.15.6",
+    "typedoc": "^0.25.13",
+    "typedoc-plugin-extras": "^3.0.0",
+    "typedoc-plugin-replace-text": "^3.3.0",
+    "typescript": "^5.4.5",
+    "zod": "^3.23.4"
+  },
+  "dependencies": {
+    
+  }
+}

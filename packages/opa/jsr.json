@@ -1,0 +1,27 @@
+
+
+{
+  "name": "@styra/opa",
+  "version": "1.1.3",
+  "exports": {
+    ".": "./src/index.ts",    
+    "./sdk/models/errors": "./src/sdk/models/errors/index.ts",    
+    "./sdk/models/components": "./src/sdk/models/components/index.ts",    
+    "./sdk/models/operations": "./src/sdk/models/operations/index.ts",
+    "./lib/config": "./src/lib/config.ts",
+    "./lib/http": "./src/lib/http.ts",
+    "./lib/retries": "./src/lib/retries.ts",
+    "./lib/sdks": "./src/lib/sdks.ts",
+    "./types": "./src/types/index.ts"
+  },
+  "publish": {
+    "include": [
+      "LICENSE",
+      "README.md",
+      "RUNTIMES.md",
+      "USAGE.md",
+      "jsr.json",
+      "src/**/*.ts"
+    ]
+  }
+}

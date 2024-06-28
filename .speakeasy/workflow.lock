@@ -1,19 +1,19 @@
-speakeasyVersion: 1.318.0
+speakeasyVersion: 1.322.1
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:49c204baa834f49dc7939553e11a3a8664891ba0bd57bdf9757d0cc631673dfe
-        sourceBlobDigest: sha256:409be84cbd5aff4097f6c56d9ff4fb30a531a8c1da05581bbab8ee735274aaad
+        sourceRevisionDigest: sha256:318fec4f29e2a47fa23e770410673e7223ed521edcb392a3e7e358b42bbcb4ad
+        sourceBlobDigest: sha256:fe27363216b77cad4cc3ae43d3245b489b4c6c6cf16a88dedaa4706b349b6846
         tags:
             - latest
-            - sr-batch-eval
+            - main
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:49c204baa834f49dc7939553e11a3a8664891ba0bd57bdf9757d0cc631673dfe
-        sourceBlobDigest: sha256:409be84cbd5aff4097f6c56d9ff4fb30a531a8c1da05581bbab8ee735274aaad
-        outLocation: /github/workspace/repo
+        sourceRevisionDigest: sha256:318fec4f29e2a47fa23e770410673e7223ed521edcb392a3e7e358b42bbcb4ad
+        sourceBlobDigest: sha256:fe27363216b77cad4cc3ae43d3245b489b4c6c6cf16a88dedaa4706b349b6846
+        outLocation: packages/opa
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -29,6 +29,4 @@ workflow:
         first-target:
             target: typescript
             source: openapi
-            publish:
-                npm:
-                    token: $npm_token
+            output: packages/opa
