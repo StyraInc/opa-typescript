@@ -35,5 +35,7 @@ jobs:
           npm run -w packages/${{ matrix.pkg }} build
       - name: test
         run: npm run -w packages/${{ matrix.pkg }} test
+      - name: docs
+        run: npm run -w packages/${{ matrix.pkg }} --if-present docs
       - name: are the types wrong?
-        run: npm run -w packages/${{ matrix.pkg }} attw
+        run: npm run -w packages/${{ matrix.pkg }} --if-present attw

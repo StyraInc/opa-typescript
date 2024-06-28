@@ -10,10 +10,11 @@ export type UseAuthzResult<T> =
   | { isLoading: false; result: undefined; error: Error };
 
 /**
- * This hook provides more flexibility than the <Authz/> component, allowing you to
+ * This hook provides more flexibility than the `<Authz/>` component, allowing you to
  * work with authorization decisions directly in your code.
  *
- * TODO(sr): update docs
+ * @param path The policy path. If unset, will be evaluating the server's default decision.
+ * @param input The input to the policy evaluation.
  */
 export default function useAuthz(
   path?: string,

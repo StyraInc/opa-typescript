@@ -1,7 +1,8 @@
 {
   "name": "ts-packages",
   "scripts": {
-    "publish": "npm run build --ws && changeset publish"
+    "publish": "npm run build --ws && changeset publish",
+    "docs": "typedoc"
   },
   "private": true,
   "workspaces": ["./packages/opa-react"],
@@ -13,6 +14,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.3",
-    "@changesets/cli": "^2.27.6"
+    "@changesets/cli": "^2.27.6",
+    "typedoc": "^0.26.2"
   }
 }
