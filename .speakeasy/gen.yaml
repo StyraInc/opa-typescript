@@ -1,0 +1,48 @@
+configVersion: 2.0.0
+generation:
+  sdkClassName: opaApiClient
+  maintainOpenAPIOrder: true
+  usageSnippets:
+    optionalPropertyRendering: withExample
+  useClassNamesForArrayFields: true
+  fixes:
+    nameResolutionDec2023: true
+    parameterOrderingFeb2024: true
+    requestResponseComponentNamesFeb2024: true
+  auth:
+    oAuth2ClientCredentialsEnabled: false
+typescript:
+  version: 1.1.3
+  additionalDependencies:
+    dependencies: {}
+    devDependencies:
+      eslint-plugin-markdown: ^4.0.1
+      prettier: 3.2.5
+      testcontainers: ^10.7.2
+      tsx: ^4.15.6
+      typedoc: ^0.25.13
+      typedoc-plugin-extras: ^3.0.0
+      typedoc-plugin-replace-text: ^3.3.0
+    peerDependencies: {}
+  additionalPackageJSON:
+    license: Apache-2.0
+  author: Styra
+  clientServerStatusCodesAsErrors: true
+  enumFormat: enum
+  flattenGlobalSecurity: true
+  imports:
+    option: openapi
+    paths:
+      callbacks: sdk/models/callbacks
+      errors: sdk/models/errors
+      operations: sdk/models/operations
+      shared: sdk/models/components
+      webhooks: sdk/models/webhooks
+  inputModelSuffix: input
+  maxMethodParams: 4
+  methodArguments: require-security-and-request
+  outputModelSuffix: output
+  packageName: '@styra/opa'
+  responseFormat: envelope-http
+  templateVersion: v2
+  useIndexModules: true

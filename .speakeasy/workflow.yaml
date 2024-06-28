@@ -1,0 +1,15 @@
+workflowVersion: 1.0.0
+speakeasyVersion: latest
+sources:
+  openapi:
+    inputs:
+      - location: https://raw.githubusercontent.com/StyraInc/enterprise-opa/main/openapi/openapi.yaml
+    overlays:
+      - location: ./.speakeasy/overlay.yaml
+    registry:
+      location: registry.speakeasyapi.dev/styra/styra/openapi
+targets:
+  first-target:
+    target: typescript
+    source: openapi
+    output: packages/opa

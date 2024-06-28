@@ -1,0 +1,34 @@
+speakeasyVersion: 1.318.0
+sources:
+    openapi:
+        sourceNamespace: openapi
+        sourceRevisionDigest: sha256:49c204baa834f49dc7939553e11a3a8664891ba0bd57bdf9757d0cc631673dfe
+        sourceBlobDigest: sha256:409be84cbd5aff4097f6c56d9ff4fb30a531a8c1da05581bbab8ee735274aaad
+        tags:
+            - latest
+            - sr-batch-eval
+targets:
+    first-target:
+        source: openapi
+        sourceNamespace: openapi
+        sourceRevisionDigest: sha256:49c204baa834f49dc7939553e11a3a8664891ba0bd57bdf9757d0cc631673dfe
+        sourceBlobDigest: sha256:409be84cbd5aff4097f6c56d9ff4fb30a531a8c1da05581bbab8ee735274aaad
+        outLocation: /github/workspace/repo
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: latest
+    sources:
+        openapi:
+            inputs:
+                - location: https://raw.githubusercontent.com/StyraInc/enterprise-opa/main/openapi/openapi.yaml
+            overlays:
+                - location: ./.speakeasy/overlay.yaml
+            registry:
+                location: registry.speakeasyapi.dev/styra/styra/openapi
+    targets:
+        first-target:
+            target: typescript
+            source: openapi
+            publish:
+                npm:
+                    token: $npm_token
