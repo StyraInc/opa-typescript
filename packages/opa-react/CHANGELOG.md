@@ -1,5 +1,17 @@
 # @styra/opa-react
 
+## 0.1.0
+
+### Minor Changes
+
+- f7eab9c: Remove default export: It seems simpler to only rely on the three exports we have:
+
+  1. `import { AuthzProvider } from "@styra/opa-react";`
+  2. `import { Authz } from "@styra/opa-react";`
+  3. `import { useAuthz } from "@styra/opa-react";`
+
+  (Besides types and interfaces.)
+
 ## 0.0.4
 
 ### Patch Changes
