@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pkg: [opa-react]
+        pkg: [opa, opa-react]
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -34,8 +34,14 @@ jobs:
           npm ci
           npm run -w packages/${{ matrix.pkg }} build
       - name: test
+        run: npx -w packages/${{ matrix.pkg }} tsx --test ./tests/**/*.ts
+        env:
+          EOPA_LICENSE_KEY: ${{ secrets.EOPA_LICENSE_KEY }} # @styra/opa needs this
+        if: matrix.pkg == 'opa'
+      - name: test
         run: npm run -w packages/${{ matrix.pkg }} test
+        if: matrix.pkg != 'opa'
       - name: docs
-        run: npm run -w packages/${{ matrix.pkg }} --if-present docs
+        run: npx -w packages/${{ matrix.pkg }} typedoc
       - name: are the types wrong?
-        run: npm run -w packages/${{ matrix.pkg }} --if-present attw
+        run: npx -w packages/${{ matrix.pkg }} attw --pack

@@ -4,6 +4,10 @@
 
 This repository contains Styra-supported Open Source TypeScript packages for use with the [Styra](https://styra.com) products, and [Open Policy Agent (OPA)](https://www.openpolicyagent.org/).
 
+## [@styra/opa](https://www.npmjs.com/package/@styra/opa)
+
+The Styra-supported driver to connect to Open Policy Agent (OPA) and Enterprise OPA deployments.
+
 
 ## [@styra/opa-react](https://www.npmjs.com/package/@styra/opa-react)
 
