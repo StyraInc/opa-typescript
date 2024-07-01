@@ -11,8 +11,18 @@ updates:
           - "eslint-*"
           - "eslint"
           - "prettier"
-      jest:
+  - package-ecosystem: "npm"
+    directory: "packages/opa-react"
+    schedule:
+      interval: "daily"
+    groups:
+      eslint:
         patterns:
-          - "@jest/*"
-          - "jest"
-          - "ts-jest"
+          - "@typescript-eslint/*"
+          - "eslint-*"
+          - "eslint"
+          - "prettier"
+      react:
+        patterns:
+          - "@react/*"
+          - "react*"
