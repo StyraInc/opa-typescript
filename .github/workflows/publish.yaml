@@ -59,6 +59,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
         if: steps.changesets.outputs.published == 'true'
-
-      - name: publish @styra/opa to JSR
-        run: npx -w packages/opa jsr publish
