@@ -41,9 +41,26 @@ export type Options = {
 };
 
 /** Extra per-request options for using the high-level SDK's
- * evaluate/evaluateDefault methods.
+ * evaluation methods ({@link OPAClient.evaluate | evaluate},
+ * {@link OPAClient.evaluateDefault | evaluateDefault}).
  */
 export interface RequestOptions<Res> extends FetchOptions {
+  /** fromResult allows you to provide a function to convert the generic `Result` type into another type
+   *
+   * @example Convert a  response to boolean
+   * Assuming that your policy evaluates to an object like `{"allowed": true}`,
+   * this `fromResult` function would let you convert it to a boolean:
+   *
+   * ```ts
+   * const res = await new OPAClient(serverURL).evaluate<any, boolean>(
+   *   "policy/result",
+   *   { action: "read" },
+   *   {
+   *     fromResult: (r?: Result) => (r as Record<string, any>)["allowed"] ?? false,
+   *   },
+   * );
+   * ```
+   */
   fromResult?: (res?: Result) => Res;
 }
 
@@ -51,8 +68,10 @@ export interface RequestOptions<Res> extends FetchOptions {
  * evaluateBatch method.
  */
 export interface BatchRequestOptions<Res> extends RequestOptions<Res> {
-  rejectMixed?: boolean; // reject promise if the batch result is "mixed", i.e. if any of the items errored
-  fallback?: boolean; // fall back to sequential evaluate calls if server doesn't support batch API
+  /** With `rejectMixed` set, a batch result that contains _any errors_ causes a `Promise` rejection. */
+  rejectMixed?: boolean;
+  /** Fall back to sequential evaluate calls if server doesn't support batch API. */
+  fallback?: boolean;
 }
 
 /** OPAClient is the starting point for using the high-level API.
