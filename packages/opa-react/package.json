@@ -51,5 +51,15 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "keywords": [
+    "OPA",
+    "Open Policy Agent",
+    "authorization",
+    "policy",
+    "permissions",
+    "rbac",
+    "role based access control",
+    "react"
+  ]
 }
