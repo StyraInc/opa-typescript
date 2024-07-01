@@ -12,8 +12,10 @@ jobs:
     name: Release
     runs-on: ubuntu-22.04
     permissions:
-      contents: write # contents and actions is for pushing tags
-      actions: write
+      contents: write #  to create release (changesets/action)
+      actions: write #  to create tags (changesets/action)
+      issues: write # to post issue comments (changesets/action)
+      pull-requests: write #  to create pull request (changesets/action)
       id-token: write # OIDC ID token for authentication with JSR
     steps:
       - uses: actions/checkout@v4
