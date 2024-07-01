@@ -26,6 +26,14 @@ typescript:
     peerDependencies: {}
   additionalPackageJSON:
     license: Apache-2.0
+    keywords:
+      - OPA
+      - Open Policy Agent
+      - authorization
+      - policy
+      - permissions
+      - rbac
+      - role based access control
   author: Styra
   clientServerStatusCodesAsErrors: true
   enumFormat: enum
@@ -42,7 +50,7 @@ typescript:
   maxMethodParams: 4
   methodArguments: require-security-and-request
   outputModelSuffix: output
-  packageName: '@styra/opa'
+  packageName: "@styra/opa"
   responseFormat: envelope-http
   templateVersion: v2
   useIndexModules: true
