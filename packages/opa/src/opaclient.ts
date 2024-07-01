@@ -1,4 +1,4 @@
-import { OpaApiClient as Opa } from "./sdk/index.js";
+import { OpaApiClient } from "./sdk/index.js";
 import {
   type Input,
   type Result,
@@ -57,10 +57,10 @@ export interface BatchRequestOptions<Res> extends RequestOptions<Res> {
 
 /** OPAClient is the starting point for using the high-level API.
  *
- * Use {@link Opa} if you need some low-level customization.
+ * Use {@link OpaApiClient} if you need some low-level customization.
  */
 export class OPAClient {
-  private opa: Opa;
+  private opa: OpaApiClient;
   private opaFallback: boolean = false;
 
   /** Create a new `OPA` instance.
@@ -80,7 +80,7 @@ export class OPAClient {
       });
       sdk.httpClient = client;
     }
-    this.opa = new Opa(sdk);
+    this.opa = new OpaApiClient(sdk);
   }
 
   /** `evaluate` is used to evaluate the policy at the specified path with optional input.
