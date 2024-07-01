@@ -1,9 +1,9 @@
-import { type ReactNode } from "react";
+import { type ReactNode, type PropsWithChildren } from "react";
 
 import useAuthz from "./use-authz.js";
 import { type Input } from "@styra/opa";
 
-export type AuthzProps = {
+export type AuthzProps = PropsWithChildren<{
   /** Input to the policy evaluation. Will be merged with `AuthzProvider`'s `defaultInput` (if set), overriding it when in conflict. */
   input?: Input;
   /** Path of the policy to evluate. Will default to `AuthzProvider`'s `path`. */
@@ -17,9 +17,7 @@ export type AuthzProps = {
    * Component to display when result is falsey
    */
   fallback?: ReactNode;
-  /** Children node(s) to render, or a function depending on the result of the policy evaluation. */
-  children?: ReactNode | ((result: unknown) => ReactNode);
-};
+}>;
 
 /**
  * Conditionally renders components based on authorization decisions for a specified
@@ -27,14 +25,6 @@ export type AuthzProps = {
  *
  * The simplest use looks like that shown below; just wrap some arbitrary content
  * and specify path and input.
- *
- * @example Using a function mapping the evaluation result to JSX children
- *
- * ```tsx
- * <Authz path={path} input={input}>
- *   {(result) => <Button disabled={!result}>Delete Item</Button>}
- * </Authz>
- * ```
  *
  * @example JSX children with fallback for the "denied" state
  *
@@ -67,10 +57,6 @@ export default ({
 
   if (isLoading) {
     return loading;
-  }
-
-  if (typeof children === "function") {
-    return children(result);
   }
 
   return !!result ? children : fallback;
