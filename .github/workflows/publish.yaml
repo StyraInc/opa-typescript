@@ -8,6 +8,22 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+  jsr:
+    name: Publish @styra/opa to JSR
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      id-token: write # OIDC ID token for authentication with JSR
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - name: publish @styra/opa to JSR
+        run: |
+          npm ci
+          npx -w packages/opa jsr publish
+
   release:
     name: Release
     runs-on: ubuntu-22.04
@@ -16,7 +32,6 @@ jobs:
       actions: write #  to create tags (changesets/action)
       issues: write # to post issue comments (changesets/action)
       pull-requests: write #  to create pull request (changesets/action)
-      id-token: write # OIDC ID token for authentication with JSR
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
