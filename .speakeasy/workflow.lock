@@ -1,18 +1,18 @@
-speakeasyVersion: 1.322.1
+speakeasyVersion: 1.322.3
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:318fec4f29e2a47fa23e770410673e7223ed521edcb392a3e7e358b42bbcb4ad
-        sourceBlobDigest: sha256:fe27363216b77cad4cc3ae43d3245b489b4c6c6cf16a88dedaa4706b349b6846
+        sourceRevisionDigest: sha256:21ed8debe4b397712b98bbdc21aa9f95625de3b86c17f8f87fd71058124f2f13
+        sourceBlobDigest: sha256:f84d559620460681baf274abdbee241c86c5873430a2ef3ce396de0b51c7e9b6
         tags:
             - latest
-            - main
+            - sr-add-our-mods
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:318fec4f29e2a47fa23e770410673e7223ed521edcb392a3e7e358b42bbcb4ad
-        sourceBlobDigest: sha256:fe27363216b77cad4cc3ae43d3245b489b4c6c6cf16a88dedaa4706b349b6846
+        sourceRevisionDigest: sha256:21ed8debe4b397712b98bbdc21aa9f95625de3b86c17f8f87fd71058124f2f13
+        sourceBlobDigest: sha256:f84d559620460681baf274abdbee241c86c5873430a2ef3ce396de0b51c7e9b6
         outLocation: packages/opa
 workflow:
     workflowVersion: 1.0.0
