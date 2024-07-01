@@ -1,14 +1,11 @@
 {
-  "name": "ts-packages",
+  "name": "opa-typescript",
   "scripts": {
     "publish": "npm run build --ws && changeset publish",
     "docs": "typedoc"
   },
   "private": true,
-  "workspaces": [
-    "./packages/opa",
-    "./packages/opa-react"
-  ],
+  "workspaces": ["./packages/opa", "./packages/opa-react"],
   "type": "module",
   "engineStrict": true,
   "engines": {
