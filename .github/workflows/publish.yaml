@@ -12,7 +12,8 @@ jobs:
     name: Release
     runs-on: ubuntu-22.04
     permissions:
-      contents: read
+      contents: write # contents and actions is for pushing tags
+      actions: write
       id-token: write # OIDC ID token for authentication with JSR
     steps:
       - uses: actions/checkout@v4
