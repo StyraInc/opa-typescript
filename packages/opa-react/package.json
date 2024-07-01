@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/StyraInc/ts-packages.git",
+    "url": "https://github.com/StyraInc/opa-typescript.git",
     "directory": "packages/opa-react"
   },
   "description": "Styra-supported React hooks and components for frontend authorization based on @styra/opa",
