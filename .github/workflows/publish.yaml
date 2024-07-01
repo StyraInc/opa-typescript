@@ -11,6 +11,9 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      id-token: write # OIDC ID token for authentication with JSR
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
