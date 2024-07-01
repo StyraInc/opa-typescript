@@ -18,16 +18,13 @@ They are enabled by wrapping your App into `<AuthzProvider>`:
 
 This example provides a previously-configured `sdk` instance (`OPAClient` from `@styra/opa`), a request path, and default input (which is merged with per-call inputs).
 
-They can either be used with a function as child:
+They can either be used by providing static children (`<button>Press Here</button>`) and optionally `fallback` and `loading` JSX elements:
 ```tsx
-<Authz path={path} input={input} loading={<div>loading</div>}>
-  {(result) => <button disabled={!result}>Press Here</button>}
-</Authz>
-```
-
-Or by providing static children (`<button>Press Here</button>`) and optionally `fallback` JSX elements:
-```tsx
-<Authz path={path} input={input} fallback={<div>unauthorized</div>}>
+<Authz
+  path={path}
+  input={input}
+  loading={<div>...</div>}
+  fallback={<button disabled="true">Press Here</button>}>
   <button>Press Here</button>
 </Authz>
 ```
