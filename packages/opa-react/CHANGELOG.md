@@ -1,5 +1,11 @@
 # @styra/opa-react
 
+## 0.2.1
+
+### Patch Changes
+
+- 6365272: Update README for v0.2.0 change
+
 ## 0.2.0
 
 ### Minor Changes
