@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.3",
-    "@changesets/cli": "^2.27.6",
+    "@changesets/cli": "^2.27.7",
     "typedoc": "^0.25.13",
     "typedoc-plugin-extras": "^3.0.0",
     "typedoc-plugin-replace-text": "^3.3.0"
