@@ -10,7 +10,7 @@ The package provides an `useAuthz` hook and a high-level `<Authz>` component.
 They are enabled by wrapping your App into `<AuthzProvider>`:
 
 ```tsx
-<AuthzProvider sdk={sdk} path="policy" defaultInput={{ user, tenant }}>
+<AuthzProvider sdk={sdk} defaultPath="policy" defaultInput={{ user, tenant }}>
   <Nav />
   <Outlet />
 </AuthzProvider>
