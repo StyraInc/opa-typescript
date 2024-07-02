@@ -13,7 +13,7 @@
     "npm": ">=8"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.15.3",
+    "@arethetypeswrong/cli": "^0.16.0",
     "@changesets/cli": "^2.27.7",
     "typedoc": "^0.25.13",
     "typedoc-plugin-extras": "^3.0.0",
