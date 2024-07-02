@@ -36,7 +36,8 @@
     "typescript": "^5.4.5",
     "zod": "^3.23.4"
   },
-  "dependencies": {
-    
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public"
   }
 }
