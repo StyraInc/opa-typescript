@@ -12,7 +12,7 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 1.1.3
+  version: 1.1.4
   additionalDependencies:
     dependencies: {}
     devDependencies:
@@ -25,7 +25,6 @@ typescript:
       typedoc-plugin-replace-text: ^3.3.0
     peerDependencies: {}
   additionalPackageJSON:
-    license: Apache-2.0
     keywords:
       - OPA
       - Open Policy Agent
@@ -34,6 +33,7 @@ typescript:
       - permissions
       - rbac
       - role based access control
+    license: Apache-2.0
   author: Styra
   clientServerStatusCodesAsErrors: true
   enumFormat: enum
@@ -50,7 +50,7 @@ typescript:
   maxMethodParams: 4
   methodArguments: require-security-and-request
   outputModelSuffix: output
-  packageName: "@styra/opa"
+  packageName: '@styra/opa'
   responseFormat: envelope-http
   templateVersion: v2
   useIndexModules: true

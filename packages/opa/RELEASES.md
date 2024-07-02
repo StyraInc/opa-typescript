@@ -339,3 +339,11 @@ Based on:
 - [typescript v1.1.3] .
 ### Releases
 - [NPM v1.1.3] https://www.npmjs.com/package/@styra/opa/v/1.1.3 - .
+
+## 2024-07-02 00:19:49
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.325.0 (2.356.0) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v1.1.4] packages/opa
