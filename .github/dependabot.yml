@@ -11,18 +11,7 @@ updates:
           - "eslint-*"
           - "eslint"
           - "prettier"
-  - package-ecosystem: "npm"
-    directory: "packages/opa-react"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "daily"
-    groups:
-      eslint:
-        patterns:
-          - "@typescript-eslint/*"
-          - "eslint-*"
-          - "eslint"
-          - "prettier"
-      react:
-        patterns:
-          - "@react/*"
-          - "react*"
+      interval: daily
