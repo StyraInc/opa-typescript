@@ -26,6 +26,8 @@ jobs:
 
   release:
     name: Release
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
     runs-on: ubuntu-22.04
     permissions:
       contents: write #  to create release (changesets/action)
@@ -50,12 +52,33 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: updated GH pages docs
-        run: npm run docs
-        if: steps.changesets.outputs.published == 'true'
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+  docs:
+    name: Publish Docs
+    needs:
+      - release
+    if: needs.release.published == 'true'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-        if: steps.changesets.outputs.published == 'true'
+          node-version: 21
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate docs
+        run: npm run docs
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: docs/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
