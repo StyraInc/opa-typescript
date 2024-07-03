@@ -1,5 +1,5 @@
 import { useContext, useCallback, useEffect, useState } from "react";
-import { AuthzContext } from "./opa-provider.js";
+import { AuthzContext } from "./authz-provider.js";
 import { type Input, type Result } from "@styra/opa";
 import merge from "lodash.merge";
 import { useDeepCompareMemoize } from "use-deep-compare-effect";
