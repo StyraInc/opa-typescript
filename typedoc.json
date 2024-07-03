@@ -5,6 +5,7 @@
   "entryPointStrategy": "packages",
   "includeVersion": false,
   "favicon": ".typedoc/favicon.ico",
+  "hideGenerator": true,
   "navigationLinks": {
     "Styra OPA SDKs": "https://docs.styra.com/sdk/",
     "GitHub": "https://github.com/StyraInc/opa-typescript"
