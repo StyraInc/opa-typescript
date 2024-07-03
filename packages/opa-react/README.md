@@ -30,3 +30,9 @@ They can either be used by providing static children (`<button>Press Here</butto
 ```
 
 The `useAuthz` hook can be used if you need more low-level control about the authorization call.
+
+
+## Community
+
+For questions, discussions and announcements related to Styra products, services and open source projects, please join
+the Styra community on [Slack](https://communityinviter.com/apps/styracommunity/signup)!
