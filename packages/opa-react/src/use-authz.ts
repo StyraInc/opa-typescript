@@ -19,12 +19,13 @@ export type UseAuthzResult<T> =
 export default function useAuthz(
   path?: string,
   input?: Input,
+  fromResult?: (_?: Result) => boolean,
 ): UseAuthzResult<Result> {
   const context = useContext(AuthzContext);
   if (context === null) {
     throw Error("Authz/useAuthz can only be used inside an AuthzProvider");
   }
-  const { sdk, defaultPath, defaultInput } = context;
+  const { sdk, defaultPath, defaultInput, defaultFromResult } = context;
 
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState<Result>();
@@ -34,19 +35,29 @@ export default function useAuthz(
   const requestMemo = useDeepCompareMemoize({
     defaultPath,
     defaultInput,
+    defaultFromResult,
     input,
     path,
+    fromResult,
   });
 
   const evaluate = useCallback<(signal: AbortSignal) => Promise<Result>>(
     async (signal: AbortSignal): Promise<Result> => {
-      const { defaultPath, defaultInput, input, path } = requestMemo;
+      const {
+        defaultPath,
+        defaultInput,
+        defaultFromResult,
+        input,
+        path,
+        fromResult: fromR,
+      } = requestMemo;
       const p = path ?? defaultPath;
       const i = mergeInput(input, defaultInput);
+      const fromResult = fromR ?? defaultFromResult;
       const fetchOptions = { signal };
       return p
-        ? sdk.evaluate(p, i, { fetchOptions })
-        : sdk.evaluateDefault(i, { fetchOptions });
+        ? sdk.evaluate(p, i, { fetchOptions, fromResult })
+        : sdk.evaluateDefault(i, { fetchOptions, fromResult });
     },
     [sdk, requestMemo],
   );
