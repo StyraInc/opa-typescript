@@ -1,7 +1,7 @@
 import { type ReactNode, type PropsWithChildren } from "react";
 
 import useAuthz from "./use-authz.js";
-import { type Input } from "@styra/opa";
+import { type Input, type Result } from "@styra/opa";
 
 export type AuthzProps = PropsWithChildren<{
   /** Input to the policy evaluation. Will be merged with `AuthzProvider`'s `defaultInput` (if set), overriding it when in conflict. */
@@ -17,6 +17,10 @@ export type AuthzProps = PropsWithChildren<{
    * Component to display when result is falsey
    */
   fallback?: ReactNode;
+  /** The function to apply to the policy evaluation result to get a boolean decision.
+   * If unset, any non-undefined, non-false (i.e. "truthy") result will be taken to mean "authorized".
+   */
+  fromResult?: (_?: Result) => boolean;
 }>;
 
 /**
@@ -38,6 +42,20 @@ export type AuthzProps = PropsWithChildren<{
  * </Authz>
  * ```
  *
+ * @example Unwrapping a policy evaluation result
+ *
+ * Assuming the policy returns an object, `{"result": true}`, the `fromResult` prop can be
+ * used to unwrap that:
+ *
+ * ```tsx
+ * <Authz
+ *   path={path}
+ *   input={input}
+ *   fromResult={({result}) => result ?? false}
+ *   <Button>Delete Item</Button>
+ * </Authz>
+ * ```
+ *
  * ## Configuration
  *
  * Configuration involves defining an API endpoint for authorization along with a context
@@ -52,8 +70,9 @@ export default ({
   loading,
   input,
   fallback = null,
+  fromResult,
 }: AuthzProps) => {
-  const { result, isLoading } = useAuthz(path, input);
+  const { result, isLoading } = useAuthz(path, input, fromResult);
 
   if (isLoading) {
     return loading;

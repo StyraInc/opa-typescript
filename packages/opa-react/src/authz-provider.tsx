@@ -1,5 +1,10 @@
 import { type PropsWithChildren, createContext, useMemo } from "react";
-import { type Input, type ToInput, type RequestOptions } from "@styra/opa";
+import {
+  type Input,
+  type Result,
+  type ToInput,
+  type RequestOptions,
+} from "@styra/opa";
 
 /** Abstracts the methods that are used from `OPAClient` of `@styra/opa`. */
 export interface SDK {
@@ -24,6 +29,11 @@ export interface AuthzProviderContext {
   defaultPath: string | undefined;
   /** The default policy evaluation input. Can be overridden by `<Authz>` components or `useAuthz` hooks. */
   defaultInput: Record<string, any> | undefined;
+  /** The default function to apply to the policy evaluation result to get a boolean decision.
+   * It can be overridden from `Authz` and `useAuthz`.
+   * If unset, any non-undefined, non-false (i.e. "truthy") result will be taken to mean "authorized".
+   */
+  defaultFromResult: ((_?: Result) => boolean) | undefined;
 }
 
 // Reference: https://reacttraining.com/blog/react-context-with-typescript
@@ -36,6 +46,11 @@ export type AuthzProviderProps = PropsWithChildren<{
   defaultPath?: string;
   /**  Default input for every decision, merged with any passed-in input. Use the latter to override the defaults. */
   defaultInput?: { [k: string]: any };
+  /** The default function to apply to the policy evaluation result to get a boolean decision.
+   * It can be overridden from `Authz` and `useAuthz`.
+   * If unset, any non-undefined, non-false (i.e. "truthy") result will be taken to mean "authorized".
+   */
+  defaultFromResult?: (_?: Result) => boolean;
 }>;
 
 /**
@@ -56,10 +71,11 @@ export default function AuthzProvider({
   sdk,
   defaultPath,
   defaultInput,
+  defaultFromResult,
 }: AuthzProviderProps) {
   const context = useMemo<AuthzProviderContext>( // TODO(sr): Is useMemo still the right thing?
-    () => ({ sdk, defaultPath, defaultInput }),
-    [sdk, defaultPath, defaultInput],
+    () => ({ sdk, defaultPath, defaultInput, defaultFromResult }),
+    [sdk, defaultPath, defaultInput, defaultFromResult],
   );
 
   return (

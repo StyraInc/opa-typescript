@@ -1,8 +1,8 @@
 import React from "react";
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { OPAClient } from "@styra/opa";
-import AuthzProvider from "../src/authz-provider";
+import { OPAClient, type Result } from "@styra/opa";
+import AuthzProvider, { AuthzProviderProps } from "../src/authz-provider";
 import useAuthz from "../src/use-authz";
 
 describe("useAuthz Hook", () => {
@@ -10,9 +10,18 @@ describe("useAuthz Hook", () => {
     evaluate: vi.fn(),
     evaluateDefault: vi.fn(),
   });
-  const wrapper = (path?: string, input?: { [k: string]: any }) => ({
+  const wrapper = ({
+    defaultPath,
+    defaultInput,
+    defaultFromResult,
+  }: Omit<AuthzProviderProps, "sdk"> = {}) => ({
     wrapper: ({ children }) => (
-      <AuthzProvider sdk={opa} defaultPath={path} defaultInput={input}>
+      <AuthzProvider
+        sdk={opa}
+        defaultPath={defaultPath}
+        defaultInput={defaultInput}
+        defaultFromResult={defaultFromResult}
+      >
         {children}
       </AuthzProvider>
     ),
@@ -57,7 +66,10 @@ describe("useAuthz Hook", () => {
     it("works with provider path and without input", async () => {
       const evaluateSpy = vi.spyOn(opa, "evaluate").mockResolvedValue(false);
 
-      const { result } = renderHook(() => useAuthz(), wrapper("some/rule"));
+      const { result } = renderHook(
+        () => useAuthz(),
+        wrapper({ defaultPath: "some/rule" }),
+      );
       await waitFor(() =>
         expect(result.current).toMatchObject({
           isLoading: false,
@@ -72,12 +84,100 @@ describe("useAuthz Hook", () => {
       );
     });
 
+    it("works without any path and input, with fromResult from provider prop", async () => {
+      const evaluateSpy = vi
+        .spyOn(opa, "evaluateDefault")
+        .mockResolvedValue(false);
+
+      const defaultFromResult = (r?: Result): boolean =>
+        ((r as Record<string, any>)["foobar"] as boolean) ?? false;
+
+      const { result } = renderHook(
+        () => useAuthz(),
+        wrapper({ defaultFromResult }),
+      );
+      await waitFor(() =>
+        expect(result.current).toMatchObject({
+          isLoading: false,
+          error: undefined,
+          result: false,
+        }),
+      );
+      expect(evaluateSpy).toHaveBeenCalledWith(undefined, {
+        fetchOptions: expect.anything(),
+        fromResult: defaultFromResult,
+      });
+    });
+
+    it("works with path and input, with fromResult from provider prop", async () => {
+      const evaluateSpy = vi.spyOn(opa, "evaluate").mockResolvedValue(false);
+
+      const defaultFromResult = (r?: Result): boolean =>
+        ((r as Record<string, any>)["foobar"] as boolean) ?? false;
+
+      const { result } = renderHook(
+        () => useAuthz(),
+        wrapper({
+          defaultFromResult,
+          defaultPath: "some/thing",
+          defaultInput: { x: true },
+        }),
+      );
+      await waitFor(() =>
+        expect(result.current).toMatchObject({
+          isLoading: false,
+          error: undefined,
+          result: false,
+        }),
+      );
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "some/thing",
+        { x: true },
+        {
+          fetchOptions: expect.anything(),
+          fromResult: defaultFromResult,
+        },
+      );
+    });
+
+    it("works with path and input, with authz fromResult overriding provider props", async () => {
+      const evaluateSpy = vi.spyOn(opa, "evaluate").mockResolvedValue(false);
+
+      const defaultFromResult = (r?: Result): boolean =>
+        ((r as Record<string, any>)["foobar"] as boolean) ?? false;
+      const defaultFromResult2 = (r?: Result): boolean => true;
+
+      const { result } = renderHook(
+        () => useAuthz("some/thing/else", { y: "z" }, defaultFromResult2),
+        wrapper({
+          defaultFromResult,
+          defaultPath: "some/thing",
+          defaultInput: { x: true },
+        }),
+      );
+      await waitFor(() =>
+        expect(result.current).toMatchObject({
+          isLoading: false,
+          error: undefined,
+          result: false,
+        }),
+      );
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "some/thing/else",
+        { x: true, y: "z" },
+        {
+          fetchOptions: expect.anything(),
+          fromResult: defaultFromResult2,
+        },
+      );
+    });
+
     it("works with provider and call path (call path overrides provider path)", async () => {
       const evaluateSpy = vi.spyOn(opa, "evaluate").mockResolvedValue(false);
 
       const { result } = renderHook(
         () => useAuthz("some/other/path"),
-        wrapper("some/provider/path"),
+        wrapper({ defaultPath: "some/provider/path" }),
       );
       await waitFor(() =>
         expect(result.current).toMatchObject({
@@ -98,7 +198,7 @@ describe("useAuthz Hook", () => {
 
       const { result } = renderHook(
         () => useAuthz(),
-        wrapper("some/rule", { x: "default" }),
+        wrapper({ defaultPath: "some/rule", defaultInput: { x: "default" } }),
       );
       await waitFor(() =>
         expect(result.current).toMatchObject({
@@ -119,7 +219,7 @@ describe("useAuthz Hook", () => {
 
       const { result } = renderHook(
         () => useAuthz("some/other/path", { other: "input" }),
-        wrapper("some/provider/path"),
+        wrapper({ defaultPath: "some/provider/path" }),
       );
       await waitFor(() =>
         expect(result.current).toMatchObject({
@@ -140,7 +240,10 @@ describe("useAuthz Hook", () => {
 
       const { result } = renderHook(
         () => useAuthz("some/other/path", { other: "input" }),
-        wrapper("some/provider/path", { x: "default" }),
+        wrapper({
+          defaultPath: "some/provider/path",
+          defaultInput: { x: "default" },
+        }),
       );
       await waitFor(() =>
         expect(result.current).toMatchObject({
