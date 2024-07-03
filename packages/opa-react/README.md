@@ -24,7 +24,7 @@ They can either be used by providing static children (`<button>Press Here</butto
   path={path}
   input={input}
   loading={<div>...</div>}
-  fallback={<button disabled="true">Press Here</button>}>
+  fallback={<button disabled={true}>Press Here</button>}>
   <button>Press Here</button>
 </Authz>
 ```
