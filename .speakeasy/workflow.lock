@@ -2,17 +2,17 @@ speakeasyVersion: 1.325.0
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:5e1c09597acbcbaecf3d0ea85c01c7a396d216ed8dfa106e97f3169bddcb5803
-        sourceBlobDigest: sha256:b63a41e53a36c860a017dbb9d6804c27b45bcc5435bf2858bb65a584c7471a44
+        sourceRevisionDigest: sha256:984142ea9d7264f7ddb40808a32960961271f8d9faf6acee53795a28359f2951
+        sourceBlobDigest: sha256:345bd5b603b2d6cf78c12e27585c74599b4c8dcb5c5a0ab189514793707c6481
         tags:
             - latest
-            - main
+            - sr-opa-enable-esm
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:5e1c09597acbcbaecf3d0ea85c01c7a396d216ed8dfa106e97f3169bddcb5803
-        sourceBlobDigest: sha256:b63a41e53a36c860a017dbb9d6804c27b45bcc5435bf2858bb65a584c7471a44
+        sourceRevisionDigest: sha256:984142ea9d7264f7ddb40808a32960961271f8d9faf6acee53795a28359f2951
+        sourceBlobDigest: sha256:345bd5b603b2d6cf78c12e27585c74599b4c8dcb5c5a0ab189514793707c6481
         outLocation: packages/opa
 workflow:
     workflowVersion: 1.0.0

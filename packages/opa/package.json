@@ -1,10 +1,34 @@
 {
   "name": "@styra/opa",
-  "version": "1.1.4",
-  "author": "Styra",  
+  "version": "1.2.0",
+  "author": "Styra",
   "license": "Apache-2.0",
-  "keywords": ["OPA","Open Policy Agent","authorization","policy","permissions","rbac","role based access control"],
-  "main": "./index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "OPA",
+    "Open Policy Agent",
+    "authorization",
+    "policy",
+    "permissions",
+    "rbac",
+    "role based access control"
+  ],
+  "tshy": {
+    "exports": {
+      ".": "./src/index.ts",
+      "./package.json": "./package.json",
+      "./types": "./src/types/index.ts",
+      "./sdk/models/components": "./src/sdk/models/components/index.ts",
+      "./sdk/models/errors": "./src/sdk/models/errors/index.ts",
+      "./sdk/models/operations": "./src/sdk/models/operations/index.ts",
+      "./sdk/models/webhooks": "./src/sdk/models/webhooks/index.ts",
+      "./sdk/models/callbacks": "./src/sdk/models/callbacks/index.ts",
+      "./*.js": "./src/*.ts",
+      "./*": "./src/*.ts"
+    }
+  },
   "sideEffects": false,
   "repository": {
     "type": "git",
@@ -13,7 +37,7 @@
   },
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
-    "build": "tsc",
+    "build": "tshy",
     "prepare": "npm run build"
   },
   "peerDependencies": {
@@ -29,6 +53,7 @@
     "eslint-plugin-markdown": "^4.0.1",
     "prettier": "3.2.5",
     "testcontainers": "^10.7.2",
+    "tshy": "^1.16.2",
     "tsx": "^4.15.6",
     "typedoc": "^0.25.13",
     "typedoc-plugin-extras": "^3.0.0",
@@ -36,8 +61,7 @@
     "typescript": "^5.4.5",
     "zod": "^3.23.4"
   },
-  "dependencies": {},
-  "publishConfig": {
-    "access": "public"
+  "dependencies": {
+    
   }
 }
