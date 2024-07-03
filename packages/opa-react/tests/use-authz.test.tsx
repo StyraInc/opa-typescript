@@ -2,7 +2,7 @@ import React from "react";
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { OPAClient } from "@styra/opa";
-import AuthzProvider from "../src/opa-provider";
+import AuthzProvider from "../src/authz-provider";
 import useAuthz from "../src/use-authz";
 
 describe("useAuthz Hook", () => {
