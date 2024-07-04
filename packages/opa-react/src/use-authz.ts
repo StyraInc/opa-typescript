@@ -22,7 +22,7 @@ export default function useAuthz(
   fromResult?: (_?: Result) => boolean,
 ): UseAuthzResult<Result> {
   const context = useContext(AuthzContext);
-  if (context === null) {
+  if (context === undefined) {
     throw Error("Authz/useAuthz can only be used inside an AuthzProvider");
   }
   const { sdk, defaultPath, defaultInput, defaultFromResult } = context;

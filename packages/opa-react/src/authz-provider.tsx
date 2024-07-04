@@ -22,24 +22,7 @@ export interface SDK {
   ): Promise<Res>;
 }
 
-export interface AuthzProviderContext {
-  /** `SDK` instance to use: most likely `OPAClient` from `@styra/opa`. */
-  sdk: SDK;
-  /** The default policy path. Can be overridden by `<Authz>` components or `useAuthz` hooks. If unset and not overridden, uses the default policy as defined by the server. */
-  defaultPath: string | undefined;
-  /** The default policy evaluation input. Can be overridden by `<Authz>` components or `useAuthz` hooks. */
-  defaultInput: Record<string, any> | undefined;
-  /** The default function to apply to the policy evaluation result to get a boolean decision.
-   * It can be overridden from `Authz` and `useAuthz`.
-   * If unset, any non-undefined, non-false (i.e. "truthy") result will be taken to mean "authorized".
-   */
-  defaultFromResult: ((_?: Result) => boolean) | undefined;
-}
-
-// Reference: https://reacttraining.com/blog/react-context-with-typescript
-export const AuthzContext = createContext<AuthzProviderContext | null>(null);
-
-export type AuthzProviderProps = PropsWithChildren<{
+export type AuthzProviderContext = {
   /**  The `@styra/opa` OPAClient instance to use. */
   sdk: SDK;
   /** Default path for every decision. Override by providing`path`. */
@@ -51,7 +34,14 @@ export type AuthzProviderProps = PropsWithChildren<{
    * If unset, any non-undefined, non-false (i.e. "truthy") result will be taken to mean "authorized".
    */
   defaultFromResult?: (_?: Result) => boolean;
-}>;
+};
+
+// Reference: https://reacttraining.com/blog/react-context-with-typescript
+export const AuthzContext = createContext<AuthzProviderContext | undefined>(
+  undefined,
+);
+
+export type AuthzProviderProps = PropsWithChildren<AuthzProviderContext>;
 
 /**
  * Configures the authorization SDK, with default path/input of applicable.
@@ -73,7 +63,7 @@ export default function AuthzProvider({
   defaultInput,
   defaultFromResult,
 }: AuthzProviderProps) {
-  const context = useMemo<AuthzProviderContext>( // TODO(sr): Is useMemo still the right thing?
+  const context = useMemo<AuthzProviderContext>(
     () => ({ sdk, defaultPath, defaultInput, defaultFromResult }),
     [sdk, defaultPath, defaultInput, defaultFromResult],
   );
