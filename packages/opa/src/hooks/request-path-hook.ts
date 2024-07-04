@@ -1,5 +1,8 @@
-import { BeforeCreateRequestContext, BeforeCreateRequestHook } from "./types";
-import { RequestInput } from "../lib/http";
+import {
+  BeforeCreateRequestContext,
+  BeforeCreateRequestHook,
+} from "./types.js";
+import { RequestInput } from "../lib/http.js";
 
 export class RewriteRequestPathHook implements BeforeCreateRequestHook {
   beforeCreateRequest(

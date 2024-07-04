@@ -7,8 +7,8 @@ import {
   StartedTestContainer,
   Wait,
 } from "testcontainers";
-import { OPAClient, ToInput, Input, Result } from "../src";
-import { HTTPClient } from "../src/lib/http";
+import { OPAClient, ToInput, Input, Result } from "../src/index.js";
+import { HTTPClient } from "../src/lib/http.js";
 
 // Run these locally, with debug output from testcontainers, like this:
 // DEBUG='testcontainers*' node --import tsx --test tests/**/*.ts
