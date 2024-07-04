@@ -55,10 +55,11 @@ jobs:
       - name: Process results
         id: opa_pkg
         run: |
-          echo "${{steps.changesets.outputs.publishedPackages}}"
-          echo "tag=$(jq -nr --argjson pkgs ${{ steps.changesets.outputs.publishedPackages }} '$pkgs[] | select(.name == "@styra/opa") | (.name + "@" + .version)') >> $GITHUB_OUTPUT
-          echo "included=$(jq -nr --argjson pkgs ${{ steps.changesets.outputs.publishedPackages }} '$pkgs[] | select(.name == "@styra/opa") | true') >> $GITHUB_OUTPUT
-          echo "version=$(jq -nr --argjson pkgs ${{ steps.changesets.outputs.publishedPackages }} '$pkgs[] | select(.name == "@styra/opa") | .version')" >> $GITHUB_OUTPUT
+          echo "tag=$(jq -nr --argjson pkgs $PP '$pkgs[] | select(.name == "@styra/opa") | (.name + "@" + .version)') >> $GITHUB_OUTPUT
+          echo "included=$(jq -nr --argjson pkgs $PP '$pkgs[] | select(.name == "@styra/opa") | true') >> $GITHUB_OUTPUT
+          echo "version=$(jq -nr --argjson pkgs $PP '$pkgs[] | select(.name == "@styra/opa") | .version')" >> $GITHUB_OUTPUT
+        env:
+          PP: ${{ steps.changesets.outputs.publishedPackages }}
 
       - name: Generate @styra/opa GH release notes
         # This takes the last block (by record separator "\n## ") and removes the first line (timestamp)
