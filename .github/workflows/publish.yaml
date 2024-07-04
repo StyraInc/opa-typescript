@@ -52,6 +52,29 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Process results
+        id: opa_pkg
+        run: |
+          echo "${{steps.changesets.outputs.publishedPackages}}"
+          echo "tag=$(jq -nr --argjson pkgs ${{ steps.changesets.outputs.publishedPackages }} '$pkgs[] | select(.name == "@styra/opa") | (.name + "@" + .version)') >> $GITHUB_OUTPUT
+          echo "included=$(jq -nr --argjson pkgs ${{ steps.changesets.outputs.publishedPackages }} '$pkgs[] | select(.name == "@styra/opa") | true') >> $GITHUB_OUTPUT
+          echo "version=$(jq -nr --argjson pkgs ${{ steps.changesets.outputs.publishedPackages }} '$pkgs[] | select(.name == "@styra/opa") | .version')" >> $GITHUB_OUTPUT
+
+      - name: Generate @styra/opa GH release notes
+        # This takes the last block (by record separator "\n## ") and removes the first line (timestamp)
+        run: |
+          awk 'BEGIN { RS="\n## "} END { print $0 }' packages/opa/RELEASES.md | tail +2 > OPA_RELEASE_NOTES.md
+          echo "\n[NPM](https://www.npmjs.com/package/@styra/opa/v/${{ steps.opa_pkg.version }})" >> OPA_RELEASE_NOTES.md
+          cat OPA_RELEASE_NOTES.md
+        if: steps.opa_pkg.included == 'true'
+
+      - name: Create @styra/opa GH release
+        uses: softprops/action-gh-release@v2
+        if: steps.opa_pkg.included == 'true'
+        with:
+          body_path: OPA_RELEASE_NOTES.md
+          tag_name: ${{ steps.opa_pkg.tag }}
+
   docs:
     name: Publish Docs
     needs:
