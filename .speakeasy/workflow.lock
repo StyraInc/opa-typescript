@@ -1,18 +1,18 @@
-speakeasyVersion: 1.325.0
+speakeasyVersion: 1.326.1
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:984142ea9d7264f7ddb40808a32960961271f8d9faf6acee53795a28359f2951
-        sourceBlobDigest: sha256:345bd5b603b2d6cf78c12e27585c74599b4c8dcb5c5a0ab189514793707c6481
+        sourceRevisionDigest: sha256:4217a334e370dd93feb8aa3eca675bc71fc821f307315924d6694da1c66ecd0e
+        sourceBlobDigest: sha256:25df9730ca18ab7e00833bacf81366eb7f732024809864c7264a0a57790cd78a
         tags:
             - latest
-            - sr-opa-enable-esm
+            - sr-opa-retry-esm
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:984142ea9d7264f7ddb40808a32960961271f8d9faf6acee53795a28359f2951
-        sourceBlobDigest: sha256:345bd5b603b2d6cf78c12e27585c74599b4c8dcb5c5a0ab189514793707c6481
+        sourceRevisionDigest: sha256:4217a334e370dd93feb8aa3eca675bc71fc821f307315924d6694da1c66ecd0e
+        sourceBlobDigest: sha256:25df9730ca18ab7e00833bacf81366eb7f732024809864c7264a0a57790cd78a
         outLocation: packages/opa
 workflow:
     workflowVersion: 1.0.0
