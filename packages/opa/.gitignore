@@ -1,3 +1,7 @@
+/esm
+/dist
+/.tshy
+/.tshy-*
 /sdk/models/errors
 /models
 /models/errors
