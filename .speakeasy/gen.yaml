@@ -12,11 +12,11 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 1.1.4
+  version: 1.2.0
   additionalDependencies:
     dependencies: {}
     devDependencies:
-      "@types/node": ^20.14.9
+      '@types/node': ^20.14.9
       eslint-plugin-markdown: ^4.0.1
       prettier: 3.2.5
       testcontainers: ^10.10.1
@@ -52,6 +52,7 @@ typescript:
   inputModelSuffix: input
   maxMethodParams: 4
   methodArguments: require-security-and-request
+  moduleFormat: commonjs
   outputModelSuffix: output
   packageName: '@styra/opa'
   responseFormat: envelope-http
