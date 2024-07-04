@@ -45,3 +45,6 @@ jobs:
         run: npx -w packages/${{ matrix.pkg }} typedoc
       - name: are the types wrong?
         run: npx -w packages/${{ matrix.pkg }} attw --pack
+      - name: jsr publish dry-run
+        run: npx -w packages/${{ matrix.pkg }} jsr publish --dry-run
+        if: matrix.pkg == 'opa'
