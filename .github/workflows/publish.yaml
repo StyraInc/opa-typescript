@@ -65,7 +65,7 @@ jobs:
         # This takes the last block (by record separator "\n## ") and removes the first line (timestamp)
         run: |
           awk 'BEGIN { RS="\n## "} END { print $0 }' packages/opa/RELEASES.md | tail +2 > OPA_RELEASE_NOTES.md
-          echo "\n[NPM](https://www.npmjs.com/package/@styra/opa/v/${{ steps.opa_pkg.version }})" >> OPA_RELEASE_NOTES.md
+          echo "\n- [NPM ${{ steps.opa_pkg.version }}](https://www.npmjs.com/package/@styra/opa/v/${{ steps.opa_pkg.version }})" >> OPA_RELEASE_NOTES.md
           cat OPA_RELEASE_NOTES.md
         if: steps.opa_pkg.included == 'true'
 
