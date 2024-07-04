@@ -29,7 +29,7 @@
     }
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@types/lodash.merge": "^4.6.9",
     "@types/react": ">=18.0.0",
