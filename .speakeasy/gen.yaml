@@ -12,7 +12,7 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 1.1.4
+  version: 1.2.0
   additionalDependencies:
     dependencies: {}
     devDependencies:
@@ -51,6 +51,7 @@ typescript:
   inputModelSuffix: input
   maxMethodParams: 4
   methodArguments: require-security-and-request
+  moduleFormat: commonjs
   outputModelSuffix: output
   packageName: '@styra/opa'
   responseFormat: envelope-http

@@ -1,9 +1,20 @@
 {
   "name": "@styra/opa",
-  "version": "1.1.4",
-  "author": "Styra",  
+  "version": "1.2.0",
+  "author": "Styra",
   "license": "Apache-2.0",
-  "keywords": ["OPA","Open Policy Agent","authorization","policy","permissions","rbac","role based access control"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "OPA",
+    "Open Policy Agent",
+    "authorization",
+    "policy",
+    "permissions",
+    "rbac",
+    "role based access control"
+  ],
   "main": "./index.js",
   "sideEffects": false,
   "repository": {
@@ -36,8 +47,7 @@
     "typescript": "^5.4.5",
     "zod": "^3.23.4"
   },
-  "dependencies": {},
-  "publishConfig": {
-    "access": "public"
+  "dependencies": {
+    
   }
 }

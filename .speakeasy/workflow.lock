@@ -1,9 +1,9 @@
-speakeasyVersion: 1.325.0
+speakeasyVersion: 1.326.0
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:5e1c09597acbcbaecf3d0ea85c01c7a396d216ed8dfa106e97f3169bddcb5803
-        sourceBlobDigest: sha256:b63a41e53a36c860a017dbb9d6804c27b45bcc5435bf2858bb65a584c7471a44
+        sourceRevisionDigest: sha256:35ca23018de6c376722d42e87b5f1c3a38e291d3fe554b8bb6cd26a322af008b
+        sourceBlobDigest: sha256:bb43b034c243cf59586c64935f48990b20684c6240a2912a02c1bf0f15bcf3b5
         tags:
             - latest
             - main
@@ -11,8 +11,8 @@ targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:5e1c09597acbcbaecf3d0ea85c01c7a396d216ed8dfa106e97f3169bddcb5803
-        sourceBlobDigest: sha256:b63a41e53a36c860a017dbb9d6804c27b45bcc5435bf2858bb65a584c7471a44
+        sourceRevisionDigest: sha256:35ca23018de6c376722d42e87b5f1c3a38e291d3fe554b8bb6cd26a322af008b
+        sourceBlobDigest: sha256:bb43b034c243cf59586c64935f48990b20684c6240a2912a02c1bf0f15bcf3b5
         outLocation: packages/opa
 workflow:
     workflowVersion: 1.0.0
