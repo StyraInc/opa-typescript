@@ -4,6 +4,6 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
-    "types": ["@testing-library/jest-dom"]
+    "types": ["vitest/globals"]
   }
 }
