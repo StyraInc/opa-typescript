@@ -52,9 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Debug
-        run: echo "${{ steps.changesets.outputs.publishedPackages }}"
-
       - name: Process results
         id: opa_pkg
         run: |
@@ -64,26 +61,31 @@ jobs:
         env:
           PP: ${{ steps.changesets.outputs.publishedPackages }}
 
+      - name: Debug
+        run: |
+          echo '${{ steps.opa_pkg.outputs }}'
+          echo '${{ steps.changesets.outputs.publishedPackages }}'
+
       - name: Generate @styra/opa GH release notes
         # This takes the last block (by record separator "\n## ") and removes the first line (timestamp)
         run: |
           awk 'BEGIN { RS="\n## "} END { print $0 }' packages/opa/RELEASES.md | tail +2 > OPA_RELEASE_NOTES.md
           echo "\n- [NPM ${{ steps.opa_pkg.version }}](https://www.npmjs.com/package/@styra/opa/v/${{ steps.opa_pkg.version }})" >> OPA_RELEASE_NOTES.md
           cat OPA_RELEASE_NOTES.md
-        if: steps.opa_pkg.included == 'true'
+        if: steps.opa_pkg.outputs.included == 'true'
 
       - name: Create @styra/opa GH release
         uses: softprops/action-gh-release@a74c6b72af54cfa997e81df42d94703d6313a2d0 # v2.0.6
-        if: steps.opa_pkg.included == 'true'
+        if: steps.opa_pkg.outputs.included == 'true'
         with:
           body_path: OPA_RELEASE_NOTES.md
-          tag_name: ${{ steps.opa_pkg.tag }}
+          tag_name: ${{ steps.opa_pkg.outputs.tag }}
 
   docs:
     name: Publish Docs
     needs:
       - release
-    if: needs.release.published == 'true'
+    if: needs.release.outputs.published == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
