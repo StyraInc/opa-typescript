@@ -1,5 +1,5 @@
-import { RewriteRequestPathHook } from "./request-path-hook";
-import { Hooks } from "./types";
+import { RewriteRequestPathHook } from "./request-path-hook.js";
+import { Hooks } from "./types.js";
 
 export function initHooks(hooks: Hooks) {
   // Add hooks by calling hooks.register{ClientInit/BeforeRequest/AfterRequest/AfterError}Hook
