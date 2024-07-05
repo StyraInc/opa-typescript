@@ -1,5 +1,14 @@
 # @styra/opa-react
 
+## 0.3.1
+
+### Patch Changes
+
+- be7bcb5: `AuthzProviderContext` is a type now (was interface)
+
+  This was done to remove code duplication. No functional changes. But since the
+  interface was exported before, some care might have to be taken when updating.
+
 ## 0.3.0
 
 ### Minor Changes
