@@ -2,17 +2,17 @@ speakeasyVersion: 1.326.3
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:2a80ee0a4531d2998cdeb1df282b732501fbdad1b6c3a38c013edc86515e2137
-        sourceBlobDigest: sha256:2ffbcc63a301ea97849aeb0d4945dfd551200736615c28e8f3b1e80aa5fd0abc
+        sourceRevisionDigest: sha256:0056a86e9b4e34da53d683b222302daa7beb171ae07fa8b4454f3c1a68397274
+        sourceBlobDigest: sha256:290f18454039c84eda16b04b96917553c19f0f29125964a2345f969b0ce488d8
         tags:
             - latest
-            - main
+            - sr-opa-dualmode
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:2a80ee0a4531d2998cdeb1df282b732501fbdad1b6c3a38c013edc86515e2137
-        sourceBlobDigest: sha256:2ffbcc63a301ea97849aeb0d4945dfd551200736615c28e8f3b1e80aa5fd0abc
+        sourceRevisionDigest: sha256:0056a86e9b4e34da53d683b222302daa7beb171ae07fa8b4454f3c1a68397274
+        sourceBlobDigest: sha256:290f18454039c84eda16b04b96917553c19f0f29125964a2345f969b0ce488d8
         outLocation: packages/opa
 workflow:
     workflowVersion: 1.0.0
