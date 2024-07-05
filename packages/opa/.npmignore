@@ -3,6 +3,7 @@
 !/**/*.ts
 !/**/*.js
 !/**/*.map
+/tests/**/*.ts
 
 /.eslintrc.js
 /cjs
