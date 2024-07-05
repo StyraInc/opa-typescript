@@ -52,6 +52,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Debug
+        run: echo "${{ steps.changesets.outputs.publishedPackages }}"
+
       - name: Process results
         id: opa_pkg
         run: |
