@@ -1,5 +1,14 @@
 # @styra/opa-react
 
+## 0.3.2
+
+### Patch Changes
+
+- 5bf10a5: tweak package (publint)
+
+  1. remove test files from package
+  2. package.json: move "browser" field to "exports"
+
 ## 0.3.1
 
 ### Patch Changes
