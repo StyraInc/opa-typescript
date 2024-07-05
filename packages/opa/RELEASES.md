@@ -369,5 +369,8 @@ Based on:
 Based on:
 - OpenAPI Doc  
 - Speakeasy CLI 1.326.3 (2.359.6) https://github.com/speakeasy-api/speakeasy
+
+This is the first time we ship a dual-build package featuring ESM and CommonJS.
+
 ### Generated
 - [typescript v1.2.2] packages/opa
