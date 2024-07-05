@@ -52,7 +52,7 @@ typescript:
   inputModelSuffix: input
   maxMethodParams: 4
   methodArguments: require-security-and-request
-  moduleFormat: commonjs
+  moduleFormat: dual
   outputModelSuffix: output
   packageName: '@styra/opa'
   responseFormat: envelope-http
