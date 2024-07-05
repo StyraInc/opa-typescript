@@ -83,7 +83,7 @@ jobs:
     name: Publish Docs
     needs:
       - release
-    if: needs.release.published == 'true'
+    if: needs.release.outputs.published == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
