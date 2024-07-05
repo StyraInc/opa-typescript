@@ -3,7 +3,7 @@
  */
 
 import { SDKHooks } from "../hooks/hooks.js";
-import { SDK_METADATA, SDKOptions, serverURLFromOptions } from "../lib/config.js";
+import { SDKOptions, serverURLFromOptions } from "../lib/config.js";
 import {
     encodeFormQuery as encodeFormQuery$,
     encodeJSON as encodeJSON$,
@@ -57,10 +57,6 @@ export class OpaApiClient extends ClientSDK {
             acceptEncoding: acceptEncoding,
             input: input,
         };
-        const headers$ = new Headers();
-        headers$.set("user-agent", SDK_METADATA.userAgent);
-        headers$.set("Content-Type", "application/json");
-        headers$.set("Accept", "application/json");
 
         const payload$ = schemas$.parse(
             input$,
@@ -76,27 +72,31 @@ export class OpaApiClient extends ClientSDK {
             pretty: payload$.pretty,
         });
 
-        headers$.set(
-            "Accept-Encoding",
-            encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
+        const headers$ = new Headers({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Accept-Encoding": encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
                 explode: false,
                 charEncoding: "none",
-            })
-        );
+            }),
+        });
+
         const context = {
             operationID: "executeDefaultPolicyWithInput",
             oAuth2Scopes: [],
             securitySource: null,
         };
 
-        const doOptions = { context, errorCodes: ["400", "404", "4XX", "500", "5XX"] };
         const request$ = this.createRequest$(
             context,
             { method: "POST", path: path$, headers: headers$, query: query$, body: body$ },
             options
         );
 
-        const response = await this.do$(request$, doOptions);
+        const response = await this.do$(request$, {
+            context,
+            errorCodes: ["400", "404", "4XX", "500", "5XX"],
+        });
 
         const responseFields$ = {
             HttpMeta: { Response: response, Request: request$ },
@@ -132,9 +132,6 @@ export class OpaApiClient extends ClientSDK {
             plugins: plugins,
             excludePlugin: excludePlugin,
         };
-        const headers$ = new Headers();
-        headers$.set("user-agent", SDK_METADATA.userAgent);
-        headers$.set("Accept", "application/json");
 
         const payload$ = schemas$.parse(
             input$,
@@ -151,16 +148,19 @@ export class OpaApiClient extends ClientSDK {
             plugins: payload$.plugins,
         });
 
+        const headers$ = new Headers({
+            Accept: "application/json",
+        });
+
         const context = { operationID: "health", oAuth2Scopes: [], securitySource: null };
 
-        const doOptions = { context, errorCodes: ["4XX", "500", "5XX"] };
         const request$ = this.createRequest$(
             context,
             { method: "GET", path: path$, headers: headers$, query: query$, body: body$ },
             options
         );
 
-        const response = await this.do$(request$, doOptions);
+        const response = await this.do$(request$, { context, errorCodes: ["4XX", "500", "5XX"] });
 
         const responseFields$ = {
             HttpMeta: { Response: response, Request: request$ },
@@ -183,10 +183,6 @@ export class OpaApiClient extends ClientSDK {
         options?: RequestOptions
     ): Promise<operations.ExecuteBatchPolicyWithInputResponse> {
         const input$ = request;
-        const headers$ = new Headers();
-        headers$.set("user-agent", SDK_METADATA.userAgent);
-        headers$.set("Content-Type", "application/json");
-        headers$.set("Accept", "application/json");
 
         const payload$ = schemas$.parse(
             input$,
@@ -209,34 +205,35 @@ export class OpaApiClient extends ClientSDK {
             "strict-builtin-errors": payload$["strict-builtin-errors"],
         });
 
-        headers$.set(
-            "Accept-Encoding",
-            encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
+        const headers$ = new Headers({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Accept-Encoding": encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
                 explode: false,
                 charEncoding: "none",
-            })
-        );
-        headers$.set(
-            "Content-Encoding",
-            encodeSimple$("Content-Encoding", payload$["Content-Encoding"], {
+            }),
+            "Content-Encoding": encodeSimple$("Content-Encoding", payload$["Content-Encoding"], {
                 explode: false,
                 charEncoding: "none",
-            })
-        );
+            }),
+        });
+
         const context = {
             operationID: "executeBatchPolicyWithInput",
             oAuth2Scopes: [],
             securitySource: null,
         };
 
-        const doOptions = { context, errorCodes: ["400", "4XX", "500", "5XX"] };
         const request$ = this.createRequest$(
             context,
             { method: "POST", path: path$, headers: headers$, query: query$, body: body$ },
             options
         );
 
-        const response = await this.do$(request$, doOptions);
+        const response = await this.do$(request$, {
+            context,
+            errorCodes: ["400", "4XX", "500", "5XX"],
+        });
 
         const responseFields$ = {
             HttpMeta: { Response: response, Request: request$ },
@@ -267,9 +264,6 @@ export class OpaApiClient extends ClientSDK {
         options?: RequestOptions
     ): Promise<operations.ExecutePolicyResponse> {
         const input$ = request;
-        const headers$ = new Headers();
-        headers$.set("user-agent", SDK_METADATA.userAgent);
-        headers$.set("Accept", "application/json");
 
         const payload$ = schemas$.parse(
             input$,
@@ -292,23 +286,26 @@ export class OpaApiClient extends ClientSDK {
             "strict-builtin-errors": payload$["strict-builtin-errors"],
         });
 
-        headers$.set(
-            "Accept-Encoding",
-            encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
+        const headers$ = new Headers({
+            Accept: "application/json",
+            "Accept-Encoding": encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
                 explode: false,
                 charEncoding: "none",
-            })
-        );
+            }),
+        });
+
         const context = { operationID: "executePolicy", oAuth2Scopes: [], securitySource: null };
 
-        const doOptions = { context, errorCodes: ["400", "4XX", "500", "5XX"] };
         const request$ = this.createRequest$(
             context,
             { method: "GET", path: path$, headers: headers$, query: query$, body: body$ },
             options
         );
 
-        const response = await this.do$(request$, doOptions);
+        const response = await this.do$(request$, {
+            context,
+            errorCodes: ["400", "4XX", "500", "5XX"],
+        });
 
         const responseFields$ = {
             HttpMeta: { Response: response, Request: request$ },
@@ -335,10 +332,6 @@ export class OpaApiClient extends ClientSDK {
         options?: RequestOptions
     ): Promise<operations.ExecutePolicyWithInputResponse> {
         const input$ = request;
-        const headers$ = new Headers();
-        headers$.set("user-agent", SDK_METADATA.userAgent);
-        headers$.set("Content-Type", "application/json");
-        headers$.set("Accept", "application/json");
 
         const payload$ = schemas$.parse(
             input$,
@@ -361,34 +354,35 @@ export class OpaApiClient extends ClientSDK {
             "strict-builtin-errors": payload$["strict-builtin-errors"],
         });
 
-        headers$.set(
-            "Accept-Encoding",
-            encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
+        const headers$ = new Headers({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Accept-Encoding": encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
                 explode: false,
                 charEncoding: "none",
-            })
-        );
-        headers$.set(
-            "Content-Encoding",
-            encodeSimple$("Content-Encoding", payload$["Content-Encoding"], {
+            }),
+            "Content-Encoding": encodeSimple$("Content-Encoding", payload$["Content-Encoding"], {
                 explode: false,
                 charEncoding: "none",
-            })
-        );
+            }),
+        });
+
         const context = {
             operationID: "executePolicyWithInput",
             oAuth2Scopes: [],
             securitySource: null,
         };
 
-        const doOptions = { context, errorCodes: ["400", "4XX", "500", "5XX"] };
         const request$ = this.createRequest$(
             context,
             { method: "POST", path: path$, headers: headers$, query: query$, body: body$ },
             options
         );
 
-        const response = await this.do$(request$, doOptions);
+        const response = await this.do$(request$, {
+            context,
+            errorCodes: ["400", "4XX", "500", "5XX"],
+        });
 
         const responseFields$ = {
             HttpMeta: { Response: response, Request: request$ },
