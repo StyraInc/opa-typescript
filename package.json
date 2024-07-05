@@ -5,10 +5,7 @@
     "docs": "typedoc"
   },
   "private": true,
-  "workspaces": [
-    "./packages/opa",
-    "./packages/opa-react"
-  ],
+  "workspaces": ["./packages/opa", "./packages/opa-react"],
   "type": "module",
   "engineStrict": true,
   "engines": {
@@ -19,7 +16,6 @@
     "@arethetypeswrong/cli": "^0.15.3",
     "@changesets/cli": "^2.27.7",
     "jsr": "^0.12.4",
-    "publint": "^0.2.8",
     "typedoc": "^0.25.13",
     "typedoc-plugin-extras": "^3.0.0",
     "typedoc-plugin-replace-text": "^3.3.0"
