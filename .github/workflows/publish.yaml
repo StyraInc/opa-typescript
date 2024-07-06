@@ -11,6 +11,9 @@ jobs:
   jsr:
     name: Publish @styra/opa to JSR
     runs-on: ubuntu-22.04
+    needs:
+      - release
+    if: contains(needs.release.outputs.publishedPackages.*.name, "@styra/opa")
     permissions:
       contents: read
       id-token: write # OIDC ID token for authentication with JSR
@@ -28,6 +31,7 @@ jobs:
     name: Release
     outputs:
       published: ${{ steps.changesets.outputs.published }}
+      publishedPackages: ${{ steps.changesets.outputs.publishedPackages  }}
     runs-on: ubuntu-22.04
     permissions:
       contents: write #  to create release (changesets/action)
