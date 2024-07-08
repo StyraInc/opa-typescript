@@ -4,7 +4,9 @@ import {
   type Result,
   type ToInput,
   type RequestOptions,
+  type BatchRequestOptions,
 } from "@styra/opa";
+import { type ServerError } from "@styra/opa/sdk/models/components";
 
 /** Abstracts the methods that are used from `OPAClient` of `@styra/opa`. */
 export interface SDK {
@@ -20,6 +22,13 @@ export interface SDK {
     input?: In,
     opts?: RequestOptions<Res>,
   ): Promise<Res>;
+
+  /** Evaluate a policy against a batch of inputs. */
+  evaluateBatch<In extends Input | ToInput, Res>(
+    path: string,
+    inputs: { [k: string]: In },
+    opts?: BatchRequestOptions<Res>,
+  ): Promise<{ [k: string]: Res | ServerError }>;
 }
 
 export type AuthzProviderContext = {
