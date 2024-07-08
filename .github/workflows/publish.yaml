@@ -69,7 +69,7 @@ jobs:
         run: build/opa-release-notes.sh > OPA_RELEASE_NOTES.md
         if: steps.opa_pkg.outputs.included == 'true'
         env:
-          VERSION: ${{ steps.opa_pkg.version }}
+          VERSION: ${{ steps.opa_pkg.outputs.version }}
 
       - name: Create @styra/opa GH release
         uses: softprops/action-gh-release@a74c6b72af54cfa997e81df42d94703d6313a2d0 # v2.0.6
