@@ -116,147 +116,6 @@ export class OpaApiClient extends ClientSDK {
     }
 
     /**
-     * Verify the server is operational
-     *
-     * @remarks
-     * The health API endpoint executes a simple built-in policy query to verify that the server is operational. Optionally it can account for bundle activation as well (useful for “ready” checks at startup).
-     */
-    async health(
-        bundles?: boolean | undefined,
-        plugins?: boolean | undefined,
-        excludePlugin?: Array<string> | undefined,
-        options?: RequestOptions
-    ): Promise<operations.HealthResponse> {
-        const input$: operations.HealthRequest = {
-            bundles: bundles,
-            plugins: plugins,
-            excludePlugin: excludePlugin,
-        };
-
-        const payload$ = schemas$.parse(
-            input$,
-            (value$) => operations.HealthRequest$.outboundSchema.parse(value$),
-            "Input validation failed"
-        );
-        const body$ = null;
-
-        const path$ = this.templateURLComponent("/health")();
-
-        const query$ = encodeFormQuery$({
-            bundles: payload$.bundles,
-            "exclude-plugin": payload$["exclude-plugin"],
-            plugins: payload$.plugins,
-        });
-
-        const headers$ = new Headers({
-            Accept: "application/json",
-        });
-
-        const context = { operationID: "health", oAuth2Scopes: [], securitySource: null };
-
-        const request$ = this.createRequest$(
-            context,
-            { method: "GET", path: path$, headers: headers$, query: query$, body: body$ },
-            options
-        );
-
-        const response = await this.do$(request$, { context, errorCodes: ["4XX", "500", "5XX"] });
-
-        const responseFields$ = {
-            HttpMeta: { Response: response, Request: request$ },
-        };
-
-        const [result$] = await this.matcher<operations.HealthResponse>()
-            .json(200, operations.HealthResponse$, { key: "HealthyServer" })
-            .json(500, errors.UnhealthyServer$, { err: true })
-            .fail(["4XX", "5XX"])
-            .match(response, request$, { extraFields: responseFields$ });
-
-        return result$;
-    }
-
-    /**
-     * Execute a policy given a batch of inputs
-     */
-    async executeBatchPolicyWithInput(
-        request: operations.ExecuteBatchPolicyWithInputRequest,
-        options?: RequestOptions
-    ): Promise<operations.ExecuteBatchPolicyWithInputResponse> {
-        const input$ = request;
-
-        const payload$ = schemas$.parse(
-            input$,
-            (value$) => operations.ExecuteBatchPolicyWithInputRequest$.outboundSchema.parse(value$),
-            "Input validation failed"
-        );
-        const body$ = encodeJSON$("body", payload$.RequestBody, { explode: true });
-
-        const pathParams$ = {
-            path: encodeSimple$("path", payload$.path, { explode: false, charEncoding: "percent" }),
-        };
-        const path$ = this.templateURLComponent("/v1/batch/data/{path}")(pathParams$);
-
-        const query$ = encodeFormQuery$({
-            explain: payload$.explain,
-            instrument: payload$.instrument,
-            metrics: payload$.metrics,
-            pretty: payload$.pretty,
-            provenance: payload$.provenance,
-            "strict-builtin-errors": payload$["strict-builtin-errors"],
-        });
-
-        const headers$ = new Headers({
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "Accept-Encoding": encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
-                explode: false,
-                charEncoding: "none",
-            }),
-            "Content-Encoding": encodeSimple$("Content-Encoding", payload$["Content-Encoding"], {
-                explode: false,
-                charEncoding: "none",
-            }),
-        });
-
-        const context = {
-            operationID: "executeBatchPolicyWithInput",
-            oAuth2Scopes: [],
-            securitySource: null,
-        };
-
-        const request$ = this.createRequest$(
-            context,
-            { method: "POST", path: path$, headers: headers$, query: query$, body: body$ },
-            options
-        );
-
-        const response = await this.do$(request$, {
-            context,
-            errorCodes: ["400", "4XX", "500", "5XX"],
-        });
-
-        const responseFields$ = {
-            HttpMeta: { Response: response, Request: request$ },
-        };
-
-        const [result$] = await this.matcher<operations.ExecuteBatchPolicyWithInputResponse>()
-            .json(200, operations.ExecuteBatchPolicyWithInputResponse$, {
-                hdrs: true,
-                key: "BatchSuccessfulPolicyEvaluation",
-            })
-            .json(207, operations.ExecuteBatchPolicyWithInputResponse$, {
-                hdrs: true,
-                key: "BatchMixedResults",
-            })
-            .json(400, errors.ClientError$, { err: true })
-            .json(500, errors.BatchServerError$, { err: true })
-            .fail(["4XX", "5XX"])
-            .match(response, request$, { extraFields: responseFields$ });
-
-        return result$;
-    }
-
-    /**
      * Execute a policy
      */
     async executePolicy(
@@ -395,6 +254,147 @@ export class OpaApiClient extends ClientSDK {
             })
             .json(400, errors.ClientError$, { err: true })
             .json(500, errors.ServerError$, { err: true })
+            .fail(["4XX", "5XX"])
+            .match(response, request$, { extraFields: responseFields$ });
+
+        return result$;
+    }
+
+    /**
+     * Execute a policy given a batch of inputs
+     */
+    async executeBatchPolicyWithInput(
+        request: operations.ExecuteBatchPolicyWithInputRequest,
+        options?: RequestOptions
+    ): Promise<operations.ExecuteBatchPolicyWithInputResponse> {
+        const input$ = request;
+
+        const payload$ = schemas$.parse(
+            input$,
+            (value$) => operations.ExecuteBatchPolicyWithInputRequest$.outboundSchema.parse(value$),
+            "Input validation failed"
+        );
+        const body$ = encodeJSON$("body", payload$.RequestBody, { explode: true });
+
+        const pathParams$ = {
+            path: encodeSimple$("path", payload$.path, { explode: false, charEncoding: "percent" }),
+        };
+        const path$ = this.templateURLComponent("/v1/batch/data/{path}")(pathParams$);
+
+        const query$ = encodeFormQuery$({
+            explain: payload$.explain,
+            instrument: payload$.instrument,
+            metrics: payload$.metrics,
+            pretty: payload$.pretty,
+            provenance: payload$.provenance,
+            "strict-builtin-errors": payload$["strict-builtin-errors"],
+        });
+
+        const headers$ = new Headers({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Accept-Encoding": encodeSimple$("Accept-Encoding", payload$["Accept-Encoding"], {
+                explode: false,
+                charEncoding: "none",
+            }),
+            "Content-Encoding": encodeSimple$("Content-Encoding", payload$["Content-Encoding"], {
+                explode: false,
+                charEncoding: "none",
+            }),
+        });
+
+        const context = {
+            operationID: "executeBatchPolicyWithInput",
+            oAuth2Scopes: [],
+            securitySource: null,
+        };
+
+        const request$ = this.createRequest$(
+            context,
+            { method: "POST", path: path$, headers: headers$, query: query$, body: body$ },
+            options
+        );
+
+        const response = await this.do$(request$, {
+            context,
+            errorCodes: ["400", "4XX", "500", "5XX"],
+        });
+
+        const responseFields$ = {
+            HttpMeta: { Response: response, Request: request$ },
+        };
+
+        const [result$] = await this.matcher<operations.ExecuteBatchPolicyWithInputResponse>()
+            .json(200, operations.ExecuteBatchPolicyWithInputResponse$, {
+                hdrs: true,
+                key: "BatchSuccessfulPolicyEvaluation",
+            })
+            .json(207, operations.ExecuteBatchPolicyWithInputResponse$, {
+                hdrs: true,
+                key: "BatchMixedResults",
+            })
+            .json(400, errors.ClientError$, { err: true })
+            .json(500, errors.BatchServerError$, { err: true })
+            .fail(["4XX", "5XX"])
+            .match(response, request$, { extraFields: responseFields$ });
+
+        return result$;
+    }
+
+    /**
+     * Verify the server is operational
+     *
+     * @remarks
+     * The health API endpoint executes a simple built-in policy query to verify that the server is operational. Optionally it can account for bundle activation as well (useful for “ready” checks at startup).
+     */
+    async health(
+        bundles?: boolean | undefined,
+        plugins?: boolean | undefined,
+        excludePlugin?: Array<string> | undefined,
+        options?: RequestOptions
+    ): Promise<operations.HealthResponse> {
+        const input$: operations.HealthRequest = {
+            bundles: bundles,
+            plugins: plugins,
+            excludePlugin: excludePlugin,
+        };
+
+        const payload$ = schemas$.parse(
+            input$,
+            (value$) => operations.HealthRequest$.outboundSchema.parse(value$),
+            "Input validation failed"
+        );
+        const body$ = null;
+
+        const path$ = this.templateURLComponent("/health")();
+
+        const query$ = encodeFormQuery$({
+            bundles: payload$.bundles,
+            "exclude-plugin": payload$["exclude-plugin"],
+            plugins: payload$.plugins,
+        });
+
+        const headers$ = new Headers({
+            Accept: "application/json",
+        });
+
+        const context = { operationID: "health", oAuth2Scopes: [], securitySource: null };
+
+        const request$ = this.createRequest$(
+            context,
+            { method: "GET", path: path$, headers: headers$, query: query$, body: body$ },
+            options
+        );
+
+        const response = await this.do$(request$, { context, errorCodes: ["4XX", "500", "5XX"] });
+
+        const responseFields$ = {
+            HttpMeta: { Response: response, Request: request$ },
+        };
+
+        const [result$] = await this.matcher<operations.HealthResponse>()
+            .json(200, operations.HealthResponse$, { key: "HealthyServer" })
+            .json(500, errors.UnhealthyServer$, { err: true })
             .fail(["4XX", "5XX"])
             .match(response, request$, { extraFields: responseFields$ });
 

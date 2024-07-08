@@ -9,31 +9,31 @@ import * as z from "zod";
 
 export type SuccessfulPolicyResponse = {
     /**
-     * If decision logging is enabled, this field contains a string that uniquely identifies the decision. The identifier will be included in the decision log event for this decision. Callers can use the identifier for correlation purposes.
+     * The base or virtual document referred to by the URL path. If the path is undefined, this key will be omitted.
      */
-    decisionId?: string | undefined;
+    result?: Result | undefined;
     /**
      * If query metrics are enabled, this field contains query performance metrics collected during the parse, compile, and evaluation steps.
      */
     metrics?: { [k: string]: any } | undefined;
     /**
+     * If decision logging is enabled, this field contains a string that uniquely identifies the decision. The identifier will be included in the decision log event for this decision. Callers can use the identifier for correlation purposes.
+     */
+    decisionId?: string | undefined;
+    /**
      * Provenance information can be requested on individual API calls and are returned inline with the API response. To obtain provenance information on an API call, specify the `provenance=true` query parameter when executing the API call.
      */
     provenance?: Provenance | undefined;
-    /**
-     * The base or virtual document referred to by the URL path. If the path is undefined, this key will be omitted.
-     */
-    result?: Result | undefined;
 };
 
 /** @internal */
 export namespace SuccessfulPolicyResponse$ {
     export const inboundSchema: z.ZodType<SuccessfulPolicyResponse, z.ZodTypeDef, unknown> = z
         .object({
-            decision_id: z.string().optional(),
-            metrics: z.record(z.any()).optional(),
-            provenance: Provenance$.inboundSchema.optional(),
             result: Result$.inboundSchema.optional(),
+            metrics: z.record(z.any()).optional(),
+            decision_id: z.string().optional(),
+            provenance: Provenance$.inboundSchema.optional(),
         })
         .transform((v) => {
             return remap$(v, {
@@ -42,18 +42,18 @@ export namespace SuccessfulPolicyResponse$ {
         });
 
     export type Outbound = {
-        decision_id?: string | undefined;
-        metrics?: { [k: string]: any } | undefined;
-        provenance?: Provenance$.Outbound | undefined;
         result?: Result$.Outbound | undefined;
+        metrics?: { [k: string]: any } | undefined;
+        decision_id?: string | undefined;
+        provenance?: Provenance$.Outbound | undefined;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, SuccessfulPolicyResponse> = z
         .object({
-            decisionId: z.string().optional(),
-            metrics: z.record(z.any()).optional(),
-            provenance: Provenance$.outboundSchema.optional(),
             result: Result$.outboundSchema.optional(),
+            metrics: z.record(z.any()).optional(),
+            decisionId: z.string().optional(),
+            provenance: Provenance$.outboundSchema.optional(),
         })
         .transform((v) => {
             return remap$(v, {

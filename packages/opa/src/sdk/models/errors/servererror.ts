@@ -6,15 +6,15 @@ import { remap as remap$ } from "../../../lib/primitives.js";
 import * as z from "zod";
 
 export type ServerErrorLocation = {
-    col: number;
     file: string;
     row: number;
+    col: number;
 };
 
 export type ServerErrorErrors = {
     code: string;
-    location?: ServerErrorLocation | undefined;
     message: string;
+    location?: ServerErrorLocation | undefined;
 };
 
 /**
@@ -22,9 +22,9 @@ export type ServerErrorErrors = {
  */
 export type ServerErrorData = {
     code: string;
-    decisionId?: string | undefined;
-    errors?: Array<ServerErrorErrors> | undefined;
     message: string;
+    errors?: Array<ServerErrorErrors> | undefined;
+    decisionId?: string | undefined;
 };
 
 /**
@@ -32,8 +32,8 @@ export type ServerErrorData = {
  */
 export class ServerError extends Error {
     code: string;
-    decisionId?: string | undefined;
     errors?: Array<ServerErrorErrors> | undefined;
+    decisionId?: string | undefined;
 
     /** The original data that was passed to this error instance. */
     data$: ServerErrorData;
@@ -43,11 +43,11 @@ export class ServerError extends Error {
         this.data$ = err;
 
         this.code = err.code;
-        if (err.decisionId != null) {
-            this.decisionId = err.decisionId;
-        }
         if (err.errors != null) {
             this.errors = err.errors;
+        }
+        if (err.decisionId != null) {
+            this.decisionId = err.decisionId;
         }
 
         this.message =
@@ -62,21 +62,21 @@ export class ServerError extends Error {
 /** @internal */
 export namespace ServerErrorLocation$ {
     export const inboundSchema: z.ZodType<ServerErrorLocation, z.ZodTypeDef, unknown> = z.object({
-        col: z.number().int(),
         file: z.string(),
         row: z.number().int(),
+        col: z.number().int(),
     });
 
     export type Outbound = {
-        col: number;
         file: string;
         row: number;
+        col: number;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ServerErrorLocation> = z.object({
-        col: z.number().int(),
         file: z.string(),
         row: z.number().int(),
+        col: z.number().int(),
     });
 }
 
@@ -84,20 +84,20 @@ export namespace ServerErrorLocation$ {
 export namespace ServerErrorErrors$ {
     export const inboundSchema: z.ZodType<ServerErrorErrors, z.ZodTypeDef, unknown> = z.object({
         code: z.string(),
-        location: z.lazy(() => ServerErrorLocation$.inboundSchema).optional(),
         message: z.string(),
+        location: z.lazy(() => ServerErrorLocation$.inboundSchema).optional(),
     });
 
     export type Outbound = {
         code: string;
-        location?: ServerErrorLocation$.Outbound | undefined;
         message: string;
+        location?: ServerErrorLocation$.Outbound | undefined;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ServerErrorErrors> = z.object({
         code: z.string(),
-        location: z.lazy(() => ServerErrorLocation$.outboundSchema).optional(),
         message: z.string(),
+        location: z.lazy(() => ServerErrorLocation$.outboundSchema).optional(),
     });
 }
 
@@ -106,9 +106,9 @@ export namespace ServerError$ {
     export const inboundSchema: z.ZodType<ServerError, z.ZodTypeDef, unknown> = z
         .object({
             code: z.string(),
-            decision_id: z.string().optional(),
-            errors: z.array(z.lazy(() => ServerErrorErrors$.inboundSchema)).optional(),
             message: z.string(),
+            errors: z.array(z.lazy(() => ServerErrorErrors$.inboundSchema)).optional(),
+            decision_id: z.string().optional(),
         })
         .transform((v) => {
             const remapped = remap$(v, {
@@ -120,9 +120,9 @@ export namespace ServerError$ {
 
     export type Outbound = {
         code: string;
-        decision_id?: string | undefined;
-        errors?: Array<ServerErrorErrors$.Outbound> | undefined;
         message: string;
+        errors?: Array<ServerErrorErrors$.Outbound> | undefined;
+        decision_id?: string | undefined;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ServerError> = z
@@ -132,9 +132,9 @@ export namespace ServerError$ {
             z
                 .object({
                     code: z.string(),
-                    decisionId: z.string().optional(),
-                    errors: z.array(z.lazy(() => ServerErrorErrors$.outboundSchema)).optional(),
                     message: z.string(),
+                    errors: z.array(z.lazy(() => ServerErrorErrors$.outboundSchema)).optional(),
+                    decisionId: z.string().optional(),
                 })
                 .transform((v) => {
                     return remap$(v, {

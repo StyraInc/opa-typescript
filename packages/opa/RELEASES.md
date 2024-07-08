@@ -374,3 +374,11 @@ This is the first time we ship a dual-build package featuring ESM and CommonJS.
 
 ### Generated
 - [typescript v1.2.2] packages/opa
+
+## 2024-07-08 00:20:46
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.327.0 (2.359.6) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v1.2.3] packages/opa
