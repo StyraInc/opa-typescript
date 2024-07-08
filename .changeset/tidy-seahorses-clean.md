@@ -4,8 +4,8 @@
 
 expose AuthzContext
 
-The prepared `sdk` instance of `AuthzProvider` can now be retrieve
-from any componets wrapped into `AuthzProvider`. For example:
+The prepared `sdk` instance of `AuthzProvider` can now be retrieved
+from any components wrapped into `AuthzProvider`. For example:
 
 ```tsx
 import { AuthzContext } from "@styra/opa-react";
