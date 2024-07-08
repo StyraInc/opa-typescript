@@ -19,5 +19,5 @@ jobs:
           node-version: 21
       - name: publish @styra/opa to JSR
         run: |
-          npm ci
+          npm ci --foreground-scripts
           npx -w packages/opa jsr publish

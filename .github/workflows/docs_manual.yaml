@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 21
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --foreground-scripts
       - name: Generate docs
         run: npm run docs
       - name: Upload artifact
