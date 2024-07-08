@@ -66,12 +66,10 @@ jobs:
           PP: ${{ steps.changesets.outputs.publishedPackages }}
 
       - name: Generate @styra/opa GH release notes
-        # This takes the last block (by record separator "\n## ") and removes the first line (timestamp)
-        run: |
-          awk 'BEGIN { RS="\n## "} END { print $0 }' packages/opa/RELEASES.md | tail +2 > OPA_RELEASE_NOTES.md
-          echo "\n- [NPM ${{ steps.opa_pkg.version }}](https://www.npmjs.com/package/@styra/opa/v/${{ steps.opa_pkg.version }})" >> OPA_RELEASE_NOTES.md
-          cat OPA_RELEASE_NOTES.md
+        run: build/opa-release-notes.sh > OPA_RELEASE_NOTES.md
         if: steps.opa_pkg.outputs.included == 'true'
+        env:
+          VERSION: ${{ steps.opa_pkg.version }}
 
       - name: Create @styra/opa GH release
         uses: softprops/action-gh-release@a74c6b72af54cfa997e81df42d94703d6313a2d0 # v2.0.6
