@@ -1,0 +1,23 @@
+name: JSR (Manual)
+
+on:
+  workflow_dispatch: {}
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  jsr:
+    name: Publish @styra/opa to JSR
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      id-token: write # OIDC ID token for authentication with JSR
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 21
+      - name: publish @styra/opa to JSR
+        run: |
+          npm ci
+          npx -w packages/opa jsr publish
