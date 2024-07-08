@@ -9,25 +9,17 @@
   "description": "Styra-supported React hooks and components for frontend authorization based on @styra/opa",
   "scripts": {
     "clean": "rm -rf ./dist/*",
-    "build": "npm run build:cjs && npm run build:esm",
-    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --verbatimModuleSyntax false --moduleResolution node10 --outDir ./dist/cjs --declaration --declarationDir ./dist/cjs && echo >./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
-    "build:esm": "tsc --project tsconfig.build.json --outDir ./dist/esm --declaration --declarationDir ./dist/esm",
+    "build": "tshy",
+    "prepare": "npm run build",
     "attw": "attw --pack",
     "test": "vitest",
     "docs": "typedoc --out docs"
   },
+  "files": [
+    "dist"
+  ],
   "author": "Styra Inc.",
   "license": "Apache-2.0",
-  "type": "module",
-  "sideEffects": false,
-  "main": "./dist/cjs/index.js",
-  "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "browser": "./dist/cjs/index.js"
-    }
-  },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
@@ -36,6 +28,7 @@
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.3.0",
     "jsdom": "^24.1.0",
+    "tshy": "^2.0.1",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.14.1",
     "vitest": "^1.6.0"
@@ -61,5 +54,28 @@
     "rbac",
     "role based access control",
     "react"
-  ]
+  ],
+  "type": "module",
+  "tshy": {
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    }
+  },
+  "main": "./dist/commonjs/index.js",
+  "types": "./dist/commonjs/index.d.ts",
+  "module": "./dist/esm/index.js"
 }
