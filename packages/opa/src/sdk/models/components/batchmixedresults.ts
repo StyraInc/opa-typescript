@@ -8,42 +8,42 @@ import { Result, Result$ } from "./result.js";
 import * as z from "zod";
 
 export type Location = {
-    col: number;
     file: string;
     row: number;
+    col: number;
 };
 
 export type Errors = {
     code: string;
-    location?: Location | undefined;
     message: string;
+    location?: Location | undefined;
 };
 
 export type ServerError = {
     code: string;
-    decisionId?: string | undefined;
-    errors?: Array<Errors> | undefined;
     message: string;
+    errors?: Array<Errors> | undefined;
+    decisionId?: string | undefined;
     httpStatusCode?: string | undefined;
 };
 
 export type ResponsesSuccessfulPolicyResponse = {
     /**
-     * If decision logging is enabled, this field contains a string that uniquely identifies the decision. The identifier will be included in the decision log event for this decision. Callers can use the identifier for correlation purposes.
+     * The base or virtual document referred to by the URL path. If the path is undefined, this key will be omitted.
      */
-    decisionId?: string | undefined;
+    result?: Result | undefined;
     /**
      * If query metrics are enabled, this field contains query performance metrics collected during the parse, compile, and evaluation steps.
      */
     metrics?: { [k: string]: any } | undefined;
     /**
+     * If decision logging is enabled, this field contains a string that uniquely identifies the decision. The identifier will be included in the decision log event for this decision. Callers can use the identifier for correlation purposes.
+     */
+    decisionId?: string | undefined;
+    /**
      * Provenance information can be requested on individual API calls and are returned inline with the API response. To obtain provenance information on an API call, specify the `provenance=true` query parameter when executing the API call.
      */
     provenance?: Provenance | undefined;
-    /**
-     * The base or virtual document referred to by the URL path. If the path is undefined, this key will be omitted.
-     */
-    result?: Result | undefined;
     httpStatusCode?: string | undefined;
 };
 
@@ -69,21 +69,21 @@ export type BatchMixedResults = {
 /** @internal */
 export namespace Location$ {
     export const inboundSchema: z.ZodType<Location, z.ZodTypeDef, unknown> = z.object({
-        col: z.number().int(),
         file: z.string(),
         row: z.number().int(),
+        col: z.number().int(),
     });
 
     export type Outbound = {
-        col: number;
         file: string;
         row: number;
+        col: number;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Location> = z.object({
-        col: z.number().int(),
         file: z.string(),
         row: z.number().int(),
+        col: z.number().int(),
     });
 }
 
@@ -91,20 +91,20 @@ export namespace Location$ {
 export namespace Errors$ {
     export const inboundSchema: z.ZodType<Errors, z.ZodTypeDef, unknown> = z.object({
         code: z.string(),
-        location: z.lazy(() => Location$.inboundSchema).optional(),
         message: z.string(),
+        location: z.lazy(() => Location$.inboundSchema).optional(),
     });
 
     export type Outbound = {
         code: string;
-        location?: Location$.Outbound | undefined;
         message: string;
+        location?: Location$.Outbound | undefined;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Errors> = z.object({
         code: z.string(),
-        location: z.lazy(() => Location$.outboundSchema).optional(),
         message: z.string(),
+        location: z.lazy(() => Location$.outboundSchema).optional(),
     });
 }
 
@@ -113,9 +113,9 @@ export namespace ServerError$ {
     export const inboundSchema: z.ZodType<ServerError, z.ZodTypeDef, unknown> = z
         .object({
             code: z.string(),
-            decision_id: z.string().optional(),
-            errors: z.array(z.lazy(() => Errors$.inboundSchema)).optional(),
             message: z.string(),
+            errors: z.array(z.lazy(() => Errors$.inboundSchema)).optional(),
+            decision_id: z.string().optional(),
             http_status_code: z.string().optional(),
         })
         .transform((v) => {
@@ -127,18 +127,18 @@ export namespace ServerError$ {
 
     export type Outbound = {
         code: string;
-        decision_id?: string | undefined;
-        errors?: Array<Errors$.Outbound> | undefined;
         message: string;
+        errors?: Array<Errors$.Outbound> | undefined;
+        decision_id?: string | undefined;
         http_status_code?: string | undefined;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ServerError> = z
         .object({
             code: z.string(),
-            decisionId: z.string().optional(),
-            errors: z.array(z.lazy(() => Errors$.outboundSchema)).optional(),
             message: z.string(),
+            errors: z.array(z.lazy(() => Errors$.outboundSchema)).optional(),
+            decisionId: z.string().optional(),
             httpStatusCode: z.string().optional(),
         })
         .transform((v) => {
@@ -157,10 +157,10 @@ export namespace ResponsesSuccessfulPolicyResponse$ {
         unknown
     > = z
         .object({
-            decision_id: z.string().optional(),
-            metrics: z.record(z.any()).optional(),
-            provenance: Provenance$.inboundSchema.optional(),
             result: Result$.inboundSchema.optional(),
+            metrics: z.record(z.any()).optional(),
+            decision_id: z.string().optional(),
+            provenance: Provenance$.inboundSchema.optional(),
             http_status_code: z.string().optional(),
         })
         .transform((v) => {
@@ -171,10 +171,10 @@ export namespace ResponsesSuccessfulPolicyResponse$ {
         });
 
     export type Outbound = {
-        decision_id?: string | undefined;
-        metrics?: { [k: string]: any } | undefined;
-        provenance?: Provenance$.Outbound | undefined;
         result?: Result$.Outbound | undefined;
+        metrics?: { [k: string]: any } | undefined;
+        decision_id?: string | undefined;
+        provenance?: Provenance$.Outbound | undefined;
         http_status_code?: string | undefined;
     };
 
@@ -184,10 +184,10 @@ export namespace ResponsesSuccessfulPolicyResponse$ {
         ResponsesSuccessfulPolicyResponse
     > = z
         .object({
-            decisionId: z.string().optional(),
-            metrics: z.record(z.any()).optional(),
-            provenance: Provenance$.outboundSchema.optional(),
             result: Result$.outboundSchema.optional(),
+            metrics: z.record(z.any()).optional(),
+            decisionId: z.string().optional(),
+            provenance: Provenance$.outboundSchema.optional(),
             httpStatusCode: z.string().optional(),
         })
         .transform((v) => {

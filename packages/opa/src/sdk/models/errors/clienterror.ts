@@ -5,15 +5,15 @@
 import * as z from "zod";
 
 export type Location = {
-    col: number;
     file: string;
     row: number;
+    col: number;
 };
 
 export type Errors = {
     code: string;
-    location?: Location | undefined;
     message: string;
+    location?: Location | undefined;
 };
 
 /**
@@ -21,8 +21,8 @@ export type Errors = {
  */
 export type ClientErrorData = {
     code: string;
-    errors?: Array<Errors> | undefined;
     message: string;
+    errors?: Array<Errors> | undefined;
 };
 
 /**
@@ -56,21 +56,21 @@ export class ClientError extends Error {
 /** @internal */
 export namespace Location$ {
     export const inboundSchema: z.ZodType<Location, z.ZodTypeDef, unknown> = z.object({
-        col: z.number().int(),
         file: z.string(),
         row: z.number().int(),
+        col: z.number().int(),
     });
 
     export type Outbound = {
-        col: number;
         file: string;
         row: number;
+        col: number;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Location> = z.object({
-        col: z.number().int(),
         file: z.string(),
         row: z.number().int(),
+        col: z.number().int(),
     });
 }
 
@@ -78,20 +78,20 @@ export namespace Location$ {
 export namespace Errors$ {
     export const inboundSchema: z.ZodType<Errors, z.ZodTypeDef, unknown> = z.object({
         code: z.string(),
-        location: z.lazy(() => Location$.inboundSchema).optional(),
         message: z.string(),
+        location: z.lazy(() => Location$.inboundSchema).optional(),
     });
 
     export type Outbound = {
         code: string;
-        location?: Location$.Outbound | undefined;
         message: string;
+        location?: Location$.Outbound | undefined;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Errors> = z.object({
         code: z.string(),
-        location: z.lazy(() => Location$.outboundSchema).optional(),
         message: z.string(),
+        location: z.lazy(() => Location$.outboundSchema).optional(),
     });
 }
 
@@ -100,8 +100,8 @@ export namespace ClientError$ {
     export const inboundSchema: z.ZodType<ClientError, z.ZodTypeDef, unknown> = z
         .object({
             code: z.string(),
-            errors: z.array(z.lazy(() => Errors$.inboundSchema)).optional(),
             message: z.string(),
+            errors: z.array(z.lazy(() => Errors$.inboundSchema)).optional(),
         })
         .transform((v) => {
             return new ClientError(v);
@@ -109,8 +109,8 @@ export namespace ClientError$ {
 
     export type Outbound = {
         code: string;
-        errors?: Array<Errors$.Outbound> | undefined;
         message: string;
+        errors?: Array<Errors$.Outbound> | undefined;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ClientError> = z
@@ -119,8 +119,8 @@ export namespace ClientError$ {
         .pipe(
             z.object({
                 code: z.string(),
-                errors: z.array(z.lazy(() => Errors$.outboundSchema)).optional(),
                 message: z.string(),
+                errors: z.array(z.lazy(() => Errors$.outboundSchema)).optional(),
             })
         );
 }

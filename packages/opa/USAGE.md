@@ -26,12 +26,10 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-    const result = await opaApiClient.executeBatchPolicyWithInput({
+    const result = await opaApiClient.executePolicyWithInput({
         path: "app/rbac",
         requestBody: {
-            inputs: {
-                key: "<value>",
-            },
+            input: false,
         },
     });
 
@@ -49,10 +47,12 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-    const result = await opaApiClient.executePolicyWithInput({
+    const result = await opaApiClient.executeBatchPolicyWithInput({
         path: "app/rbac",
         requestBody: {
-            input: false,
+            inputs: {
+                key: "<value>",
+            },
         },
     });
 
