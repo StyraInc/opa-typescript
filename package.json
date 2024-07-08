@@ -5,7 +5,10 @@
     "docs": "typedoc"
   },
   "private": true,
-  "workspaces": ["./packages/opa", "./packages/opa-react"],
+  "workspaces": [
+    "./packages/opa",
+    "./packages/opa-react"
+  ],
   "type": "module",
   "engineStrict": true,
   "engines": {
