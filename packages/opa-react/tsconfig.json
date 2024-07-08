@@ -1,9 +1,8 @@
 {
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "allowSyntheticDefaultImports": true,
-    "types": ["vitest/globals"]
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
   }
 }

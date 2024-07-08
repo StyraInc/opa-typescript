@@ -27,8 +27,9 @@ jobs:
         with:
           node-version: "21.x"
       - id: workspaces
+        # https://github.com/npm/cli/issues/3034#issuecomment-885211061
         run: |
-          npm ci
+          npm ci --foreground-scripts
           echo packages=$(npm query .workspace | jq -c '[.[].location]') >> $GITHUB_OUTPUT
 
   packages:
@@ -49,8 +50,9 @@ jobs:
         with:
           node-version: "21.x"
       - name: setup and build
+        # https://github.com/npm/cli/issues/3034#issuecomment-885211061
         run: |
-          npm ci
+          npm ci --foreground-scripts
           npm run -w ${{ matrix.pkg }} build
       - name: test
         run: npx -w ${{ matrix.pkg }} tsx --test ./tests/**/*.ts

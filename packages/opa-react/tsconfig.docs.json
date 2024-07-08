@@ -1,0 +1,10 @@
+{
+  "include": ["src/**/*.ts"],
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2022",
+    "rootDir": "src",
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
+  }
+}
