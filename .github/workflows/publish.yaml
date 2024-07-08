@@ -24,7 +24,7 @@ jobs:
           node-version: 21
       - name: publish @styra/opa to JSR
         run: |
-          npm ci
+          npm ci --foreground-scripts
           npx -w packages/opa jsr publish
 
   release:
@@ -45,7 +45,7 @@ jobs:
           node-version: 21
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm ci --foreground-scripts
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
@@ -97,7 +97,7 @@ jobs:
         with:
           node-version: 21
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --foreground-scripts
       - name: Generate docs
         run: npm run docs
       - name: Upload artifact
