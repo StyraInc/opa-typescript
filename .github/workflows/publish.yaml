@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - release
-    if: contains(needs.release.outputs.publishedPackages.*.name, "@styra/opa")
+    if: ${{ contains(needs.release.outputs.publishedPackages.*.name, "@styra/opa") }}
     permissions:
       contents: read
       id-token: write # OIDC ID token for authentication with JSR
