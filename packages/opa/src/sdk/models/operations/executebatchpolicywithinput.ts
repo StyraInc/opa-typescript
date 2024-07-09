@@ -74,146 +74,185 @@ export type ExecuteBatchPolicyWithInputResponse = {
 };
 
 /** @internal */
+export const ExecuteBatchPolicyWithInputRequestBody$inboundSchema: z.ZodType<
+    ExecuteBatchPolicyWithInputRequestBody,
+    z.ZodTypeDef,
+    unknown
+> = z.object({
+    inputs: z.record(components.Input$inboundSchema),
+});
+
+/** @internal */
+export type ExecuteBatchPolicyWithInputRequestBody$Outbound = {
+    inputs: { [k: string]: components.Input$Outbound };
+};
+
+/** @internal */
+export const ExecuteBatchPolicyWithInputRequestBody$outboundSchema: z.ZodType<
+    ExecuteBatchPolicyWithInputRequestBody$Outbound,
+    z.ZodTypeDef,
+    ExecuteBatchPolicyWithInputRequestBody
+> = z.object({
+    inputs: z.record(components.Input$outboundSchema),
+});
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ExecuteBatchPolicyWithInputRequestBody$ {
-    export const inboundSchema: z.ZodType<
-        ExecuteBatchPolicyWithInputRequestBody,
-        z.ZodTypeDef,
-        unknown
-    > = z.object({
-        inputs: z.record(components.Input$.inboundSchema),
-    });
-
-    export type Outbound = {
-        inputs: { [k: string]: components.Input$.Outbound };
-    };
-
-    export const outboundSchema: z.ZodType<
-        Outbound,
-        z.ZodTypeDef,
-        ExecuteBatchPolicyWithInputRequestBody
-    > = z.object({
-        inputs: z.record(components.Input$.outboundSchema),
-    });
+    /** @deprecated use `ExecuteBatchPolicyWithInputRequestBody$inboundSchema` instead. */
+    export const inboundSchema = ExecuteBatchPolicyWithInputRequestBody$inboundSchema;
+    /** @deprecated use `ExecuteBatchPolicyWithInputRequestBody$outboundSchema` instead. */
+    export const outboundSchema = ExecuteBatchPolicyWithInputRequestBody$outboundSchema;
+    /** @deprecated use `ExecuteBatchPolicyWithInputRequestBody$Outbound` instead. */
+    export type Outbound = ExecuteBatchPolicyWithInputRequestBody$Outbound;
 }
 
 /** @internal */
+export const ExecuteBatchPolicyWithInputRequest$inboundSchema: z.ZodType<
+    ExecuteBatchPolicyWithInputRequest,
+    z.ZodTypeDef,
+    unknown
+> = z
+    .object({
+        path: z.string().default(""),
+        "Content-Encoding": components.GzipContentEncoding$inboundSchema.optional(),
+        "Accept-Encoding": components.GzipAcceptEncoding$inboundSchema.optional(),
+        pretty: z.boolean().optional(),
+        provenance: z.boolean().optional(),
+        explain: components.Explain$inboundSchema.optional(),
+        metrics: z.boolean().optional(),
+        instrument: z.boolean().optional(),
+        "strict-builtin-errors": z.boolean().optional(),
+        RequestBody: z.lazy(() => ExecuteBatchPolicyWithInputRequestBody$inboundSchema),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            "Content-Encoding": "contentEncoding",
+            "Accept-Encoding": "acceptEncoding",
+            "strict-builtin-errors": "strictBuiltinErrors",
+            RequestBody: "requestBody",
+        });
+    });
+
+/** @internal */
+export type ExecuteBatchPolicyWithInputRequest$Outbound = {
+    path: string;
+    "Content-Encoding"?: string | undefined;
+    "Accept-Encoding"?: string | undefined;
+    pretty?: boolean | undefined;
+    provenance?: boolean | undefined;
+    explain?: string | undefined;
+    metrics?: boolean | undefined;
+    instrument?: boolean | undefined;
+    "strict-builtin-errors"?: boolean | undefined;
+    RequestBody: ExecuteBatchPolicyWithInputRequestBody$Outbound;
+};
+
+/** @internal */
+export const ExecuteBatchPolicyWithInputRequest$outboundSchema: z.ZodType<
+    ExecuteBatchPolicyWithInputRequest$Outbound,
+    z.ZodTypeDef,
+    ExecuteBatchPolicyWithInputRequest
+> = z
+    .object({
+        path: z.string().default(""),
+        contentEncoding: components.GzipContentEncoding$outboundSchema.optional(),
+        acceptEncoding: components.GzipAcceptEncoding$outboundSchema.optional(),
+        pretty: z.boolean().optional(),
+        provenance: z.boolean().optional(),
+        explain: components.Explain$outboundSchema.optional(),
+        metrics: z.boolean().optional(),
+        instrument: z.boolean().optional(),
+        strictBuiltinErrors: z.boolean().optional(),
+        requestBody: z.lazy(() => ExecuteBatchPolicyWithInputRequestBody$outboundSchema),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            contentEncoding: "Content-Encoding",
+            acceptEncoding: "Accept-Encoding",
+            strictBuiltinErrors: "strict-builtin-errors",
+            requestBody: "RequestBody",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ExecuteBatchPolicyWithInputRequest$ {
-    export const inboundSchema: z.ZodType<
-        ExecuteBatchPolicyWithInputRequest,
-        z.ZodTypeDef,
-        unknown
-    > = z
-        .object({
-            path: z.string().default(""),
-            "Content-Encoding": components.GzipContentEncoding$.inboundSchema.optional(),
-            "Accept-Encoding": components.GzipAcceptEncoding$.inboundSchema.optional(),
-            pretty: z.boolean().optional(),
-            provenance: z.boolean().optional(),
-            explain: components.Explain$.inboundSchema.optional(),
-            metrics: z.boolean().optional(),
-            instrument: z.boolean().optional(),
-            "strict-builtin-errors": z.boolean().optional(),
-            RequestBody: z.lazy(() => ExecuteBatchPolicyWithInputRequestBody$.inboundSchema),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                "Content-Encoding": "contentEncoding",
-                "Accept-Encoding": "acceptEncoding",
-                "strict-builtin-errors": "strictBuiltinErrors",
-                RequestBody: "requestBody",
-            });
-        });
-
-    export type Outbound = {
-        path: string;
-        "Content-Encoding"?: string | undefined;
-        "Accept-Encoding"?: string | undefined;
-        pretty?: boolean | undefined;
-        provenance?: boolean | undefined;
-        explain?: string | undefined;
-        metrics?: boolean | undefined;
-        instrument?: boolean | undefined;
-        "strict-builtin-errors"?: boolean | undefined;
-        RequestBody: ExecuteBatchPolicyWithInputRequestBody$.Outbound;
-    };
-
-    export const outboundSchema: z.ZodType<
-        Outbound,
-        z.ZodTypeDef,
-        ExecuteBatchPolicyWithInputRequest
-    > = z
-        .object({
-            path: z.string().default(""),
-            contentEncoding: components.GzipContentEncoding$.outboundSchema.optional(),
-            acceptEncoding: components.GzipAcceptEncoding$.outboundSchema.optional(),
-            pretty: z.boolean().optional(),
-            provenance: z.boolean().optional(),
-            explain: components.Explain$.outboundSchema.optional(),
-            metrics: z.boolean().optional(),
-            instrument: z.boolean().optional(),
-            strictBuiltinErrors: z.boolean().optional(),
-            requestBody: z.lazy(() => ExecuteBatchPolicyWithInputRequestBody$.outboundSchema),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                contentEncoding: "Content-Encoding",
-                acceptEncoding: "Accept-Encoding",
-                strictBuiltinErrors: "strict-builtin-errors",
-                requestBody: "RequestBody",
-            });
-        });
+    /** @deprecated use `ExecuteBatchPolicyWithInputRequest$inboundSchema` instead. */
+    export const inboundSchema = ExecuteBatchPolicyWithInputRequest$inboundSchema;
+    /** @deprecated use `ExecuteBatchPolicyWithInputRequest$outboundSchema` instead. */
+    export const outboundSchema = ExecuteBatchPolicyWithInputRequest$outboundSchema;
+    /** @deprecated use `ExecuteBatchPolicyWithInputRequest$Outbound` instead. */
+    export type Outbound = ExecuteBatchPolicyWithInputRequest$Outbound;
 }
 
 /** @internal */
+export const ExecuteBatchPolicyWithInputResponse$inboundSchema: z.ZodType<
+    ExecuteBatchPolicyWithInputResponse,
+    z.ZodTypeDef,
+    unknown
+> = z
+    .object({
+        HttpMeta: components.HTTPMetadata$inboundSchema,
+        BatchSuccessfulPolicyEvaluation:
+            components.BatchSuccessfulPolicyEvaluation$inboundSchema.optional(),
+        BatchMixedResults: components.BatchMixedResults$inboundSchema.optional(),
+        Headers: z.record(z.array(z.string())),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            HttpMeta: "httpMeta",
+            BatchSuccessfulPolicyEvaluation: "batchSuccessfulPolicyEvaluation",
+            BatchMixedResults: "batchMixedResults",
+            Headers: "headers",
+        });
+    });
+
+/** @internal */
+export type ExecuteBatchPolicyWithInputResponse$Outbound = {
+    HttpMeta: components.HTTPMetadata$Outbound;
+    BatchSuccessfulPolicyEvaluation?:
+        | components.BatchSuccessfulPolicyEvaluation$Outbound
+        | undefined;
+    BatchMixedResults?: components.BatchMixedResults$Outbound | undefined;
+    Headers: { [k: string]: Array<string> };
+};
+
+/** @internal */
+export const ExecuteBatchPolicyWithInputResponse$outboundSchema: z.ZodType<
+    ExecuteBatchPolicyWithInputResponse$Outbound,
+    z.ZodTypeDef,
+    ExecuteBatchPolicyWithInputResponse
+> = z
+    .object({
+        httpMeta: components.HTTPMetadata$outboundSchema,
+        batchSuccessfulPolicyEvaluation:
+            components.BatchSuccessfulPolicyEvaluation$outboundSchema.optional(),
+        batchMixedResults: components.BatchMixedResults$outboundSchema.optional(),
+        headers: z.record(z.array(z.string())),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            httpMeta: "HttpMeta",
+            batchSuccessfulPolicyEvaluation: "BatchSuccessfulPolicyEvaluation",
+            batchMixedResults: "BatchMixedResults",
+            headers: "Headers",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ExecuteBatchPolicyWithInputResponse$ {
-    export const inboundSchema: z.ZodType<
-        ExecuteBatchPolicyWithInputResponse,
-        z.ZodTypeDef,
-        unknown
-    > = z
-        .object({
-            HttpMeta: components.HTTPMetadata$.inboundSchema,
-            BatchSuccessfulPolicyEvaluation:
-                components.BatchSuccessfulPolicyEvaluation$.inboundSchema.optional(),
-            BatchMixedResults: components.BatchMixedResults$.inboundSchema.optional(),
-            Headers: z.record(z.array(z.string())),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                HttpMeta: "httpMeta",
-                BatchSuccessfulPolicyEvaluation: "batchSuccessfulPolicyEvaluation",
-                BatchMixedResults: "batchMixedResults",
-                Headers: "headers",
-            });
-        });
-
-    export type Outbound = {
-        HttpMeta: components.HTTPMetadata$.Outbound;
-        BatchSuccessfulPolicyEvaluation?:
-            | components.BatchSuccessfulPolicyEvaluation$.Outbound
-            | undefined;
-        BatchMixedResults?: components.BatchMixedResults$.Outbound | undefined;
-        Headers: { [k: string]: Array<string> };
-    };
-
-    export const outboundSchema: z.ZodType<
-        Outbound,
-        z.ZodTypeDef,
-        ExecuteBatchPolicyWithInputResponse
-    > = z
-        .object({
-            httpMeta: components.HTTPMetadata$.outboundSchema,
-            batchSuccessfulPolicyEvaluation:
-                components.BatchSuccessfulPolicyEvaluation$.outboundSchema.optional(),
-            batchMixedResults: components.BatchMixedResults$.outboundSchema.optional(),
-            headers: z.record(z.array(z.string())),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                httpMeta: "HttpMeta",
-                batchSuccessfulPolicyEvaluation: "BatchSuccessfulPolicyEvaluation",
-                batchMixedResults: "BatchMixedResults",
-                headers: "Headers",
-            });
-        });
+    /** @deprecated use `ExecuteBatchPolicyWithInputResponse$inboundSchema` instead. */
+    export const inboundSchema = ExecuteBatchPolicyWithInputResponse$inboundSchema;
+    /** @deprecated use `ExecuteBatchPolicyWithInputResponse$outboundSchema` instead. */
+    export const outboundSchema = ExecuteBatchPolicyWithInputResponse$outboundSchema;
+    /** @deprecated use `ExecuteBatchPolicyWithInputResponse$Outbound` instead. */
+    export type Outbound = ExecuteBatchPolicyWithInputResponse$Outbound;
 }

@@ -9,8 +9,20 @@ export enum GzipAcceptEncoding {
 }
 
 /** @internal */
+export const GzipAcceptEncoding$inboundSchema: z.ZodNativeEnum<typeof GzipAcceptEncoding> =
+    z.nativeEnum(GzipAcceptEncoding);
+
+/** @internal */
+export const GzipAcceptEncoding$outboundSchema: z.ZodNativeEnum<typeof GzipAcceptEncoding> =
+    GzipAcceptEncoding$inboundSchema;
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace GzipAcceptEncoding$ {
-    export const inboundSchema: z.ZodNativeEnum<typeof GzipAcceptEncoding> =
-        z.nativeEnum(GzipAcceptEncoding);
-    export const outboundSchema: z.ZodNativeEnum<typeof GzipAcceptEncoding> = inboundSchema;
+    /** @deprecated use `GzipAcceptEncoding$inboundSchema` instead. */
+    export const inboundSchema = GzipAcceptEncoding$inboundSchema;
+    /** @deprecated use `GzipAcceptEncoding$outboundSchema` instead. */
+    export const outboundSchema = GzipAcceptEncoding$outboundSchema;
 }

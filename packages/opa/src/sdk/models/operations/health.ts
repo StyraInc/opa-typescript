@@ -30,66 +30,100 @@ export type HealthResponse = {
 };
 
 /** @internal */
+export const HealthRequest$inboundSchema: z.ZodType<HealthRequest, z.ZodTypeDef, unknown> = z
+    .object({
+        bundles: z.boolean().default(false),
+        plugins: z.boolean().default(false),
+        "exclude-plugin": z.array(z.string()).optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            "exclude-plugin": "excludePlugin",
+        });
+    });
+
+/** @internal */
+export type HealthRequest$Outbound = {
+    bundles: boolean;
+    plugins: boolean;
+    "exclude-plugin"?: Array<string> | undefined;
+};
+
+/** @internal */
+export const HealthRequest$outboundSchema: z.ZodType<
+    HealthRequest$Outbound,
+    z.ZodTypeDef,
+    HealthRequest
+> = z
+    .object({
+        bundles: z.boolean().default(false),
+        plugins: z.boolean().default(false),
+        excludePlugin: z.array(z.string()).optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            excludePlugin: "exclude-plugin",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace HealthRequest$ {
-    export const inboundSchema: z.ZodType<HealthRequest, z.ZodTypeDef, unknown> = z
-        .object({
-            bundles: z.boolean().default(false),
-            plugins: z.boolean().default(false),
-            "exclude-plugin": z.array(z.string()).optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                "exclude-plugin": "excludePlugin",
-            });
-        });
-
-    export type Outbound = {
-        bundles: boolean;
-        plugins: boolean;
-        "exclude-plugin"?: Array<string> | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, HealthRequest> = z
-        .object({
-            bundles: z.boolean().default(false),
-            plugins: z.boolean().default(false),
-            excludePlugin: z.array(z.string()).optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                excludePlugin: "exclude-plugin",
-            });
-        });
+    /** @deprecated use `HealthRequest$inboundSchema` instead. */
+    export const inboundSchema = HealthRequest$inboundSchema;
+    /** @deprecated use `HealthRequest$outboundSchema` instead. */
+    export const outboundSchema = HealthRequest$outboundSchema;
+    /** @deprecated use `HealthRequest$Outbound` instead. */
+    export type Outbound = HealthRequest$Outbound;
 }
 
 /** @internal */
+export const HealthResponse$inboundSchema: z.ZodType<HealthResponse, z.ZodTypeDef, unknown> = z
+    .object({
+        HttpMeta: components.HTTPMetadata$inboundSchema,
+        HealthyServer: components.HealthyServer$inboundSchema.optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            HttpMeta: "httpMeta",
+            HealthyServer: "healthyServer",
+        });
+    });
+
+/** @internal */
+export type HealthResponse$Outbound = {
+    HttpMeta: components.HTTPMetadata$Outbound;
+    HealthyServer?: components.HealthyServer$Outbound | undefined;
+};
+
+/** @internal */
+export const HealthResponse$outboundSchema: z.ZodType<
+    HealthResponse$Outbound,
+    z.ZodTypeDef,
+    HealthResponse
+> = z
+    .object({
+        httpMeta: components.HTTPMetadata$outboundSchema,
+        healthyServer: components.HealthyServer$outboundSchema.optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            httpMeta: "HttpMeta",
+            healthyServer: "HealthyServer",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace HealthResponse$ {
-    export const inboundSchema: z.ZodType<HealthResponse, z.ZodTypeDef, unknown> = z
-        .object({
-            HttpMeta: components.HTTPMetadata$.inboundSchema,
-            HealthyServer: components.HealthyServer$.inboundSchema.optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                HttpMeta: "httpMeta",
-                HealthyServer: "healthyServer",
-            });
-        });
-
-    export type Outbound = {
-        HttpMeta: components.HTTPMetadata$.Outbound;
-        HealthyServer?: components.HealthyServer$.Outbound | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, HealthResponse> = z
-        .object({
-            httpMeta: components.HTTPMetadata$.outboundSchema,
-            healthyServer: components.HealthyServer$.outboundSchema.optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                httpMeta: "HttpMeta",
-                healthyServer: "HealthyServer",
-            });
-        });
+    /** @deprecated use `HealthResponse$inboundSchema` instead. */
+    export const inboundSchema = HealthResponse$inboundSchema;
+    /** @deprecated use `HealthResponse$outboundSchema` instead. */
+    export const outboundSchema = HealthResponse$outboundSchema;
+    /** @deprecated use `HealthResponse$Outbound` instead. */
+    export type Outbound = HealthResponse$Outbound;
 }

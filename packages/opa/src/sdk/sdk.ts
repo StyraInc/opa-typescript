@@ -61,7 +61,7 @@ export class OpaApiClient extends ClientSDK {
         const payload$ = schemas$.parse(
             input$,
             (value$) =>
-                operations.ExecuteDefaultPolicyWithInputRequest$.outboundSchema.parse(value$),
+                operations.ExecuteDefaultPolicyWithInputRequest$outboundSchema.parse(value$),
             "Input validation failed"
         );
         const body$ = encodeJSON$("body", payload$.input, { explode: true });
@@ -103,12 +103,12 @@ export class OpaApiClient extends ClientSDK {
         };
 
         const [result$] = await this.matcher<operations.ExecuteDefaultPolicyWithInputResponse>()
-            .json(200, operations.ExecuteDefaultPolicyWithInputResponse$, {
+            .json(200, operations.ExecuteDefaultPolicyWithInputResponse$inboundSchema, {
                 hdrs: true,
                 key: "result",
             })
-            .json([400, 404], errors.ClientError$, { err: true })
-            .json(500, errors.ServerError$, { err: true })
+            .json([400, 404], errors.ClientError$inboundSchema, { err: true })
+            .json(500, errors.ServerError$inboundSchema, { err: true })
             .fail(["4XX", "5XX"])
             .match(response, request$, { extraFields: responseFields$ });
 
@@ -126,7 +126,7 @@ export class OpaApiClient extends ClientSDK {
 
         const payload$ = schemas$.parse(
             input$,
-            (value$) => operations.ExecutePolicyRequest$.outboundSchema.parse(value$),
+            (value$) => operations.ExecutePolicyRequest$outboundSchema.parse(value$),
             "Input validation failed"
         );
         const body$ = null;
@@ -171,12 +171,12 @@ export class OpaApiClient extends ClientSDK {
         };
 
         const [result$] = await this.matcher<operations.ExecutePolicyResponse>()
-            .json(200, operations.ExecutePolicyResponse$, {
+            .json(200, operations.ExecutePolicyResponse$inboundSchema, {
                 hdrs: true,
                 key: "SuccessfulPolicyResponse",
             })
-            .json(400, errors.ClientError$, { err: true })
-            .json(500, errors.ServerError$, { err: true })
+            .json(400, errors.ClientError$inboundSchema, { err: true })
+            .json(500, errors.ServerError$inboundSchema, { err: true })
             .fail(["4XX", "5XX"])
             .match(response, request$, { extraFields: responseFields$ });
 
@@ -194,7 +194,7 @@ export class OpaApiClient extends ClientSDK {
 
         const payload$ = schemas$.parse(
             input$,
-            (value$) => operations.ExecutePolicyWithInputRequest$.outboundSchema.parse(value$),
+            (value$) => operations.ExecutePolicyWithInputRequest$outboundSchema.parse(value$),
             "Input validation failed"
         );
         const body$ = encodeJSON$("body", payload$.RequestBody, { explode: true });
@@ -248,12 +248,12 @@ export class OpaApiClient extends ClientSDK {
         };
 
         const [result$] = await this.matcher<operations.ExecutePolicyWithInputResponse>()
-            .json(200, operations.ExecutePolicyWithInputResponse$, {
+            .json(200, operations.ExecutePolicyWithInputResponse$inboundSchema, {
                 hdrs: true,
                 key: "SuccessfulPolicyResponse",
             })
-            .json(400, errors.ClientError$, { err: true })
-            .json(500, errors.ServerError$, { err: true })
+            .json(400, errors.ClientError$inboundSchema, { err: true })
+            .json(500, errors.ServerError$inboundSchema, { err: true })
             .fail(["4XX", "5XX"])
             .match(response, request$, { extraFields: responseFields$ });
 
@@ -271,7 +271,7 @@ export class OpaApiClient extends ClientSDK {
 
         const payload$ = schemas$.parse(
             input$,
-            (value$) => operations.ExecuteBatchPolicyWithInputRequest$.outboundSchema.parse(value$),
+            (value$) => operations.ExecuteBatchPolicyWithInputRequest$outboundSchema.parse(value$),
             "Input validation failed"
         );
         const body$ = encodeJSON$("body", payload$.RequestBody, { explode: true });
@@ -325,16 +325,16 @@ export class OpaApiClient extends ClientSDK {
         };
 
         const [result$] = await this.matcher<operations.ExecuteBatchPolicyWithInputResponse>()
-            .json(200, operations.ExecuteBatchPolicyWithInputResponse$, {
+            .json(200, operations.ExecuteBatchPolicyWithInputResponse$inboundSchema, {
                 hdrs: true,
                 key: "BatchSuccessfulPolicyEvaluation",
             })
-            .json(207, operations.ExecuteBatchPolicyWithInputResponse$, {
+            .json(207, operations.ExecuteBatchPolicyWithInputResponse$inboundSchema, {
                 hdrs: true,
                 key: "BatchMixedResults",
             })
-            .json(400, errors.ClientError$, { err: true })
-            .json(500, errors.BatchServerError$, { err: true })
+            .json(400, errors.ClientError$inboundSchema, { err: true })
+            .json(500, errors.BatchServerError$inboundSchema, { err: true })
             .fail(["4XX", "5XX"])
             .match(response, request$, { extraFields: responseFields$ });
 
@@ -361,7 +361,7 @@ export class OpaApiClient extends ClientSDK {
 
         const payload$ = schemas$.parse(
             input$,
-            (value$) => operations.HealthRequest$.outboundSchema.parse(value$),
+            (value$) => operations.HealthRequest$outboundSchema.parse(value$),
             "Input validation failed"
         );
         const body$ = null;
@@ -393,8 +393,8 @@ export class OpaApiClient extends ClientSDK {
         };
 
         const [result$] = await this.matcher<operations.HealthResponse>()
-            .json(200, operations.HealthResponse$, { key: "HealthyServer" })
-            .json(500, errors.UnhealthyServer$, { err: true })
+            .json(200, operations.HealthResponse$inboundSchema, { key: "HealthyServer" })
+            .json(500, errors.UnhealthyServer$inboundSchema, { err: true })
             .fail(["4XX", "5XX"])
             .match(response, request$, { extraFields: responseFields$ });
 

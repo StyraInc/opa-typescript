@@ -3,7 +3,12 @@
  */
 
 import { remap as remap$ } from "../../../lib/primitives.js";
-import { ServerError, ServerError$ } from "./servererror.js";
+import {
+    ServerError,
+    ServerError$inboundSchema,
+    ServerError$Outbound,
+    ServerError$outboundSchema,
+} from "./servererror.js";
 import * as z from "zod";
 
 export type BatchServerErrorData = {
@@ -19,7 +24,11 @@ export class BatchServerError extends Error {
     data$: BatchServerErrorData;
 
     constructor(err: BatchServerErrorData) {
-        super("");
+        const message =
+            "message" in err && typeof err.message === "string"
+                ? err.message
+                : `API error occurred: ${JSON.stringify(err)}`;
+        super(message);
         this.data$ = err;
 
         if (err.batchDecisionId != null) {
@@ -29,48 +38,60 @@ export class BatchServerError extends Error {
             this.responses = err.responses;
         }
 
-        this.message =
-            "message" in err && typeof err.message === "string"
-                ? err.message
-                : "API error occurred";
-
         this.name = "BatchServerError";
     }
 }
 
 /** @internal */
-export namespace BatchServerError$ {
-    export const inboundSchema: z.ZodType<BatchServerError, z.ZodTypeDef, unknown> = z
-        .object({
-            batch_decision_id: z.string().optional(),
-            responses: z.record(ServerError$.inboundSchema).optional(),
-        })
-        .transform((v) => {
-            const remapped = remap$(v, {
-                batch_decision_id: "batchDecisionId",
-            });
-
-            return new BatchServerError(remapped);
+export const BatchServerError$inboundSchema: z.ZodType<BatchServerError, z.ZodTypeDef, unknown> = z
+    .object({
+        batch_decision_id: z.string().optional(),
+        responses: z.record(ServerError$inboundSchema).optional(),
+    })
+    .transform((v) => {
+        const remapped = remap$(v, {
+            batch_decision_id: "batchDecisionId",
         });
 
-    export type Outbound = {
-        batch_decision_id?: string | undefined;
-        responses?: { [k: string]: ServerError$.Outbound } | undefined;
-    };
+        return new BatchServerError(remapped);
+    });
 
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, BatchServerError> = z
-        .instanceof(BatchServerError)
-        .transform((v) => v.data$)
-        .pipe(
-            z
-                .object({
-                    batchDecisionId: z.string().optional(),
-                    responses: z.record(ServerError$.outboundSchema).optional(),
-                })
-                .transform((v) => {
-                    return remap$(v, {
-                        batchDecisionId: "batch_decision_id",
-                    });
-                })
-        );
+/** @internal */
+export type BatchServerError$Outbound = {
+    batch_decision_id?: string | undefined;
+    responses?: { [k: string]: ServerError$Outbound } | undefined;
+};
+
+/** @internal */
+export const BatchServerError$outboundSchema: z.ZodType<
+    BatchServerError$Outbound,
+    z.ZodTypeDef,
+    BatchServerError
+> = z
+    .instanceof(BatchServerError)
+    .transform((v) => v.data$)
+    .pipe(
+        z
+            .object({
+                batchDecisionId: z.string().optional(),
+                responses: z.record(ServerError$outboundSchema).optional(),
+            })
+            .transform((v) => {
+                return remap$(v, {
+                    batchDecisionId: "batch_decision_id",
+                });
+            })
+    );
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace BatchServerError$ {
+    /** @deprecated use `BatchServerError$inboundSchema` instead. */
+    export const inboundSchema = BatchServerError$inboundSchema;
+    /** @deprecated use `BatchServerError$outboundSchema` instead. */
+    export const outboundSchema = BatchServerError$outboundSchema;
+    /** @deprecated use `BatchServerError$Outbound` instead. */
+    export type Outbound = BatchServerError$Outbound;
 }

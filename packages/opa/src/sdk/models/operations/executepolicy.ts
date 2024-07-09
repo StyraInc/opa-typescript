@@ -55,89 +55,130 @@ export type ExecutePolicyResponse = {
 };
 
 /** @internal */
+export const ExecutePolicyRequest$inboundSchema: z.ZodType<
+    ExecutePolicyRequest,
+    z.ZodTypeDef,
+    unknown
+> = z
+    .object({
+        path: z.string().default(""),
+        "Accept-Encoding": components.GzipAcceptEncoding$inboundSchema.optional(),
+        pretty: z.boolean().optional(),
+        provenance: z.boolean().optional(),
+        explain: components.Explain$inboundSchema.optional(),
+        metrics: z.boolean().optional(),
+        instrument: z.boolean().optional(),
+        "strict-builtin-errors": z.boolean().optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            "Accept-Encoding": "acceptEncoding",
+            "strict-builtin-errors": "strictBuiltinErrors",
+        });
+    });
+
+/** @internal */
+export type ExecutePolicyRequest$Outbound = {
+    path: string;
+    "Accept-Encoding"?: string | undefined;
+    pretty?: boolean | undefined;
+    provenance?: boolean | undefined;
+    explain?: string | undefined;
+    metrics?: boolean | undefined;
+    instrument?: boolean | undefined;
+    "strict-builtin-errors"?: boolean | undefined;
+};
+
+/** @internal */
+export const ExecutePolicyRequest$outboundSchema: z.ZodType<
+    ExecutePolicyRequest$Outbound,
+    z.ZodTypeDef,
+    ExecutePolicyRequest
+> = z
+    .object({
+        path: z.string().default(""),
+        acceptEncoding: components.GzipAcceptEncoding$outboundSchema.optional(),
+        pretty: z.boolean().optional(),
+        provenance: z.boolean().optional(),
+        explain: components.Explain$outboundSchema.optional(),
+        metrics: z.boolean().optional(),
+        instrument: z.boolean().optional(),
+        strictBuiltinErrors: z.boolean().optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            acceptEncoding: "Accept-Encoding",
+            strictBuiltinErrors: "strict-builtin-errors",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ExecutePolicyRequest$ {
-    export const inboundSchema: z.ZodType<ExecutePolicyRequest, z.ZodTypeDef, unknown> = z
-        .object({
-            path: z.string().default(""),
-            "Accept-Encoding": components.GzipAcceptEncoding$.inboundSchema.optional(),
-            pretty: z.boolean().optional(),
-            provenance: z.boolean().optional(),
-            explain: components.Explain$.inboundSchema.optional(),
-            metrics: z.boolean().optional(),
-            instrument: z.boolean().optional(),
-            "strict-builtin-errors": z.boolean().optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                "Accept-Encoding": "acceptEncoding",
-                "strict-builtin-errors": "strictBuiltinErrors",
-            });
-        });
-
-    export type Outbound = {
-        path: string;
-        "Accept-Encoding"?: string | undefined;
-        pretty?: boolean | undefined;
-        provenance?: boolean | undefined;
-        explain?: string | undefined;
-        metrics?: boolean | undefined;
-        instrument?: boolean | undefined;
-        "strict-builtin-errors"?: boolean | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ExecutePolicyRequest> = z
-        .object({
-            path: z.string().default(""),
-            acceptEncoding: components.GzipAcceptEncoding$.outboundSchema.optional(),
-            pretty: z.boolean().optional(),
-            provenance: z.boolean().optional(),
-            explain: components.Explain$.outboundSchema.optional(),
-            metrics: z.boolean().optional(),
-            instrument: z.boolean().optional(),
-            strictBuiltinErrors: z.boolean().optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                acceptEncoding: "Accept-Encoding",
-                strictBuiltinErrors: "strict-builtin-errors",
-            });
-        });
+    /** @deprecated use `ExecutePolicyRequest$inboundSchema` instead. */
+    export const inboundSchema = ExecutePolicyRequest$inboundSchema;
+    /** @deprecated use `ExecutePolicyRequest$outboundSchema` instead. */
+    export const outboundSchema = ExecutePolicyRequest$outboundSchema;
+    /** @deprecated use `ExecutePolicyRequest$Outbound` instead. */
+    export type Outbound = ExecutePolicyRequest$Outbound;
 }
 
 /** @internal */
+export const ExecutePolicyResponse$inboundSchema: z.ZodType<
+    ExecutePolicyResponse,
+    z.ZodTypeDef,
+    unknown
+> = z
+    .object({
+        HttpMeta: components.HTTPMetadata$inboundSchema,
+        SuccessfulPolicyResponse: components.SuccessfulPolicyResponse$inboundSchema.optional(),
+        Headers: z.record(z.array(z.string())),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            HttpMeta: "httpMeta",
+            SuccessfulPolicyResponse: "successfulPolicyResponse",
+            Headers: "headers",
+        });
+    });
+
+/** @internal */
+export type ExecutePolicyResponse$Outbound = {
+    HttpMeta: components.HTTPMetadata$Outbound;
+    SuccessfulPolicyResponse?: components.SuccessfulPolicyResponse$Outbound | undefined;
+    Headers: { [k: string]: Array<string> };
+};
+
+/** @internal */
+export const ExecutePolicyResponse$outboundSchema: z.ZodType<
+    ExecutePolicyResponse$Outbound,
+    z.ZodTypeDef,
+    ExecutePolicyResponse
+> = z
+    .object({
+        httpMeta: components.HTTPMetadata$outboundSchema,
+        successfulPolicyResponse: components.SuccessfulPolicyResponse$outboundSchema.optional(),
+        headers: z.record(z.array(z.string())),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            httpMeta: "HttpMeta",
+            successfulPolicyResponse: "SuccessfulPolicyResponse",
+            headers: "Headers",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ExecutePolicyResponse$ {
-    export const inboundSchema: z.ZodType<ExecutePolicyResponse, z.ZodTypeDef, unknown> = z
-        .object({
-            HttpMeta: components.HTTPMetadata$.inboundSchema,
-            SuccessfulPolicyResponse: components.SuccessfulPolicyResponse$.inboundSchema.optional(),
-            Headers: z.record(z.array(z.string())),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                HttpMeta: "httpMeta",
-                SuccessfulPolicyResponse: "successfulPolicyResponse",
-                Headers: "headers",
-            });
-        });
-
-    export type Outbound = {
-        HttpMeta: components.HTTPMetadata$.Outbound;
-        SuccessfulPolicyResponse?: components.SuccessfulPolicyResponse$.Outbound | undefined;
-        Headers: { [k: string]: Array<string> };
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ExecutePolicyResponse> = z
-        .object({
-            httpMeta: components.HTTPMetadata$.outboundSchema,
-            successfulPolicyResponse:
-                components.SuccessfulPolicyResponse$.outboundSchema.optional(),
-            headers: z.record(z.array(z.string())),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                httpMeta: "HttpMeta",
-                successfulPolicyResponse: "SuccessfulPolicyResponse",
-                headers: "Headers",
-            });
-        });
+    /** @deprecated use `ExecutePolicyResponse$inboundSchema` instead. */
+    export const inboundSchema = ExecutePolicyResponse$inboundSchema;
+    /** @deprecated use `ExecutePolicyResponse$outboundSchema` instead. */
+    export const outboundSchema = ExecutePolicyResponse$outboundSchema;
+    /** @deprecated use `ExecutePolicyResponse$Outbound` instead. */
+    export type Outbound = ExecutePolicyResponse$Outbound;
 }
