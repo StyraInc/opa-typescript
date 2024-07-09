@@ -1,5 +1,28 @@
 # @styra/opa-react
 
+## 0.4.0
+
+### Minor Changes
+
+- b12fd17: build: switch to tshy for (dual) build
+- 0caf161: add evaluateBatch to SDK interface
+
+  So when retrieving the AuthzProvider's `sdk` instance, you can call `evaluateBatch` on it, and TypeScript will be happy.
+
+- 2217054: expose AuthzContext
+
+  The prepared `sdk` instance of `AuthzProvider` can now be retrieved
+  from any components wrapped into `AuthzProvider`. For example:
+
+  ```tsx
+  import { AuthzContext } from "@styra/opa-react";
+
+  export default function Component() {
+    const { sdk } = useContext(AuthzContext);
+    // now you can use `sdk.evaluate()` etc directly
+  }
+  ```
+
 ## 0.3.2
 
 ### Patch Changes
