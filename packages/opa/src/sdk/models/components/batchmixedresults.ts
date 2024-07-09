@@ -3,8 +3,13 @@
  */
 
 import { remap as remap$ } from "../../../lib/primitives.js";
-import { Provenance, Provenance$ } from "./provenance.js";
-import { Result, Result$ } from "./result.js";
+import {
+    Provenance,
+    Provenance$inboundSchema,
+    Provenance$Outbound,
+    Provenance$outboundSchema,
+} from "./provenance.js";
+import { Result, Result$inboundSchema, Result$Outbound, Result$outboundSchema } from "./result.js";
 import * as z from "zod";
 
 export type Location = {
@@ -67,180 +72,252 @@ export type BatchMixedResults = {
 };
 
 /** @internal */
+export const Location$inboundSchema: z.ZodType<Location, z.ZodTypeDef, unknown> = z.object({
+    file: z.string(),
+    row: z.number().int(),
+    col: z.number().int(),
+});
+
+/** @internal */
+export type Location$Outbound = {
+    file: string;
+    row: number;
+    col: number;
+};
+
+/** @internal */
+export const Location$outboundSchema: z.ZodType<Location$Outbound, z.ZodTypeDef, Location> =
+    z.object({
+        file: z.string(),
+        row: z.number().int(),
+        col: z.number().int(),
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace Location$ {
-    export const inboundSchema: z.ZodType<Location, z.ZodTypeDef, unknown> = z.object({
-        file: z.string(),
-        row: z.number().int(),
-        col: z.number().int(),
-    });
-
-    export type Outbound = {
-        file: string;
-        row: number;
-        col: number;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Location> = z.object({
-        file: z.string(),
-        row: z.number().int(),
-        col: z.number().int(),
-    });
+    /** @deprecated use `Location$inboundSchema` instead. */
+    export const inboundSchema = Location$inboundSchema;
+    /** @deprecated use `Location$outboundSchema` instead. */
+    export const outboundSchema = Location$outboundSchema;
+    /** @deprecated use `Location$Outbound` instead. */
+    export type Outbound = Location$Outbound;
 }
 
 /** @internal */
+export const Errors$inboundSchema: z.ZodType<Errors, z.ZodTypeDef, unknown> = z.object({
+    code: z.string(),
+    message: z.string(),
+    location: z.lazy(() => Location$inboundSchema).optional(),
+});
+
+/** @internal */
+export type Errors$Outbound = {
+    code: string;
+    message: string;
+    location?: Location$Outbound | undefined;
+};
+
+/** @internal */
+export const Errors$outboundSchema: z.ZodType<Errors$Outbound, z.ZodTypeDef, Errors> = z.object({
+    code: z.string(),
+    message: z.string(),
+    location: z.lazy(() => Location$outboundSchema).optional(),
+});
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace Errors$ {
-    export const inboundSchema: z.ZodType<Errors, z.ZodTypeDef, unknown> = z.object({
-        code: z.string(),
-        message: z.string(),
-        location: z.lazy(() => Location$.inboundSchema).optional(),
-    });
-
-    export type Outbound = {
-        code: string;
-        message: string;
-        location?: Location$.Outbound | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Errors> = z.object({
-        code: z.string(),
-        message: z.string(),
-        location: z.lazy(() => Location$.outboundSchema).optional(),
-    });
+    /** @deprecated use `Errors$inboundSchema` instead. */
+    export const inboundSchema = Errors$inboundSchema;
+    /** @deprecated use `Errors$outboundSchema` instead. */
+    export const outboundSchema = Errors$outboundSchema;
+    /** @deprecated use `Errors$Outbound` instead. */
+    export type Outbound = Errors$Outbound;
 }
 
 /** @internal */
+export const ServerError$inboundSchema: z.ZodType<ServerError, z.ZodTypeDef, unknown> = z
+    .object({
+        code: z.string(),
+        message: z.string(),
+        errors: z.array(z.lazy(() => Errors$inboundSchema)).optional(),
+        decision_id: z.string().optional(),
+        http_status_code: z.string().optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            decision_id: "decisionId",
+            http_status_code: "httpStatusCode",
+        });
+    });
+
+/** @internal */
+export type ServerError$Outbound = {
+    code: string;
+    message: string;
+    errors?: Array<Errors$Outbound> | undefined;
+    decision_id?: string | undefined;
+    http_status_code?: string | undefined;
+};
+
+/** @internal */
+export const ServerError$outboundSchema: z.ZodType<
+    ServerError$Outbound,
+    z.ZodTypeDef,
+    ServerError
+> = z
+    .object({
+        code: z.string(),
+        message: z.string(),
+        errors: z.array(z.lazy(() => Errors$outboundSchema)).optional(),
+        decisionId: z.string().optional(),
+        httpStatusCode: z.string().optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            decisionId: "decision_id",
+            httpStatusCode: "http_status_code",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ServerError$ {
-    export const inboundSchema: z.ZodType<ServerError, z.ZodTypeDef, unknown> = z
-        .object({
-            code: z.string(),
-            message: z.string(),
-            errors: z.array(z.lazy(() => Errors$.inboundSchema)).optional(),
-            decision_id: z.string().optional(),
-            http_status_code: z.string().optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                decision_id: "decisionId",
-                http_status_code: "httpStatusCode",
-            });
-        });
-
-    export type Outbound = {
-        code: string;
-        message: string;
-        errors?: Array<Errors$.Outbound> | undefined;
-        decision_id?: string | undefined;
-        http_status_code?: string | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ServerError> = z
-        .object({
-            code: z.string(),
-            message: z.string(),
-            errors: z.array(z.lazy(() => Errors$.outboundSchema)).optional(),
-            decisionId: z.string().optional(),
-            httpStatusCode: z.string().optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                decisionId: "decision_id",
-                httpStatusCode: "http_status_code",
-            });
-        });
+    /** @deprecated use `ServerError$inboundSchema` instead. */
+    export const inboundSchema = ServerError$inboundSchema;
+    /** @deprecated use `ServerError$outboundSchema` instead. */
+    export const outboundSchema = ServerError$outboundSchema;
+    /** @deprecated use `ServerError$Outbound` instead. */
+    export type Outbound = ServerError$Outbound;
 }
 
 /** @internal */
+export const ResponsesSuccessfulPolicyResponse$inboundSchema: z.ZodType<
+    ResponsesSuccessfulPolicyResponse,
+    z.ZodTypeDef,
+    unknown
+> = z
+    .object({
+        result: Result$inboundSchema.optional(),
+        metrics: z.record(z.any()).optional(),
+        decision_id: z.string().optional(),
+        provenance: Provenance$inboundSchema.optional(),
+        http_status_code: z.string().optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            decision_id: "decisionId",
+            http_status_code: "httpStatusCode",
+        });
+    });
+
+/** @internal */
+export type ResponsesSuccessfulPolicyResponse$Outbound = {
+    result?: Result$Outbound | undefined;
+    metrics?: { [k: string]: any } | undefined;
+    decision_id?: string | undefined;
+    provenance?: Provenance$Outbound | undefined;
+    http_status_code?: string | undefined;
+};
+
+/** @internal */
+export const ResponsesSuccessfulPolicyResponse$outboundSchema: z.ZodType<
+    ResponsesSuccessfulPolicyResponse$Outbound,
+    z.ZodTypeDef,
+    ResponsesSuccessfulPolicyResponse
+> = z
+    .object({
+        result: Result$outboundSchema.optional(),
+        metrics: z.record(z.any()).optional(),
+        decisionId: z.string().optional(),
+        provenance: Provenance$outboundSchema.optional(),
+        httpStatusCode: z.string().optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            decisionId: "decision_id",
+            httpStatusCode: "http_status_code",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ResponsesSuccessfulPolicyResponse$ {
-    export const inboundSchema: z.ZodType<
-        ResponsesSuccessfulPolicyResponse,
-        z.ZodTypeDef,
-        unknown
-    > = z
-        .object({
-            result: Result$.inboundSchema.optional(),
-            metrics: z.record(z.any()).optional(),
-            decision_id: z.string().optional(),
-            provenance: Provenance$.inboundSchema.optional(),
-            http_status_code: z.string().optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                decision_id: "decisionId",
-                http_status_code: "httpStatusCode",
-            });
-        });
-
-    export type Outbound = {
-        result?: Result$.Outbound | undefined;
-        metrics?: { [k: string]: any } | undefined;
-        decision_id?: string | undefined;
-        provenance?: Provenance$.Outbound | undefined;
-        http_status_code?: string | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<
-        Outbound,
-        z.ZodTypeDef,
-        ResponsesSuccessfulPolicyResponse
-    > = z
-        .object({
-            result: Result$.outboundSchema.optional(),
-            metrics: z.record(z.any()).optional(),
-            decisionId: z.string().optional(),
-            provenance: Provenance$.outboundSchema.optional(),
-            httpStatusCode: z.string().optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                decisionId: "decision_id",
-                httpStatusCode: "http_status_code",
-            });
-        });
+    /** @deprecated use `ResponsesSuccessfulPolicyResponse$inboundSchema` instead. */
+    export const inboundSchema = ResponsesSuccessfulPolicyResponse$inboundSchema;
+    /** @deprecated use `ResponsesSuccessfulPolicyResponse$outboundSchema` instead. */
+    export const outboundSchema = ResponsesSuccessfulPolicyResponse$outboundSchema;
+    /** @deprecated use `ResponsesSuccessfulPolicyResponse$Outbound` instead. */
+    export type Outbound = ResponsesSuccessfulPolicyResponse$Outbound;
 }
 
 /** @internal */
-export namespace Responses$ {
-    export const inboundSchema: z.ZodType<Responses, z.ZodTypeDef, unknown> = z.union([
-        z
-            .lazy(() => ResponsesSuccessfulPolicyResponse$.inboundSchema)
-            .and(
-                z
-                    .object({ http_status_code: z.literal("200") })
-                    .transform((v) => ({ httpStatusCode: v.http_status_code }))
-            ),
-        z
-            .lazy(() => ServerError$.inboundSchema)
-            .and(
-                z
-                    .object({ http_status_code: z.literal("500") })
-                    .transform((v) => ({ httpStatusCode: v.http_status_code }))
-            ),
-    ]);
+export const Responses$inboundSchema: z.ZodType<Responses, z.ZodTypeDef, unknown> = z.union([
+    z
+        .lazy(() => ResponsesSuccessfulPolicyResponse$inboundSchema)
+        .and(
+            z
+                .object({ http_status_code: z.literal("200") })
+                .transform((v) => ({ httpStatusCode: v.http_status_code }))
+        ),
+    z
+        .lazy(() => ServerError$inboundSchema)
+        .and(
+            z
+                .object({ http_status_code: z.literal("500") })
+                .transform((v) => ({ httpStatusCode: v.http_status_code }))
+        ),
+]);
 
-    export type Outbound =
-        | (ResponsesSuccessfulPolicyResponse$.Outbound & { http_status_code: "200" })
-        | (ServerError$.Outbound & { http_status_code: "500" });
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Responses> = z.union([
+/** @internal */
+export type Responses$Outbound =
+    | (ResponsesSuccessfulPolicyResponse$Outbound & { http_status_code: "200" })
+    | (ServerError$Outbound & { http_status_code: "500" });
+
+/** @internal */
+export const Responses$outboundSchema: z.ZodType<Responses$Outbound, z.ZodTypeDef, Responses> =
+    z.union([
         z
-            .lazy(() => ResponsesSuccessfulPolicyResponse$.outboundSchema)
+            .lazy(() => ResponsesSuccessfulPolicyResponse$outboundSchema)
             .and(
                 z
                     .object({ httpStatusCode: z.literal("200") })
                     .transform((v) => ({ http_status_code: v.httpStatusCode }))
             ),
         z
-            .lazy(() => ServerError$.outboundSchema)
+            .lazy(() => ServerError$outboundSchema)
             .and(
                 z
                     .object({ httpStatusCode: z.literal("500") })
                     .transform((v) => ({ http_status_code: v.httpStatusCode }))
             ),
     ]);
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace Responses$ {
+    /** @deprecated use `Responses$inboundSchema` instead. */
+    export const inboundSchema = Responses$inboundSchema;
+    /** @deprecated use `Responses$outboundSchema` instead. */
+    export const outboundSchema = Responses$outboundSchema;
+    /** @deprecated use `Responses$Outbound` instead. */
+    export type Outbound = Responses$Outbound;
 }
 
 /** @internal */
-export namespace BatchMixedResults$ {
-    export const inboundSchema: z.ZodType<BatchMixedResults, z.ZodTypeDef, unknown> = z
+export const BatchMixedResults$inboundSchema: z.ZodType<BatchMixedResults, z.ZodTypeDef, unknown> =
+    z
         .object({
             batch_decision_id: z.string().optional(),
             metrics: z.record(z.any()).optional(),
@@ -248,14 +325,14 @@ export namespace BatchMixedResults$ {
                 .record(
                     z.union([
                         z
-                            .lazy(() => ResponsesSuccessfulPolicyResponse$.inboundSchema)
+                            .lazy(() => ResponsesSuccessfulPolicyResponse$inboundSchema)
                             .and(
                                 z
                                     .object({ http_status_code: z.literal("200") })
                                     .transform((v) => ({ httpStatusCode: v.http_status_code }))
                             ),
                         z
-                            .lazy(() => ServerError$.inboundSchema)
+                            .lazy(() => ServerError$inboundSchema)
                             .and(
                                 z
                                     .object({ http_status_code: z.literal("500") })
@@ -271,46 +348,64 @@ export namespace BatchMixedResults$ {
             });
         });
 
-    export type Outbound = {
-        batch_decision_id?: string | undefined;
-        metrics?: { [k: string]: any } | undefined;
-        responses?:
-            | {
-                  [k: string]:
-                      | (ResponsesSuccessfulPolicyResponse$.Outbound & { http_status_code: "200" })
-                      | (ServerError$.Outbound & { http_status_code: "500" });
-              }
-            | undefined;
-    };
+/** @internal */
+export type BatchMixedResults$Outbound = {
+    batch_decision_id?: string | undefined;
+    metrics?: { [k: string]: any } | undefined;
+    responses?:
+        | {
+              [k: string]:
+                  | (ResponsesSuccessfulPolicyResponse$Outbound & { http_status_code: "200" })
+                  | (ServerError$Outbound & { http_status_code: "500" });
+          }
+        | undefined;
+};
 
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, BatchMixedResults> = z
-        .object({
-            batchDecisionId: z.string().optional(),
-            metrics: z.record(z.any()).optional(),
-            responses: z
-                .record(
-                    z.union([
-                        z
-                            .lazy(() => ResponsesSuccessfulPolicyResponse$.outboundSchema)
-                            .and(
-                                z
-                                    .object({ httpStatusCode: z.literal("200") })
-                                    .transform((v) => ({ http_status_code: v.httpStatusCode }))
-                            ),
-                        z
-                            .lazy(() => ServerError$.outboundSchema)
-                            .and(
-                                z
-                                    .object({ httpStatusCode: z.literal("500") })
-                                    .transform((v) => ({ http_status_code: v.httpStatusCode }))
-                            ),
-                    ])
-                )
-                .optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                batchDecisionId: "batch_decision_id",
-            });
+/** @internal */
+export const BatchMixedResults$outboundSchema: z.ZodType<
+    BatchMixedResults$Outbound,
+    z.ZodTypeDef,
+    BatchMixedResults
+> = z
+    .object({
+        batchDecisionId: z.string().optional(),
+        metrics: z.record(z.any()).optional(),
+        responses: z
+            .record(
+                z.union([
+                    z
+                        .lazy(() => ResponsesSuccessfulPolicyResponse$outboundSchema)
+                        .and(
+                            z
+                                .object({ httpStatusCode: z.literal("200") })
+                                .transform((v) => ({ http_status_code: v.httpStatusCode }))
+                        ),
+                    z
+                        .lazy(() => ServerError$outboundSchema)
+                        .and(
+                            z
+                                .object({ httpStatusCode: z.literal("500") })
+                                .transform((v) => ({ http_status_code: v.httpStatusCode }))
+                        ),
+                ])
+            )
+            .optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            batchDecisionId: "batch_decision_id",
         });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace BatchMixedResults$ {
+    /** @deprecated use `BatchMixedResults$inboundSchema` instead. */
+    export const inboundSchema = BatchMixedResults$inboundSchema;
+    /** @deprecated use `BatchMixedResults$outboundSchema` instead. */
+    export const outboundSchema = BatchMixedResults$outboundSchema;
+    /** @deprecated use `BatchMixedResults$Outbound` instead. */
+    export type Outbound = BatchMixedResults$Outbound;
 }

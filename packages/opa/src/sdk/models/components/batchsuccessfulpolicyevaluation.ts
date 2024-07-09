@@ -3,7 +3,12 @@
  */
 
 import { remap as remap$ } from "../../../lib/primitives.js";
-import { SuccessfulPolicyResponse, SuccessfulPolicyResponse$ } from "./successfulpolicyresponse.js";
+import {
+    SuccessfulPolicyResponse,
+    SuccessfulPolicyResponse$inboundSchema,
+    SuccessfulPolicyResponse$Outbound,
+    SuccessfulPolicyResponse$outboundSchema,
+} from "./successfulpolicyresponse.js";
 import * as z from "zod";
 
 export type BatchSuccessfulPolicyEvaluation = {
@@ -16,39 +21,55 @@ export type BatchSuccessfulPolicyEvaluation = {
 };
 
 /** @internal */
-export namespace BatchSuccessfulPolicyEvaluation$ {
-    export const inboundSchema: z.ZodType<BatchSuccessfulPolicyEvaluation, z.ZodTypeDef, unknown> =
-        z
-            .object({
-                batch_decision_id: z.string().optional(),
-                metrics: z.record(z.any()).optional(),
-                responses: z.record(SuccessfulPolicyResponse$.inboundSchema).optional(),
-            })
-            .transform((v) => {
-                return remap$(v, {
-                    batch_decision_id: "batchDecisionId",
-                });
-            });
-
-    export type Outbound = {
-        batch_decision_id?: string | undefined;
-        metrics?: { [k: string]: any } | undefined;
-        responses?: { [k: string]: SuccessfulPolicyResponse$.Outbound } | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<
-        Outbound,
-        z.ZodTypeDef,
-        BatchSuccessfulPolicyEvaluation
-    > = z
-        .object({
-            batchDecisionId: z.string().optional(),
-            metrics: z.record(z.any()).optional(),
-            responses: z.record(SuccessfulPolicyResponse$.outboundSchema).optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                batchDecisionId: "batch_decision_id",
-            });
+export const BatchSuccessfulPolicyEvaluation$inboundSchema: z.ZodType<
+    BatchSuccessfulPolicyEvaluation,
+    z.ZodTypeDef,
+    unknown
+> = z
+    .object({
+        batch_decision_id: z.string().optional(),
+        metrics: z.record(z.any()).optional(),
+        responses: z.record(SuccessfulPolicyResponse$inboundSchema).optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            batch_decision_id: "batchDecisionId",
         });
+    });
+
+/** @internal */
+export type BatchSuccessfulPolicyEvaluation$Outbound = {
+    batch_decision_id?: string | undefined;
+    metrics?: { [k: string]: any } | undefined;
+    responses?: { [k: string]: SuccessfulPolicyResponse$Outbound } | undefined;
+};
+
+/** @internal */
+export const BatchSuccessfulPolicyEvaluation$outboundSchema: z.ZodType<
+    BatchSuccessfulPolicyEvaluation$Outbound,
+    z.ZodTypeDef,
+    BatchSuccessfulPolicyEvaluation
+> = z
+    .object({
+        batchDecisionId: z.string().optional(),
+        metrics: z.record(z.any()).optional(),
+        responses: z.record(SuccessfulPolicyResponse$outboundSchema).optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            batchDecisionId: "batch_decision_id",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace BatchSuccessfulPolicyEvaluation$ {
+    /** @deprecated use `BatchSuccessfulPolicyEvaluation$inboundSchema` instead. */
+    export const inboundSchema = BatchSuccessfulPolicyEvaluation$inboundSchema;
+    /** @deprecated use `BatchSuccessfulPolicyEvaluation$outboundSchema` instead. */
+    export const outboundSchema = BatchSuccessfulPolicyEvaluation$outboundSchema;
+    /** @deprecated use `BatchSuccessfulPolicyEvaluation$Outbound` instead. */
+    export type Outbound = BatchSuccessfulPolicyEvaluation$Outbound;
 }

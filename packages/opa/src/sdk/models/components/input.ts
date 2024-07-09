@@ -10,21 +10,35 @@ import * as z from "zod";
 export type Input = boolean | string | number | Array<any> | { [k: string]: any };
 
 /** @internal */
-export namespace Input$ {
-    export const inboundSchema: z.ZodType<Input, z.ZodTypeDef, unknown> = z.union([
-        z.boolean(),
-        z.string(),
-        z.number(),
-        z.array(z.any()),
-        z.record(z.any()),
-    ]);
+export const Input$inboundSchema: z.ZodType<Input, z.ZodTypeDef, unknown> = z.union([
+    z.boolean(),
+    z.string(),
+    z.number(),
+    z.array(z.any()),
+    z.record(z.any()),
+]);
 
-    export type Outbound = boolean | string | number | Array<any> | { [k: string]: any };
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Input> = z.union([
-        z.boolean(),
-        z.string(),
-        z.number(),
-        z.array(z.any()),
-        z.record(z.any()),
-    ]);
+/** @internal */
+export type Input$Outbound = boolean | string | number | Array<any> | { [k: string]: any };
+
+/** @internal */
+export const Input$outboundSchema: z.ZodType<Input$Outbound, z.ZodTypeDef, Input> = z.union([
+    z.boolean(),
+    z.string(),
+    z.number(),
+    z.array(z.any()),
+    z.record(z.any()),
+]);
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace Input$ {
+    /** @deprecated use `Input$inboundSchema` instead. */
+    export const inboundSchema = Input$inboundSchema;
+    /** @deprecated use `Input$outboundSchema` instead. */
+    export const outboundSchema = Input$outboundSchema;
+    /** @deprecated use `Input$Outbound` instead. */
+    export type Outbound = Input$Outbound;
 }

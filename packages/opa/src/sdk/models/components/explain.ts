@@ -12,7 +12,18 @@ export enum Explain {
 }
 
 /** @internal */
+export const Explain$inboundSchema: z.ZodNativeEnum<typeof Explain> = z.nativeEnum(Explain);
+
+/** @internal */
+export const Explain$outboundSchema: z.ZodNativeEnum<typeof Explain> = Explain$inboundSchema;
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace Explain$ {
-    export const inboundSchema: z.ZodNativeEnum<typeof Explain> = z.nativeEnum(Explain);
-    export const outboundSchema: z.ZodNativeEnum<typeof Explain> = inboundSchema;
+    /** @deprecated use `Explain$inboundSchema` instead. */
+    export const inboundSchema = Explain$inboundSchema;
+    /** @deprecated use `Explain$outboundSchema` instead. */
+    export const outboundSchema = Explain$outboundSchema;
 }

@@ -1,11 +1,7 @@
 {
   "name": "@styra/opa",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "author": "Styra",
-  "license": "Apache-2.0",
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "OPA",
     "Open Policy Agent",
@@ -15,6 +11,10 @@
     "rbac",
     "role based access control"
   ],
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "tshy": {
     "exports": {
       ".": "./src/index.ts",

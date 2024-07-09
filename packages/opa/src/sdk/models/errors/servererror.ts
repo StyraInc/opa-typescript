@@ -39,7 +39,11 @@ export class ServerError extends Error {
     data$: ServerErrorData;
 
     constructor(err: ServerErrorData) {
-        super("");
+        const message =
+            "message" in err && typeof err.message === "string"
+                ? err.message
+                : `API error occurred: ${JSON.stringify(err)}`;
+        super(message);
         this.data$ = err;
 
         this.code = err.code;
@@ -50,96 +54,147 @@ export class ServerError extends Error {
             this.decisionId = err.decisionId;
         }
 
-        this.message =
-            "message" in err && typeof err.message === "string"
-                ? err.message
-                : "API error occurred";
-
         this.name = "ServerError";
     }
 }
 
 /** @internal */
+export const ServerErrorLocation$inboundSchema: z.ZodType<
+    ServerErrorLocation,
+    z.ZodTypeDef,
+    unknown
+> = z.object({
+    file: z.string(),
+    row: z.number().int(),
+    col: z.number().int(),
+});
+
+/** @internal */
+export type ServerErrorLocation$Outbound = {
+    file: string;
+    row: number;
+    col: number;
+};
+
+/** @internal */
+export const ServerErrorLocation$outboundSchema: z.ZodType<
+    ServerErrorLocation$Outbound,
+    z.ZodTypeDef,
+    ServerErrorLocation
+> = z.object({
+    file: z.string(),
+    row: z.number().int(),
+    col: z.number().int(),
+});
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ServerErrorLocation$ {
-    export const inboundSchema: z.ZodType<ServerErrorLocation, z.ZodTypeDef, unknown> = z.object({
-        file: z.string(),
-        row: z.number().int(),
-        col: z.number().int(),
-    });
-
-    export type Outbound = {
-        file: string;
-        row: number;
-        col: number;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ServerErrorLocation> = z.object({
-        file: z.string(),
-        row: z.number().int(),
-        col: z.number().int(),
-    });
+    /** @deprecated use `ServerErrorLocation$inboundSchema` instead. */
+    export const inboundSchema = ServerErrorLocation$inboundSchema;
+    /** @deprecated use `ServerErrorLocation$outboundSchema` instead. */
+    export const outboundSchema = ServerErrorLocation$outboundSchema;
+    /** @deprecated use `ServerErrorLocation$Outbound` instead. */
+    export type Outbound = ServerErrorLocation$Outbound;
 }
 
 /** @internal */
+export const ServerErrorErrors$inboundSchema: z.ZodType<ServerErrorErrors, z.ZodTypeDef, unknown> =
+    z.object({
+        code: z.string(),
+        message: z.string(),
+        location: z.lazy(() => ServerErrorLocation$inboundSchema).optional(),
+    });
+
+/** @internal */
+export type ServerErrorErrors$Outbound = {
+    code: string;
+    message: string;
+    location?: ServerErrorLocation$Outbound | undefined;
+};
+
+/** @internal */
+export const ServerErrorErrors$outboundSchema: z.ZodType<
+    ServerErrorErrors$Outbound,
+    z.ZodTypeDef,
+    ServerErrorErrors
+> = z.object({
+    code: z.string(),
+    message: z.string(),
+    location: z.lazy(() => ServerErrorLocation$outboundSchema).optional(),
+});
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace ServerErrorErrors$ {
-    export const inboundSchema: z.ZodType<ServerErrorErrors, z.ZodTypeDef, unknown> = z.object({
-        code: z.string(),
-        message: z.string(),
-        location: z.lazy(() => ServerErrorLocation$.inboundSchema).optional(),
-    });
-
-    export type Outbound = {
-        code: string;
-        message: string;
-        location?: ServerErrorLocation$.Outbound | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ServerErrorErrors> = z.object({
-        code: z.string(),
-        message: z.string(),
-        location: z.lazy(() => ServerErrorLocation$.outboundSchema).optional(),
-    });
+    /** @deprecated use `ServerErrorErrors$inboundSchema` instead. */
+    export const inboundSchema = ServerErrorErrors$inboundSchema;
+    /** @deprecated use `ServerErrorErrors$outboundSchema` instead. */
+    export const outboundSchema = ServerErrorErrors$outboundSchema;
+    /** @deprecated use `ServerErrorErrors$Outbound` instead. */
+    export type Outbound = ServerErrorErrors$Outbound;
 }
 
 /** @internal */
-export namespace ServerError$ {
-    export const inboundSchema: z.ZodType<ServerError, z.ZodTypeDef, unknown> = z
-        .object({
-            code: z.string(),
-            message: z.string(),
-            errors: z.array(z.lazy(() => ServerErrorErrors$.inboundSchema)).optional(),
-            decision_id: z.string().optional(),
-        })
-        .transform((v) => {
-            const remapped = remap$(v, {
-                decision_id: "decisionId",
-            });
-
-            return new ServerError(remapped);
+export const ServerError$inboundSchema: z.ZodType<ServerError, z.ZodTypeDef, unknown> = z
+    .object({
+        code: z.string(),
+        message: z.string(),
+        errors: z.array(z.lazy(() => ServerErrorErrors$inboundSchema)).optional(),
+        decision_id: z.string().optional(),
+    })
+    .transform((v) => {
+        const remapped = remap$(v, {
+            decision_id: "decisionId",
         });
 
-    export type Outbound = {
-        code: string;
-        message: string;
-        errors?: Array<ServerErrorErrors$.Outbound> | undefined;
-        decision_id?: string | undefined;
-    };
+        return new ServerError(remapped);
+    });
 
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ServerError> = z
-        .instanceof(ServerError)
-        .transform((v) => v.data$)
-        .pipe(
-            z
-                .object({
-                    code: z.string(),
-                    message: z.string(),
-                    errors: z.array(z.lazy(() => ServerErrorErrors$.outboundSchema)).optional(),
-                    decisionId: z.string().optional(),
-                })
-                .transform((v) => {
-                    return remap$(v, {
-                        decisionId: "decision_id",
-                    });
-                })
-        );
+/** @internal */
+export type ServerError$Outbound = {
+    code: string;
+    message: string;
+    errors?: Array<ServerErrorErrors$Outbound> | undefined;
+    decision_id?: string | undefined;
+};
+
+/** @internal */
+export const ServerError$outboundSchema: z.ZodType<
+    ServerError$Outbound,
+    z.ZodTypeDef,
+    ServerError
+> = z
+    .instanceof(ServerError)
+    .transform((v) => v.data$)
+    .pipe(
+        z
+            .object({
+                code: z.string(),
+                message: z.string(),
+                errors: z.array(z.lazy(() => ServerErrorErrors$outboundSchema)).optional(),
+                decisionId: z.string().optional(),
+            })
+            .transform((v) => {
+                return remap$(v, {
+                    decisionId: "decision_id",
+                });
+            })
+    );
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace ServerError$ {
+    /** @deprecated use `ServerError$inboundSchema` instead. */
+    export const inboundSchema = ServerError$inboundSchema;
+    /** @deprecated use `ServerError$outboundSchema` instead. */
+    export const outboundSchema = ServerError$outboundSchema;
+    /** @deprecated use `ServerError$Outbound` instead. */
+    export type Outbound = ServerError$Outbound;
 }

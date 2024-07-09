@@ -3,8 +3,13 @@
  */
 
 import { remap as remap$ } from "../../../lib/primitives.js";
-import { Provenance, Provenance$ } from "./provenance.js";
-import { Result, Result$ } from "./result.js";
+import {
+    Provenance,
+    Provenance$inboundSchema,
+    Provenance$Outbound,
+    Provenance$outboundSchema,
+} from "./provenance.js";
+import { Result, Result$inboundSchema, Result$Outbound, Result$outboundSchema } from "./result.js";
 import * as z from "zod";
 
 export type SuccessfulPolicyResponse = {
@@ -27,37 +32,58 @@ export type SuccessfulPolicyResponse = {
 };
 
 /** @internal */
+export const SuccessfulPolicyResponse$inboundSchema: z.ZodType<
+    SuccessfulPolicyResponse,
+    z.ZodTypeDef,
+    unknown
+> = z
+    .object({
+        result: Result$inboundSchema.optional(),
+        metrics: z.record(z.any()).optional(),
+        decision_id: z.string().optional(),
+        provenance: Provenance$inboundSchema.optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            decision_id: "decisionId",
+        });
+    });
+
+/** @internal */
+export type SuccessfulPolicyResponse$Outbound = {
+    result?: Result$Outbound | undefined;
+    metrics?: { [k: string]: any } | undefined;
+    decision_id?: string | undefined;
+    provenance?: Provenance$Outbound | undefined;
+};
+
+/** @internal */
+export const SuccessfulPolicyResponse$outboundSchema: z.ZodType<
+    SuccessfulPolicyResponse$Outbound,
+    z.ZodTypeDef,
+    SuccessfulPolicyResponse
+> = z
+    .object({
+        result: Result$outboundSchema.optional(),
+        metrics: z.record(z.any()).optional(),
+        decisionId: z.string().optional(),
+        provenance: Provenance$outboundSchema.optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            decisionId: "decision_id",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace SuccessfulPolicyResponse$ {
-    export const inboundSchema: z.ZodType<SuccessfulPolicyResponse, z.ZodTypeDef, unknown> = z
-        .object({
-            result: Result$.inboundSchema.optional(),
-            metrics: z.record(z.any()).optional(),
-            decision_id: z.string().optional(),
-            provenance: Provenance$.inboundSchema.optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                decision_id: "decisionId",
-            });
-        });
-
-    export type Outbound = {
-        result?: Result$.Outbound | undefined;
-        metrics?: { [k: string]: any } | undefined;
-        decision_id?: string | undefined;
-        provenance?: Provenance$.Outbound | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, SuccessfulPolicyResponse> = z
-        .object({
-            result: Result$.outboundSchema.optional(),
-            metrics: z.record(z.any()).optional(),
-            decisionId: z.string().optional(),
-            provenance: Provenance$.outboundSchema.optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                decisionId: "decision_id",
-            });
-        });
+    /** @deprecated use `SuccessfulPolicyResponse$inboundSchema` instead. */
+    export const inboundSchema = SuccessfulPolicyResponse$inboundSchema;
+    /** @deprecated use `SuccessfulPolicyResponse$outboundSchema` instead. */
+    export const outboundSchema = SuccessfulPolicyResponse$outboundSchema;
+    /** @deprecated use `SuccessfulPolicyResponse$Outbound` instead. */
+    export type Outbound = SuccessfulPolicyResponse$Outbound;
 }

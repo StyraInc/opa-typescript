@@ -21,66 +21,93 @@ export type Provenance = {
 };
 
 /** @internal */
+export const Revision$inboundSchema: z.ZodType<Revision, z.ZodTypeDef, unknown> = z.object({
+    revision: z.string(),
+});
+
+/** @internal */
+export type Revision$Outbound = {
+    revision: string;
+};
+
+/** @internal */
+export const Revision$outboundSchema: z.ZodType<Revision$Outbound, z.ZodTypeDef, Revision> =
+    z.object({
+        revision: z.string(),
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace Revision$ {
-    export const inboundSchema: z.ZodType<Revision, z.ZodTypeDef, unknown> = z.object({
-        revision: z.string(),
-    });
-
-    export type Outbound = {
-        revision: string;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Revision> = z.object({
-        revision: z.string(),
-    });
+    /** @deprecated use `Revision$inboundSchema` instead. */
+    export const inboundSchema = Revision$inboundSchema;
+    /** @deprecated use `Revision$outboundSchema` instead. */
+    export const outboundSchema = Revision$outboundSchema;
+    /** @deprecated use `Revision$Outbound` instead. */
+    export type Outbound = Revision$Outbound;
 }
 
 /** @internal */
+export const Provenance$inboundSchema: z.ZodType<Provenance, z.ZodTypeDef, unknown> = z
+    .object({
+        version: z.string().optional(),
+        build_commit: z.string().optional(),
+        build_timestamp: z
+            .string()
+            .datetime({ offset: true })
+            .transform((v) => new Date(v))
+            .optional(),
+        build_host: z.string().optional(),
+        bundles: z.record(z.lazy(() => Revision$inboundSchema)).optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            build_commit: "buildCommit",
+            build_timestamp: "buildTimestamp",
+            build_host: "buildHost",
+        });
+    });
+
+/** @internal */
+export type Provenance$Outbound = {
+    version?: string | undefined;
+    build_commit?: string | undefined;
+    build_timestamp?: string | undefined;
+    build_host?: string | undefined;
+    bundles?: { [k: string]: Revision$Outbound } | undefined;
+};
+
+/** @internal */
+export const Provenance$outboundSchema: z.ZodType<Provenance$Outbound, z.ZodTypeDef, Provenance> = z
+    .object({
+        version: z.string().optional(),
+        buildCommit: z.string().optional(),
+        buildTimestamp: z
+            .date()
+            .transform((v) => v.toISOString())
+            .optional(),
+        buildHost: z.string().optional(),
+        bundles: z.record(z.lazy(() => Revision$outboundSchema)).optional(),
+    })
+    .transform((v) => {
+        return remap$(v, {
+            buildCommit: "build_commit",
+            buildTimestamp: "build_timestamp",
+            buildHost: "build_host",
+        });
+    });
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
 export namespace Provenance$ {
-    export const inboundSchema: z.ZodType<Provenance, z.ZodTypeDef, unknown> = z
-        .object({
-            version: z.string().optional(),
-            build_commit: z.string().optional(),
-            build_timestamp: z
-                .string()
-                .datetime({ offset: true })
-                .transform((v) => new Date(v))
-                .optional(),
-            build_host: z.string().optional(),
-            bundles: z.record(z.lazy(() => Revision$.inboundSchema)).optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                build_commit: "buildCommit",
-                build_timestamp: "buildTimestamp",
-                build_host: "buildHost",
-            });
-        });
-
-    export type Outbound = {
-        version?: string | undefined;
-        build_commit?: string | undefined;
-        build_timestamp?: string | undefined;
-        build_host?: string | undefined;
-        bundles?: { [k: string]: Revision$.Outbound } | undefined;
-    };
-
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Provenance> = z
-        .object({
-            version: z.string().optional(),
-            buildCommit: z.string().optional(),
-            buildTimestamp: z
-                .date()
-                .transform((v) => v.toISOString())
-                .optional(),
-            buildHost: z.string().optional(),
-            bundles: z.record(z.lazy(() => Revision$.outboundSchema)).optional(),
-        })
-        .transform((v) => {
-            return remap$(v, {
-                buildCommit: "build_commit",
-                buildTimestamp: "build_timestamp",
-                buildHost: "build_host",
-            });
-        });
+    /** @deprecated use `Provenance$inboundSchema` instead. */
+    export const inboundSchema = Provenance$inboundSchema;
+    /** @deprecated use `Provenance$outboundSchema` instead. */
+    export const outboundSchema = Provenance$outboundSchema;
+    /** @deprecated use `Provenance$Outbound` instead. */
+    export type Outbound = Provenance$Outbound;
 }
