@@ -1,8 +1,10 @@
-import React from "react";
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { OPAClient, type Result } from "@styra/opa";
-import AuthzProvider, { AuthzProviderProps } from "../src/authz-provider";
+import {
+  default as AuthzProvider,
+  AuthzProviderProps,
+} from "../src/authz-provider";
 import useAuthz from "../src/use-authz";
 
 describe("useAuthz Hook", () => {
@@ -14,18 +16,21 @@ describe("useAuthz Hook", () => {
     defaultPath,
     defaultInput,
     defaultFromResult,
-  }: Omit<AuthzProviderProps, "sdk"> = {}) => ({
-    wrapper: ({ children }) => (
-      <AuthzProvider
-        sdk={opa}
-        defaultPath={defaultPath}
-        defaultInput={defaultInput}
-        defaultFromResult={defaultFromResult}
-      >
-        {children}
-      </AuthzProvider>
-    ),
-  });
+  }: Omit<AuthzProviderProps, "sdk" | "queryClient" | "retry"> = {}) => {
+    return {
+      wrapper: ({ children }) => (
+        <AuthzProvider
+          sdk={opa}
+          defaultPath={defaultPath}
+          defaultInput={defaultInput}
+          defaultFromResult={defaultFromResult}
+          retry={false}
+        >
+          {children}
+        </AuthzProvider>
+      ),
+    };
+  };
 
   describe("on error", () => {
     it("sets the error", async () => {

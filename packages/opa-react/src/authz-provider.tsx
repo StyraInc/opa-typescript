@@ -1,4 +1,10 @@
-import { type PropsWithChildren, createContext, useMemo } from "react";
+import {
+  type PropsWithChildren,
+  createContext,
+  useState,
+  useMemo,
+} from "react";
+import { QueryClient, QueryFunctionContext } from "@tanstack/react-query";
 import {
   type Input,
   type Result,
@@ -43,6 +49,12 @@ export type AuthzProviderContext = {
    * If unset, any non-undefined, non-false (i.e. "truthy") result will be taken to mean "authorized".
    */
   defaultFromResult?: (_?: Result) => boolean;
+
+  /** The `@tanstack/react-query` client that's used for scheduling policy evaluation requests. */
+  queryClient: QueryClient;
+
+  /** Whether or not policy evaluations should retry on transient failures. `false` means never; `true` means infinite retry; any number N means N retries. Defaults to 3. */
+  retry: boolean | number;
 };
 
 // Reference: https://reacttraining.com/blog/react-context-with-typescript
@@ -50,7 +62,9 @@ export const AuthzContext = createContext<AuthzProviderContext | undefined>(
   undefined,
 );
 
-export type AuthzProviderProps = PropsWithChildren<AuthzProviderContext>;
+export type AuthzProviderProps = PropsWithChildren<
+  Omit<AuthzProviderContext, "queryClient">
+>;
 
 /**
  * Configures the authorization SDK, with default path/input of applicable.
@@ -71,10 +85,46 @@ export default function AuthzProvider({
   defaultPath,
   defaultInput,
   defaultFromResult,
+  retry = 3,
 }: AuthzProviderProps) {
+  const [queryClient] = useState(() => {
+    const defaultQueryFn = async ({
+      queryKey,
+      meta = {},
+      signal,
+    }: QueryFunctionContext) => {
+      const [path, input] = queryKey as [string, Input];
+      const fromResult = meta["fromResult"] as (_?: Result) => boolean;
+      return path
+        ? sdk.evaluate<Input, Result>(path, input, {
+            fromResult,
+            fetchOptions: { signal },
+          })
+        : sdk.evaluateDefault<Input, Result>(input, {
+            fromResult,
+            fetchOptions: { signal },
+          });
+    };
+    return new QueryClient({
+      defaultOptions: {
+        queries: {
+          queryFn: defaultQueryFn,
+          retry,
+        },
+      },
+    });
+  });
+
   const context = useMemo<AuthzProviderContext>(
-    () => ({ sdk, defaultPath, defaultInput, defaultFromResult }),
-    [sdk, defaultPath, defaultInput, defaultFromResult],
+    () => ({
+      sdk,
+      defaultPath,
+      defaultInput,
+      defaultFromResult,
+      queryClient,
+      retry,
+    }),
+    [sdk, defaultPath, defaultInput, defaultFromResult, queryClient, retry],
   );
 
   return (
