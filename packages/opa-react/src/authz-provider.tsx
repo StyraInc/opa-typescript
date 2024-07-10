@@ -9,7 +9,7 @@ import {
 import { type ServerError } from "@styra/opa/sdk/models/components";
 
 /** Abstracts the methods that are used from `OPAClient` of `@styra/opa`. */
-export interface SDK {
+export interface OPAClient {
   /** Evaluate a policy at `path`, with optional `input` and `RequestOptions`. */
   evaluate<In extends Input | ToInput, Res>(
     path: string,
@@ -33,7 +33,7 @@ export interface SDK {
 
 export type AuthzProviderContext = {
   /**  The `@styra/opa` OPAClient instance to use. */
-  sdk: SDK;
+  sdk: OPAClient;
   /** Default path for every decision. Override by providing`path`. */
   defaultPath?: string;
   /**  Default input for every decision, merged with any passed-in input. Use the latter to override the defaults. */
