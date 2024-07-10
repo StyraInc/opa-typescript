@@ -16,11 +16,11 @@ describe("useAuthz Hook", () => {
     defaultPath,
     defaultInput,
     defaultFromResult,
-  }: Omit<AuthzProviderProps, "sdk" | "queryClient" | "retry"> = {}) => {
+  }: Omit<AuthzProviderProps, "opaClient" | "queryClient" | "retry"> = {}) => {
     return {
       wrapper: ({ children }) => (
         <AuthzProvider
-          sdk={opa}
+          opaClient={opa}
           defaultPath={defaultPath}
           defaultInput={defaultInput}
           defaultFromResult={defaultFromResult}
