@@ -1,5 +1,10 @@
 import * as React from "react";
-import { type PropsWithChildren, createContext, useMemo } from "react";
+import {
+  type PropsWithChildren,
+  createContext,
+  useCallback,
+  useMemo,
+} from "react";
 import { QueryClient, QueryFunctionContext } from "@tanstack/react-query";
 import {
   type Input,
@@ -83,14 +88,10 @@ export default function AuthzProvider({
   defaultFromResult,
   retry = 3,
 }: AuthzProviderProps) {
-  const queryClient = useMemo(() => {
-    if (!opaClient) return;
+  const defaultQueryFn = useCallback(
+    async ({ queryKey, meta = {}, signal }: QueryFunctionContext) => {
+      if (!opaClient) return;
 
-    const defaultQueryFn = async ({
-      queryKey,
-      meta = {},
-      signal,
-    }: QueryFunctionContext) => {
       const [path, input] = queryKey as [string, Input];
       const fromResult = meta["fromResult"] as (_?: Result) => boolean;
       return path
@@ -102,16 +103,21 @@ export default function AuthzProvider({
             fromResult,
             fetchOptions: { signal },
           });
-    };
-    return new QueryClient({
-      defaultOptions: {
-        queries: {
-          queryFn: defaultQueryFn,
-          retry,
+    },
+    [opaClient],
+  );
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            queryFn: defaultQueryFn,
+            retry,
+          },
         },
-      },
-    });
-  }, [opaClient]);
+      }),
+    [defaultQueryFn],
+  );
 
   const context = useMemo<AuthzProviderContext>(
     () => ({
