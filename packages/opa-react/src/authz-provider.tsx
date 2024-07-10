@@ -1,3 +1,4 @@
+import * as React from "react";
 import { type PropsWithChildren, createContext, useMemo } from "react";
 import { QueryClient, QueryFunctionContext } from "@tanstack/react-query";
 import {
@@ -34,7 +35,7 @@ export interface OPAClient {
 
 export type AuthzProviderContext = {
   /**  The `@styra/opa` OPAClient instance to use. */
-  sdk: OPAClient;
+  opaClient: OPAClient;
   /** Default path for every decision. Override by providing`path`. */
   defaultPath?: string;
   /**  Default input for every decision, merged with any passed-in input. Use the latter to override the defaults. */
@@ -76,14 +77,14 @@ export type AuthzProviderProps = PropsWithChildren<
  */
 export default function AuthzProvider({
   children,
-  sdk,
+  opaClient,
   defaultPath,
   defaultInput,
   defaultFromResult,
   retry = 3,
 }: AuthzProviderProps) {
   const queryClient = useMemo(() => {
-    if (!sdk) return;
+    if (!opaClient) return;
 
     const defaultQueryFn = async ({
       queryKey,
@@ -93,11 +94,11 @@ export default function AuthzProvider({
       const [path, input] = queryKey as [string, Input];
       const fromResult = meta["fromResult"] as (_?: Result) => boolean;
       return path
-        ? sdk.evaluate<Input, Result>(path, input, {
+        ? opaClient.evaluate<Input, Result>(path, input, {
             fromResult,
             fetchOptions: { signal },
           })
-        : sdk.evaluateDefault<Input, Result>(input, {
+        : opaClient.evaluateDefault<Input, Result>(input, {
             fromResult,
             fetchOptions: { signal },
           });
@@ -110,18 +111,25 @@ export default function AuthzProvider({
         },
       },
     });
-  }, [sdk]);
+  }, [opaClient]);
 
   const context = useMemo<AuthzProviderContext>(
     () => ({
-      sdk,
+      opaClient,
       defaultPath,
       defaultInput,
       defaultFromResult,
-      queryClient: queryClient as QueryClient,
+      queryClient: queryClient!,
       retry,
     }),
-    [sdk, defaultPath, defaultInput, defaultFromResult, queryClient, retry],
+    [
+      opaClient,
+      defaultPath,
+      defaultInput,
+      defaultFromResult,
+      queryClient,
+      retry,
+    ],
   );
 
   if (!queryClient) return null;

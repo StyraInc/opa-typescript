@@ -1,3 +1,4 @@
+import * as React from "react";
 import { cleanup, render, screen } from "@testing-library/react";
 import Authz from "../src/authz";
 import { Result } from "@styra/opa";
