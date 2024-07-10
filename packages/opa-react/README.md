@@ -10,13 +10,13 @@ The package provides an `useAuthz` hook and a high-level `<Authz>` component.
 They are enabled by wrapping your App into `<AuthzProvider>`:
 
 ```tsx
-<AuthzProvider sdk={sdk} defaultPath="policy" defaultInput={{ user, tenant }}>
+<AuthzProvider opaClient={opaClient} defaultPath="policy" defaultInput={{ user, tenant }}>
   <Nav />
   <Outlet />
 </AuthzProvider>
 ```
 
-This example provides a previously-configured `sdk` instance (`OPAClient` from `@styra/opa`), a request path, and default input (which is merged with per-call inputs).
+This example provides a previously-configured `opaClient` instance (`OPAClient` from `@styra/opa`), a request path, and default input (which is merged with per-call inputs).
 
 They can either be used by providing static children (`<button>Press Here</button>`) and optionally `fallback` and `loading` JSX elements:
 ```tsx
