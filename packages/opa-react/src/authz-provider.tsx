@@ -1,9 +1,4 @@
-import {
-  type PropsWithChildren,
-  createContext,
-  useState,
-  useMemo,
-} from "react";
+import { type PropsWithChildren, createContext, useMemo } from "react";
 import { QueryClient, QueryFunctionContext } from "@tanstack/react-query";
 import {
   type Input,
@@ -87,7 +82,9 @@ export default function AuthzProvider({
   defaultFromResult,
   retry = 3,
 }: AuthzProviderProps) {
-  const [queryClient] = useState(() => {
+  const queryClient = useMemo(() => {
+    if (!sdk) return;
+
     const defaultQueryFn = async ({
       queryKey,
       meta = {},
@@ -113,7 +110,7 @@ export default function AuthzProvider({
         },
       },
     });
-  });
+  }, [sdk]);
 
   const context = useMemo<AuthzProviderContext>(
     () => ({
@@ -121,11 +118,13 @@ export default function AuthzProvider({
       defaultPath,
       defaultInput,
       defaultFromResult,
-      queryClient,
+      queryClient: queryClient as QueryClient,
       retry,
     }),
     [sdk, defaultPath, defaultInput, defaultFromResult, queryClient, retry],
   );
+
+  if (!queryClient) return null;
 
   return (
     <AuthzContext.Provider value={context}>{children}</AuthzContext.Provider>
