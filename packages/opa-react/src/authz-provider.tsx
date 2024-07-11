@@ -1,5 +1,4 @@
 import * as React from "react";
-import { BatshitDevtools } from "@yornaath/batshit-devtools-react";
 import {
   type PropsWithChildren,
   createContext,
@@ -17,21 +16,13 @@ import {
 import { type ServerError } from "@styra/opa/sdk/models/components";
 import { create, windowScheduler } from "@yornaath/batshit";
 
-const myIndexedResolver =
-  <T extends Record<any, any>>() =>
-  (itemsIndex: T, query: { path: string; input: Input }) => {
-    const k = key(query);
-    return itemsIndex[k] ?? null;
-  };
-
 function key(x: { path: string; input: Input }): string {
-  return JSON.stringify(x);
+  return stringify(x);
 }
 
 const evals = (sdk: OPAClient) =>
   create({
     fetcher: async (evals: { path: string; input: Input }[]) => {
-      console.table(evals);
       const evs = evals.map((x) => ({ ...x, k: key(x) }));
       const groups = Object.groupBy(evs, ({ path }) => path); // group by path
       return Promise.all(
@@ -42,11 +33,11 @@ const evals = (sdk: OPAClient) =>
           }, {});
           return sdk.evaluateBatch(path, inps, { rejectMixed: true });
         }),
-      ).then(([all]) => all); // unwrap
+      ).then((all: object[]) => all.reduce((acc, n) => ({ ...acc, ...n }), {})); // combine result arrays of objects
     },
-    resolver: myIndexedResolver(),
+    resolver: (results, query) => results[key(query)] ?? null,
     scheduler: windowScheduler(10),
-    name: "batcher:eval",
+    name: "@styra/opa-react",
   });
 
 /** Abstracts the methods that are used from `OPAClient` of `@styra/opa`. */
@@ -167,9 +158,55 @@ export default function AuthzProvider({
   if (!queryClient) return null;
 
   return (
-    <AuthzContext.Provider value={context}>
-      <BatshitDevtools />
-      {children}
-    </AuthzContext.Provider>
+    <AuthzContext.Provider value={context}>{children}</AuthzContext.Provider>
   );
+}
+
+// Taken from fast-json-stable-hash, MIT-licensed:
+// https://github.com/zkldi/fast-json-stable-hash/blob/31b3081e942c1ce491f9698fd0bf527847093036/index.js
+// That module was tricky to import because it's using `crypto` for hashing.
+// We only need a stable string.
+function stringify(obj: any) {
+  const type = typeof obj;
+
+  if (type === "string") {
+    return JSON.stringify(obj);
+  } else if (Array.isArray(obj)) {
+    let str = "[";
+
+    let al = obj.length - 1;
+
+    for (let i = 0; i < obj.length; i++) {
+      str += stringify(obj[i]);
+
+      if (i !== al) {
+        str += ",";
+      }
+    }
+
+    return `${str}]`;
+  } else if (type === "object" && obj !== null) {
+    let str = "{";
+    let keys = Object.keys(obj).sort();
+
+    let kl = keys.length - 1;
+
+    for (let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      str += `${JSON.stringify(key)}:${stringify(obj[key])}`;
+
+      if (i !== kl) {
+        str += ",";
+      }
+    }
+
+    return `${str}}`;
+  } else if (type === "number" || type === "boolean" || obj === null) {
+    // bool, num, null have correct auto-coercions
+    return `${obj}`;
+  } else {
+    throw new TypeError(
+      `Invalid JSON type of ${type}, value ${obj}. Can only hash JSON objects.`,
+    );
+  }
 }

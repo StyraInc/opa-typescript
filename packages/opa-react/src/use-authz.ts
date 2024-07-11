@@ -37,7 +37,6 @@ export default function useAuthz(
   const i = mergeInput(input, defaultInput);
   const fromR = fromResult ?? defaultFromResult;
 
-  // console.log({ p, i });
   const {
     // NOTE(sr): we're ignoring 'status'
     data: result,
