@@ -16,22 +16,39 @@ import {
 import { type ServerError } from "@styra/opa/sdk/models/components";
 import { create, windowScheduler } from "@yornaath/batshit";
 
-function key(x: { path: string; input: Input }): string {
-  return stringify(x);
+type EvalQuery = {
+  path: string | undefined;
+  input: Input | undefined;
+  fromResult: ((_?: Result) => boolean) | undefined;
+};
+
+function key({ path, input }: EvalQuery): string {
+  return stringify({ path, input }); // Note: omit fromResult
 }
 
 const evals = (sdk: OPAClient) =>
   create({
-    fetcher: async (evals: { path: string; input: Input }[]) => {
+    fetcher: async (evals: EvalQuery[]) => {
       const evs = evals.map((x) => ({ ...x, k: key(x) }));
       const groups = Object.groupBy(evs, ({ path }) => path); // group by path
       return Promise.all(
         Object.entries(groups).map(([path, inputs]) => {
-          const inps = inputs.reduce((acc, { k, input }) => {
-            acc[k] = input;
-            return acc;
-          }, {});
-          return sdk.evaluateBatch(path, inps, { rejectMixed: true });
+          const inps: Record<string, Input> = {};
+          const fromRs: Record<string, (_?: Result) => boolean> = {};
+          inputs.forEach(({ k, input, fromResult }) => {
+            inps[k] = input;
+            fromRs[k] = fromResult;
+          });
+          return sdk
+            .evaluateBatch(path, inps, { rejectMixed: true })
+            .then((res) =>
+              Object.fromEntries(
+                Object.entries(res).map(([k, res]) => [
+                  k,
+                  fromRs[k] ? fromRs[k](res) : res,
+                ]),
+              ),
+            );
         }),
       ).then((all: object[]) => all.reduce((acc, n) => ({ ...acc, ...n }), {})); // combine result arrays of objects
     },
@@ -111,15 +128,20 @@ export default function AuthzProvider({
   defaultPath,
   defaultInput,
   defaultFromResult,
-  retry = 3,
+  retry = 0, // Debugging
 }: AuthzProviderProps) {
   const batcher = useMemo(() => opaClient && evals(opaClient), [opaClient]);
   const defaultQueryFn = useCallback(
-    async ({ queryKey, meta = {}, signal }: QueryFunctionContext) => {
+    async ({
+      queryKey,
+      meta = {},
+      signal,
+    }: QueryFunctionContext): Promise<Record<string, Result>> => {
       if (!batcher) return;
 
       const [path, input] = queryKey as [string, Input];
-      return batcher.fetch({ path, input }); // TODO: fromResult, signal
+      const fromResult = meta["fromResult"] as any;
+      return batcher.fetch({ path, input, fromResult }); // TODO: signal
     },
     [batcher],
   );
@@ -133,7 +155,7 @@ export default function AuthzProvider({
           },
         },
       }),
-    [defaultQueryFn],
+    [defaultQueryFn, retry],
   );
 
   const context = useMemo<AuthzProviderContext>(
@@ -168,6 +190,7 @@ export default function AuthzProvider({
 // We only need a stable string.
 function stringify(obj: any) {
   const type = typeof obj;
+  if (obj === undefined) return "_";
 
   if (type === "string") {
     return JSON.stringify(obj);
