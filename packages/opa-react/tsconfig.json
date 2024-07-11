@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["ESNext.Object", "DOM"],
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
     "declaration": true,

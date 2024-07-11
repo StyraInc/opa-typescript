@@ -1,4 +1,5 @@
 import * as React from "react";
+import { BatshitDevtools } from "@yornaath/batshit-devtools-react";
 import {
   type PropsWithChildren,
   createContext,
@@ -14,6 +15,39 @@ import {
   type BatchRequestOptions,
 } from "@styra/opa";
 import { type ServerError } from "@styra/opa/sdk/models/components";
+import { create, windowScheduler } from "@yornaath/batshit";
+
+const myIndexedResolver =
+  <T extends Record<any, any>>() =>
+  (itemsIndex: T, query: { path: string; input: Input }) => {
+    const k = key(query);
+    return itemsIndex[k] ?? null;
+  };
+
+function key(x: { path: string; input: Input }): string {
+  return JSON.stringify(x);
+}
+
+const evals = (sdk: OPAClient) =>
+  create({
+    fetcher: async (evals: { path: string; input: Input }[]) => {
+      console.table(evals);
+      const evs = evals.map((x) => ({ ...x, k: key(x) }));
+      const groups = Object.groupBy(evs, ({ path }) => path); // group by path
+      return Promise.all(
+        Object.entries(groups).map(([path, inputs]) => {
+          const inps = inputs.reduce((acc, { k, input }) => {
+            acc[k] = input;
+            return acc;
+          }, {});
+          return sdk.evaluateBatch(path, inps, { rejectMixed: true });
+        }),
+      ).then(([all]) => all); // unwrap
+    },
+    resolver: myIndexedResolver(),
+    scheduler: windowScheduler(10),
+    name: "batcher:eval",
+  });
 
 /** Abstracts the methods that are used from `OPAClient` of `@styra/opa`. */
 export interface OPAClient {
@@ -88,23 +122,15 @@ export default function AuthzProvider({
   defaultFromResult,
   retry = 3,
 }: AuthzProviderProps) {
+  const batcher = useMemo(() => opaClient && evals(opaClient), [opaClient]);
   const defaultQueryFn = useCallback(
     async ({ queryKey, meta = {}, signal }: QueryFunctionContext) => {
-      if (!opaClient) return;
+      if (!batcher) return;
 
       const [path, input] = queryKey as [string, Input];
-      const fromResult = meta["fromResult"] as (_?: Result) => boolean;
-      return path
-        ? opaClient.evaluate<Input, Result>(path, input, {
-            fromResult,
-            fetchOptions: { signal },
-          })
-        : opaClient.evaluateDefault<Input, Result>(input, {
-            fromResult,
-            fetchOptions: { signal },
-          });
+      return batcher.fetch({ path, input }); // TODO: fromResult, signal
     },
-    [opaClient],
+    [batcher],
   );
   const queryClient = useMemo(
     () =>
@@ -141,6 +167,9 @@ export default function AuthzProvider({
   if (!queryClient) return null;
 
   return (
-    <AuthzContext.Provider value={context}>{children}</AuthzContext.Provider>
+    <AuthzContext.Provider value={context}>
+      <BatshitDevtools />
+      {children}
+    </AuthzContext.Provider>
   );
 }
