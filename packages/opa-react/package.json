@@ -58,6 +58,9 @@
   ],
   "type": "module",
   "tshy": {
+    "sourceDialects": [
+      "@styra/opa-react/source"
+    ],
     "exports": {
       "./package.json": "./package.json",
       ".": "./src/index.ts"
@@ -67,6 +70,7 @@
     "./package.json": "./package.json",
     ".": {
       "import": {
+        "@styra/opa-react/source": "./src/index.ts",
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
       },
