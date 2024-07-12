@@ -1,5 +1,47 @@
 # @styra/opa-react
 
+## 0.5.0
+
+### Minor Changes
+
+- 12f1e98: Support batching requests sent to the backend (optional)
+
+  When used with [Enterprise OPA's Batch API](https://docs.styra.com/enterprise-opa/reference/api-reference/batch-api), this mode allows for sending much
+  fewer requests to the backend. It's enabled by setting `batch={true}` on `<AuthzProvider>`.
+
+  Note that the Batch API has no notion of "default query", so it's not possible
+  to use batching without having either `defaultPath` (`<AuthzProvider>`) or
+  `path` (`useAuthz()`, `<Authz>`) set.
+
+  Please note that `fromResult` is exempt from the cache key, so multiple requests
+  with the same path and input, but different `fromResult` settings will lead to
+  unforeseen results.
+  This is on par with the regular (non-batching) caching, and we'll revisit this
+  if it becomes a problem for users. Please create an issue on Github if it is
+  problematic for you.
+
+  Furthermore, batching queries are not wired up with `AbortController` like the
+  non-batching equivalents are.
+
+- dd082b5: Introduce `@tanstack/react-query` for policy evaluation request caching
+
+  With this release, multiple uses of `useAuthz` and `<Authz>` with the same inputs no longer unconditionally lead to API requests.
+  Using `@tanstack/react-query` underneath, `useAuthz` will now return cached results when applicable.
+
+  Furthermore, API requests are retried on transient errors.
+  You can control the retry count via `AuthzProvider`'s `retry` property.
+
+  **NOTE** The `fromResult` property/argument is currently exempt from the cache key -- so two requests with the same `path` and `input` will produce the same result even if their `fromResult` differs.
+  We believe that this is quite uncommon, please file an issue if it is a problem in your use case.
+
+  For details on how and when the cache is invalidated, please refer to the docs here: https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults
+
+- f9d7ac2: change exported interfaces names, and AuthzProvider property
+
+  The export iterface `SDK` is now called `OPAClient` for consistency with `@styra/opa`.
+
+  It is used in `AuthzProviderContext` and `AuthzProviderProps`, and has been renamed from `sdk` to `opaClient`.
+
 ## 0.4.0
 
 ### Minor Changes
