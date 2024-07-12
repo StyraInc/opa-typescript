@@ -95,9 +95,6 @@ export type AuthzProviderContext = {
 
   /** The `@tanstack/react-query` client that's used for scheduling policy evaluation requests. */
   queryClient: QueryClient;
-
-  /** Whether or not policy evaluations should retry on transient failures. `false` means never; `true` means infinite retry; any number N means N retries. Defaults to 3. */
-  retry: boolean | number;
 };
 
 // Reference: https://reacttraining.com/blog/react-context-with-typescript
@@ -105,9 +102,14 @@ export const AuthzContext = createContext<AuthzProviderContext | undefined>(
   undefined,
 );
 
-export type AuthzProviderProps = PropsWithChildren<
-  Omit<AuthzProviderContext, "queryClient">
->;
+export interface AuthzProviderProps
+  extends PropsWithChildren<Omit<AuthzProviderContext, "queryClient">> {
+  /** Whether or not policy evaluations should retry on transient failures. `false` means never; `true` means infinite retry; any number N means N retries. Defaults to 3. */
+  retry?: boolean | number;
+
+  /** Batch policy evaluation queries when possible, and supported by the backend. Defaults to `false`. */
+  batch?: boolean;
+}
 
 /**
  * Configures the authorization SDK, with default path/input of applicable.
@@ -129,21 +131,42 @@ export default function AuthzProvider({
   defaultInput,
   defaultFromResult,
   retry = 0, // Debugging
+  batch = false,
 }: AuthzProviderProps) {
-  const batcher = useMemo(() => opaClient && evals(opaClient), [opaClient]);
+  const batcher = useMemo(
+    () => batch && opaClient && evals(opaClient),
+    [opaClient, batch],
+  );
   const defaultQueryFn = useCallback(
     async ({
       queryKey,
       meta = {},
       signal,
-    }: QueryFunctionContext): Promise<Record<string, Result>> => {
-      if (!batcher) return;
-
+    }: QueryFunctionContext): Promise<Result> => {
       const [path, input] = queryKey as [string, Input];
-      const fromResult = meta["fromResult"] as any;
-      return batcher.fetch({ path, input, fromResult }); // TODO: signal
+      const fromResult = meta["fromResult"] as
+        | ((_?: Result) => boolean)
+        | undefined;
+
+      if (!batcher) {
+        // use the default, unbatched queries backed by react-query
+        return path
+          ? opaClient.evaluate<Input, Result>(path, input, {
+              fromResult,
+              fetchOptions: { signal },
+            })
+          : opaClient.evaluateDefault<Input, Result>(input, {
+              fromResult,
+              fetchOptions: { signal },
+            });
+      }
+
+      if (!path)
+        throw new Error("batch requests need to have a defined query path");
+
+      return batcher.fetch({ path, input, fromResult });
     },
-    [batcher],
+    [batcher, batch],
   );
   const queryClient = useMemo(
     () =>
@@ -165,16 +188,8 @@ export default function AuthzProvider({
       defaultInput,
       defaultFromResult,
       queryClient: queryClient!,
-      retry,
     }),
-    [
-      opaClient,
-      defaultPath,
-      defaultInput,
-      defaultFromResult,
-      queryClient,
-      retry,
-    ],
+    [opaClient, defaultPath, defaultInput, defaultFromResult, queryClient],
   );
 
   if (!queryClient) return null;

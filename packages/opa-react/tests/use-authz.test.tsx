@@ -16,6 +16,7 @@ describe("useAuthz Hook", () => {
     defaultPath,
     defaultInput,
     defaultFromResult,
+    batch = false,
   }: Omit<AuthzProviderProps, "opaClient" | "queryClient" | "retry"> = {}) => {
     return {
       wrapper: ({ children }) => (
@@ -25,6 +26,7 @@ describe("useAuthz Hook", () => {
           defaultInput={defaultInput}
           defaultFromResult={defaultFromResult}
           retry={false}
+          batch={batch}
         >
           {children}
         </AuthzProvider>
@@ -261,6 +263,224 @@ describe("useAuthz Hook", () => {
         "some/other/path",
         { x: "default", other: "input" },
         expect.anything(),
+      );
+    });
+
+    it("caches requests with the same input/path (disregarding fromResult)", async () => {
+      // NOTE(sr): We're mocking the call to evaluate which handles the `fromResult`
+      // application. So, it never really is called. However, we check that it was
+      // passed as expected in the assertions below.
+      const evaluateSpy = vi.spyOn(opa, "evaluate").mockResolvedValue(false);
+
+      const fromResult1 = (res?: Result) => (res as any).foo;
+      const fromResult2 = (res?: Result) => (res as any).bar;
+
+      const { result } = renderHook(() => {
+        return {
+          first: useAuthz("path/allow", "foo", fromResult1),
+          second: useAuthz(
+            "path/allow",
+            "foo",
+            fromResult2, // Not part of the cache key!
+          ),
+        };
+      }, wrapper());
+
+      await waitFor(() =>
+        Promise.all([
+          expect(result.current.first).toMatchObject({
+            isLoading: false,
+            error: undefined,
+            result: false,
+          }),
+          expect(result.current.second).toMatchObject({
+            isLoading: false,
+            error: undefined,
+            result: false,
+          }),
+        ]),
+      );
+
+      expect(evaluateSpy).toHaveBeenCalledOnce();
+      expect(evaluateSpy).toHaveBeenCalledWith("path/allow", "foo", {
+        fetchOptions: expect.anything(),
+        fromResult: fromResult1,
+      });
+    });
+  });
+
+  describe("with batching", () => {
+    const batch = true;
+
+    it("works without input, without fromResult", async () => {
+      const hash = '{"input":_,"path":"path/allow"}';
+      const evaluateSpy = vi
+        .spyOn(opa, "evaluateBatch")
+        .mockResolvedValue({ [hash]: false });
+
+      const { result } = renderHook(
+        () => useAuthz("path/allow"),
+        wrapper({ batch }),
+      );
+      await waitFor(() =>
+        expect(result.current).toMatchObject({
+          isLoading: false,
+          error: undefined,
+          result: false,
+        }),
+      );
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "path/allow",
+        { [hash]: undefined },
+        { rejectMixed: true },
+      );
+    });
+
+    it("works without input, with fromResult", async () => {
+      const hash = '{"input":_,"path":"path/allow"}';
+      const evaluateSpy = vi
+        .spyOn(opa, "evaluateBatch")
+        .mockResolvedValue({ [hash]: { foo: false } });
+
+      const { result } = renderHook(
+        () => useAuthz("path/allow", undefined, (x) => (x as any).foo),
+        wrapper({ batch }),
+      );
+      await waitFor(() =>
+        expect(result.current).toMatchObject({
+          isLoading: false,
+          error: undefined,
+          result: false,
+        }),
+      );
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "path/allow",
+        { [hash]: undefined },
+        { rejectMixed: true },
+      );
+    });
+
+    it("rejects evals without path", async () => {
+      const hash = '{"input":_,"path":"path/allow"}';
+      const evaluateSpy = vi.spyOn(opa, "evaluateBatch");
+
+      const { result } = renderHook(
+        () => useAuthz(undefined, "some input"),
+        wrapper({ batch }),
+      );
+      await waitFor(() =>
+        expect(result.current).toMatchObject({
+          isLoading: false,
+          error: new Error("batch requests need to have a defined query path"),
+          result: undefined,
+        }),
+      );
+      expect(evaluateSpy).not.toHaveBeenCalled();
+    });
+
+    it("works with input, with fromResult", async () => {
+      const hash = '{"input":"foo","path":"path/allow"}';
+      const evaluateSpy = vi
+        .spyOn(opa, "evaluateBatch")
+        .mockResolvedValue({ [hash]: { foo: false } });
+
+      const { result } = renderHook(
+        () => useAuthz("path/allow", "foo", (x) => (x as any).foo),
+        wrapper({ batch }),
+      );
+      await waitFor(() =>
+        expect(result.current).toMatchObject({
+          isLoading: false,
+          error: undefined,
+          result: false,
+        }),
+      );
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "path/allow",
+        { [hash]: "foo" },
+        { rejectMixed: true },
+      );
+    });
+
+    it("batches multiple requests with different inputs", async () => {
+      const hash1 = '{"input":"foo","path":"path/allow"}';
+      const hash2 = '{"input":"bar","path":"path/allow"}';
+      const evaluateSpy = vi
+        .spyOn(opa, "evaluateBatch")
+        .mockResolvedValue({ [hash1]: false, [hash2]: true });
+
+      const { result } = renderHook(() => {
+        return {
+          first: useAuthz("path/allow", "foo"),
+          second: useAuthz("path/allow", "bar"),
+        };
+      }, wrapper({ batch }));
+
+      await waitFor(() =>
+        Promise.all([
+          expect(result.current.first).toMatchObject({
+            isLoading: false,
+            error: undefined,
+            result: false,
+          }),
+          expect(result.current.second).toMatchObject({
+            isLoading: false,
+            error: undefined,
+            result: true,
+          }),
+        ]),
+      );
+
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "path/allow",
+        { [hash1]: "foo", [hash2]: "bar" },
+        { rejectMixed: true },
+      );
+    });
+
+    it("coalesces multiple requests with the same path input (disregarding fromResult)", async () => {
+      const hash = '{"input":"foo","path":"path/allow"}';
+      // NOTE(sr): Unlike the non-batching case, we're handling the application of `fromResult`
+      // in the code of opa-react. So the functions that are passed are evaluated on the mocked
+      // result returned here.
+      const evaluateSpy = vi
+        .spyOn(opa, "evaluateBatch")
+        .mockResolvedValue({ [hash]: { foo: false } });
+
+      const { result } = renderHook(() => {
+        return {
+          first: useAuthz(
+            "path/allow",
+            "foo",
+            (res?: Result) => (res as any).foo,
+          ),
+          second: useAuthz(
+            "path/allow",
+            "foo",
+            (res?: Result) => (res as any).bar,
+          ),
+        };
+      }, wrapper({ batch }));
+
+      await waitFor(() =>
+        Promise.all([
+          expect(result.current.first).toMatchObject({
+            isLoading: false,
+            error: undefined,
+            result: false,
+          }),
+          expect(result.current.second).toMatchObject({
+            isLoading: false,
+            error: undefined,
+            result: false,
+          }),
+        ]),
+      );
+
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "path/allow",
+        { [hash]: "foo" },
+        { rejectMixed: true },
       );
     });
   });
