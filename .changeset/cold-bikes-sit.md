@@ -9,7 +9,7 @@ fewer requests to the backend. It's enabled by setting `batch={true}` on `<Authz
 
 Note that the Batch API has no notion of "default query", so it's not possible
 to use batching without having either `defaultPath` (`<AuthzProvider>`) or
-`path` (`useAuthz()`, `<Authz>`) set.
+`path` (`useAuthz()`, `<Authz>`) set.
 
 Please note that `fromResult` is exempt from the cache key, so multiple requests
 with the same path and input, but different `fromResult` settings will lead to
