@@ -70,7 +70,7 @@ jobs:
         run: npx -w ${{ matrix.pkg }} attw --pack --ignore-rules no-resolution
         if: matrix.pkg == 'packages/opa'
       - name: jsr publish dry-run
-        run: npx -w ${{ matrix.pkg }} jsr publish --dry-run
+        run: npx -w ${{ matrix.pkg }} jsr publish --dry-run --allow-dirty
         if: matrix.pkg == 'packages/opa'
 
   success:
