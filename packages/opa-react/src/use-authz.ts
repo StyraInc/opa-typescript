@@ -26,7 +26,13 @@ export default function useAuthz(
   if (context === undefined) {
     throw Error("Authz/useAuthz can only be used inside an AuthzProvider");
   }
-  const { defaultPath, defaultInput, defaultFromResult, queryClient } = context;
+  const {
+    defaultPath,
+    defaultInput,
+    defaultFromResult,
+    queryClient,
+    opaClient,
+  } = context;
   const p = path ?? defaultPath;
   const i = mergeInput(input, defaultInput);
   const fromR = fromResult ?? defaultFromResult;
@@ -40,6 +46,7 @@ export default function useAuthz(
     {
       queryKey: [p, i],
       meta: { fromResult: fromR },
+      enabled: !!opaClient,
     },
     queryClient,
   );
