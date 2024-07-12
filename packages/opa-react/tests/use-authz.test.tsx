@@ -438,6 +438,48 @@ describe("useAuthz Hook", () => {
       );
     });
 
+    it("batches multiple requests with different paths+fromResults, too", async () => {
+      const hash1 = '{"input":"foo","path":"path/foo"}';
+      const hash2 = '{"input":"bar","path":"path/bar"}';
+      const evaluateSpy = vi
+        .spyOn(opa, "evaluateBatch")
+        .mockResolvedValueOnce({ [hash1]: { a: false } })
+        .mockResolvedValueOnce({ [hash2]: { b: true } });
+
+      const { result } = renderHook(() => {
+        return {
+          first: useAuthz("path/foo", "foo", (x) => (x as any).a),
+          second: useAuthz("path/bar", "bar", (x) => (x as any).b),
+        };
+      }, wrapper({ batch }));
+
+      await waitFor(() =>
+        Promise.all([
+          expect(result.current.first).toMatchObject({
+            isLoading: false,
+            error: undefined,
+            result: false,
+          }),
+          expect(result.current.second).toMatchObject({
+            isLoading: false,
+            error: undefined,
+            result: true,
+          }),
+        ]),
+      );
+
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "path/foo",
+        { [hash1]: "foo" },
+        { rejectMixed: true },
+      );
+      expect(evaluateSpy).toHaveBeenCalledWith(
+        "path/bar",
+        { [hash2]: "bar" },
+        { rejectMixed: true },
+      );
+    });
+
     it("coalesces multiple requests with the same path input (disregarding fromResult)", async () => {
       const hash = '{"input":"foo","path":"path/allow"}';
       // NOTE(sr): Unlike the non-batching case, we're handling the application of `fromResult`
