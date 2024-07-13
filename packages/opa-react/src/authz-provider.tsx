@@ -50,7 +50,10 @@ const evals = (sdk: OPAClient) =>
               ),
             );
         }),
-      ).then((all: object[]) => Object.assign({}, ...all)); // combine result arrays of objects
+      ).then((all: object[]) =>
+        // combine result arrays of objects (if there's more than one)
+        all.length == 1 ? all[0] : Object.assign({}, ...all),
+      );
     },
     resolver: (results, query) => results[key(query)] ?? null,
     scheduler: windowScheduler(10),
