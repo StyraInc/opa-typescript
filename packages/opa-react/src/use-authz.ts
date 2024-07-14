@@ -44,7 +44,7 @@ export default function useAuthz(
     isFetching: isLoading,
   } = useQuery<Result>(
     {
-      queryKey: [p, i],
+      queryKey: [{ path: p, input: i }],
       meta: { fromResult: fromR },
       enabled: !!opaClient,
     },
