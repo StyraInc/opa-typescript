@@ -1,5 +1,11 @@
 # @styra/opa-react
 
+## 0.5.1
+
+### Patch Changes
+
+- 6820c04: Tweak cache key computation and minor performance enhancements
+
 ## 0.5.0
 
 ### Minor Changes
