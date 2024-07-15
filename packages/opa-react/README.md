@@ -5,6 +5,14 @@
 
 This package contains helpers for using [@styra/opa](https://www.npmjs.com/package/@styra/opa) from React.
 
+## Features
+
+* High-level, declarative components for embedding authorization decisions in your frontend code.
+* Built-in caching, deduplication, and state management based on `@tanstack/react-query`.
+* Optional **request batching** for backends that support it (Enterprise OPA, or your own implementation of the Batch API).
+
+## Details
+
 The package provides an `useAuthz` hook and a high-level `<Authz>` component.
 
 They are enabled by wrapping your App into `<AuthzProvider>`:
