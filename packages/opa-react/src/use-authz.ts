@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { AuthzContext } from "./authz-provider.js";
 import { type Input, type Result } from "@styra/opa";
 import merge from "lodash.merge";
@@ -33,9 +33,15 @@ export default function useAuthz(
     queryClient,
     opaClient,
   } = context;
-  const p = path ?? defaultPath;
-  const i = mergeInput(input, defaultInput);
-  const fromR = fromResult ?? defaultFromResult;
+
+  const queryKey = useMemo(
+    () => [path ?? defaultPath, mergeInput(input, defaultInput)],
+    [path, defaultPath, input, defaultInput],
+  );
+  const meta = useMemo(
+    () => ({ fromResult: fromResult ?? defaultFromResult }),
+    [fromResult, defaultFromResult],
+  );
 
   const {
     // NOTE(sr): we're ignoring 'status'
@@ -44,8 +50,8 @@ export default function useAuthz(
     isFetching: isLoading,
   } = useQuery<Result>(
     {
-      queryKey: [{ path: p, input: i }],
-      meta: { fromResult: fromR },
+      queryKey,
+      meta,
       enabled: !!opaClient,
     },
     queryClient,

@@ -159,8 +159,7 @@ export default function AuthzProvider({
       meta = {},
       signal,
     }: QueryFunctionContext): Promise<Result> => {
-      const q = queryKey as [EvalQuery];
-      const [{ path, input }] = q;
+      const [path, input] = queryKey as [string, Input];
       const fromResult = meta["fromResult"] as
         | ((_?: Result) => boolean)
         | undefined;
