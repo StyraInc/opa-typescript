@@ -313,10 +313,13 @@ describe("useAuthz Hook", () => {
     const batch = true;
 
     it("works without input, without fromResult", async () => {
-      const hash = '{"input":_,"path":"path/allow"}';
+      let hash: string;
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
-        .mockResolvedValue({ [hash]: false });
+        .mockImplementationOnce((_path, inputs, _opts) => {
+          [hash] = Object.keys(inputs);
+          return Promise.resolve({ [hash]: false });
+        });
 
       const { result } = renderHook(
         () => useAuthz("path/allow"),
@@ -337,13 +340,16 @@ describe("useAuthz Hook", () => {
     });
 
     it("works without input, with fromResult", async () => {
-      const hash = '{"input":_,"path":"path/allow"}';
+      let hash: string;
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
-        .mockResolvedValue({ [hash]: { foo: false } });
+        .mockImplementationOnce((_path, inputs, _opts) => {
+          [hash] = Object.keys(inputs);
+          return Promise.resolve({ [hash]: { foo: false } });
+        });
 
       const { result } = renderHook(
-        () => useAuthz("path/allow", undefined, (x) => (x as any).foo),
+        () => useAuthz("path/allow", undefined, (x?: Result) => (x as any).foo),
         wrapper({ batch }),
       );
       await waitFor(() =>
@@ -361,7 +367,6 @@ describe("useAuthz Hook", () => {
     });
 
     it("rejects evals without path", async () => {
-      const hash = '{"input":_,"path":"path/allow"}';
       const evaluateSpy = vi.spyOn(opa, "evaluateBatch");
 
       const { result } = renderHook(
@@ -379,13 +384,16 @@ describe("useAuthz Hook", () => {
     });
 
     it("works with input, with fromResult", async () => {
-      const hash = '{"input":"foo","path":"path/allow"}';
+      let hash: string;
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
-        .mockResolvedValue({ [hash]: { foo: false } });
+        .mockImplementationOnce((_path, inputs, _opts) => {
+          [hash] = Object.keys(inputs);
+          return Promise.resolve({ [hash]: { foo: false } });
+        });
 
       const { result } = renderHook(
-        () => useAuthz("path/allow", "foo", (x) => (x as any).foo),
+        () => useAuthz("path/allow", "foo", (x?: Result) => (x as any).foo),
         wrapper({ batch }),
       );
       await waitFor(() =>
@@ -403,11 +411,23 @@ describe("useAuthz Hook", () => {
     });
 
     it("batches multiple requests with different inputs", async () => {
-      const hash1 = '{"input":"foo","path":"path/allow"}';
-      const hash2 = '{"input":"bar","path":"path/allow"}';
+      let hash1: string;
+      let hash2: string;
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
-        .mockResolvedValue({ [hash1]: false, [hash2]: true });
+        .mockImplementationOnce((_path, inputs, _opts) => {
+          const res = Object.fromEntries(
+            Object.entries(inputs).map(([k, inp]) => {
+              if (inp === "foo") {
+                hash1 = k;
+              } else {
+                hash2 = k;
+              }
+              return [k, inp != "foo"];
+            }),
+          );
+          return Promise.resolve({ [hash1]: false, [hash2]: true });
+        });
 
       const { result } = renderHook(() => {
         return {
@@ -439,17 +459,23 @@ describe("useAuthz Hook", () => {
     });
 
     it("batches multiple requests with different paths+fromResults, too", async () => {
-      const hash1 = '{"input":"foo","path":"path/foo"}';
-      const hash2 = '{"input":"bar","path":"path/bar"}';
+      let hash1: string;
+      let hash2: string;
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
-        .mockResolvedValueOnce({ [hash1]: { a: false } })
-        .mockResolvedValueOnce({ [hash2]: { b: true } });
+        .mockImplementationOnce((_path, inputs, _opts) => {
+          [hash1] = Object.keys(inputs);
+          return Promise.resolve({ [hash1]: { a: false } });
+        })
+        .mockImplementationOnce((_path, inputs, _opts) => {
+          [hash2] = Object.keys(inputs);
+          return Promise.resolve({ [hash2]: { b: true } });
+        });
 
       const { result } = renderHook(() => {
         return {
-          first: useAuthz("path/foo", "foo", (x) => (x as any).a),
-          second: useAuthz("path/bar", "bar", (x) => (x as any).b),
+          first: useAuthz("path/foo", "foo", (x?: Result) => (x as any).a),
+          second: useAuthz("path/bar", "bar", (x?: Result) => (x as any).b),
         };
       }, wrapper({ batch }));
 
@@ -481,13 +507,16 @@ describe("useAuthz Hook", () => {
     });
 
     it("coalesces multiple requests with the same path input (disregarding fromResult)", async () => {
-      const hash = '{"input":"foo","path":"path/allow"}';
+      let hash: string;
       // NOTE(sr): Unlike the non-batching case, we're handling the application of `fromResult`
       // in the code of opa-react. So the functions that are passed are evaluated on the mocked
       // result returned here.
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
-        .mockResolvedValue({ [hash]: { foo: false } });
+        .mockImplementationOnce((_path, inputs, _opts) => {
+          [hash] = Object.keys(inputs);
+          return Promise.resolve({ [hash]: { foo: false } });
+        });
 
       const { result } = renderHook(() => {
         return {

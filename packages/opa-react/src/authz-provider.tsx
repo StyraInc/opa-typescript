@@ -22,8 +22,21 @@ type EvalQuery = {
   fromResult: ((_?: Result) => boolean) | undefined;
 };
 
-function key({ path, input }: EvalQuery): string {
-  return stringify({ path, input }); // Note: omit fromResult
+const table = new WeakMap();
+
+// key is used to index the individual Batch API batches when splitting
+// an incoming batch of EvalQuery. The same `x` is later passed to the
+// batch item resolver in the results object. We use the WeakMap to
+// ensure that the same `x` gets the same number.
+function key(x: EvalQuery): string {
+  const r = table.get(x);
+  if (r) return r;
+
+  const num = new Uint32Array(1);
+  crypto.getRandomValues(num);
+  const rand = num.toString();
+  table.set(x, rand);
+  return rand;
 }
 
 const evals = (sdk: OPAClient) =>
@@ -133,7 +146,7 @@ export default function AuthzProvider({
   defaultPath,
   defaultInput,
   defaultFromResult,
-  retry = 0, // Debugging
+  retry = 0,
   batch = false,
 }: AuthzProviderProps) {
   const batcher = useMemo(
@@ -200,54 +213,4 @@ export default function AuthzProvider({
   return (
     <AuthzContext.Provider value={context}>{children}</AuthzContext.Provider>
   );
-}
-
-// Taken from fast-json-stable-hash, MIT-licensed:
-// https://github.com/zkldi/fast-json-stable-hash/blob/31b3081e942c1ce491f9698fd0bf527847093036/index.js
-// That module was tricky to import because it's using `crypto` for hashing.
-// We only need a stable string.
-function stringify(obj: any) {
-  const type = typeof obj;
-  if (obj === undefined) return "_";
-
-  if (type === "string") {
-    return JSON.stringify(obj);
-  } else if (Array.isArray(obj)) {
-    let str = "[";
-
-    let al = obj.length - 1;
-
-    for (let i = 0; i < obj.length; i++) {
-      str += stringify(obj[i]);
-
-      if (i !== al) {
-        str += ",";
-      }
-    }
-
-    return `${str}]`;
-  } else if (type === "object" && obj !== null) {
-    let str = "{";
-    let keys = Object.keys(obj).sort();
-
-    let kl = keys.length - 1;
-
-    for (let i = 0; i < keys.length; i++) {
-      let key = keys[i];
-      str += `${JSON.stringify(key)}:${stringify(obj[key])}`;
-
-      if (i !== kl) {
-        str += ",";
-      }
-    }
-
-    return `${str}}`;
-  } else if (type === "number" || type === "boolean" || obj === null) {
-    // bool, num, null have correct auto-coercions
-    return `${obj}`;
-  } else {
-    throw new TypeError(
-      `Invalid JSON type of ${type}, value ${obj}. Can only hash JSON objects.`,
-    );
-  }
 }
