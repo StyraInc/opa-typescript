@@ -23,7 +23,6 @@ type EvalQuery = {
 };
 
 const table = new WeakMap();
-let counter = 0; // overflow?
 
 // key is used to index the individual Batch API batches when splitting
 // an incoming batch of EvalQuery. The same `x` is later passed to the
@@ -31,12 +30,13 @@ let counter = 0; // overflow?
 // ensure that the same `x` gets the same number.
 function key(x: EvalQuery): string {
   const r = table.get(x);
-  if (r) {
-    return r;
-  }
-  const hash = (++counter).toString();
-  table.set(x, hash);
-  return hash;
+  if (r) return r;
+
+  const num = new Uint32Array(1);
+  crypto.getRandomValues(num);
+  const rand = num.toString();
+  table.set(x, rand);
+  return rand;
 }
 
 const evals = (sdk: OPAClient) =>

@@ -317,7 +317,7 @@ describe("useAuthz Hook", () => {
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
         .mockImplementationOnce((_path, inputs, _opts) => {
-          [hash] = Object.keys(inputs)[0];
+          [hash] = Object.keys(inputs);
           return Promise.resolve({ [hash]: false });
         });
 
@@ -344,12 +344,12 @@ describe("useAuthz Hook", () => {
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
         .mockImplementationOnce((_path, inputs, _opts) => {
-          [hash] = Object.keys(inputs)[0];
+          [hash] = Object.keys(inputs);
           return Promise.resolve({ [hash]: { foo: false } });
         });
 
       const { result } = renderHook(
-        () => useAuthz("path/allow", undefined, (x) => (x as any).foo),
+        () => useAuthz("path/allow", undefined, (x?: Result) => (x as any).foo),
         wrapper({ batch }),
       );
       await waitFor(() =>
@@ -388,12 +388,12 @@ describe("useAuthz Hook", () => {
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
         .mockImplementationOnce((_path, inputs, _opts) => {
-          [hash] = Object.keys(inputs)[0];
+          [hash] = Object.keys(inputs);
           return Promise.resolve({ [hash]: { foo: false } });
         });
 
       const { result } = renderHook(
-        () => useAuthz("path/allow", "foo", (x) => (x as any).foo),
+        () => useAuthz("path/allow", "foo", (x?: Result) => (x as any).foo),
         wrapper({ batch }),
       );
       await waitFor(() =>
@@ -416,7 +416,16 @@ describe("useAuthz Hook", () => {
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
         .mockImplementationOnce((_path, inputs, _opts) => {
-          [hash1, hash2] = Object.keys(inputs);
+          const res = Object.fromEntries(
+            Object.entries(inputs).map(([k, inp]) => {
+              if (inp === "foo") {
+                hash1 = k;
+              } else {
+                hash2 = k;
+              }
+              return [k, inp != "foo"];
+            }),
+          );
           return Promise.resolve({ [hash1]: false, [hash2]: true });
         });
 
@@ -455,11 +464,11 @@ describe("useAuthz Hook", () => {
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
         .mockImplementationOnce((_path, inputs, _opts) => {
-          hash1 = Object.keys(inputs)[0];
+          [hash1] = Object.keys(inputs);
           return Promise.resolve({ [hash1]: { a: false } });
         })
         .mockImplementationOnce((_path, inputs, _opts) => {
-          hash2 = Object.keys(inputs)[0];
+          [hash2] = Object.keys(inputs);
           return Promise.resolve({ [hash2]: { b: true } });
         });
 
@@ -505,7 +514,7 @@ describe("useAuthz Hook", () => {
       const evaluateSpy = vi
         .spyOn(opa, "evaluateBatch")
         .mockImplementationOnce((_path, inputs, _opts) => {
-          hash = Object.keys(inputs)[0];
+          [hash] = Object.keys(inputs);
           return Promise.resolve({ [hash]: { foo: false } });
         });
 
