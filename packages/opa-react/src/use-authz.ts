@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { AuthzContext } from "./authz-provider.js";
 import { type Input, type Result } from "@styra/opa";
 import merge from "lodash.merge";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries, UseQueryResult } from "@tanstack/react-query";
 
 export type UseAuthzResult<T> =
   | { isLoading: true; result: undefined; error: undefined }
@@ -43,12 +43,7 @@ export default function useAuthz(
     [fromResult, defaultFromResult],
   );
 
-  const {
-    // NOTE(sr): we're ignoring 'status'
-    data: result,
-    error,
-    isFetching: isLoading,
-  } = useQuery<Result>(
+  const result = useQuery<Result>(
     {
       queryKey,
       meta,
@@ -56,15 +51,56 @@ export default function useAuthz(
     },
     queryClient,
   );
-  return {
-    isLoading,
-    result,
-    error: error != null ? error : undefined,
-  } as UseAuthzResult<Result>;
+  return convertResult(result);
+}
+
+export function useAuthzMultiple(
+  queries: {
+    path?: string;
+    input?: Input;
+    fromResult?: (_?: Result) => boolean;
+  }[],
+): UseAuthzResult<Result>[] {
+  const context = useContext(AuthzContext);
+  if (context === undefined) {
+    throw Error("useAuthzMultiple can only be used inside an AuthzProvider");
+  }
+  const {
+    defaultPath,
+    defaultInput,
+    defaultFromResult,
+    queryClient,
+    opaClient,
+  } = context;
+
+  const data = useQueries<Result[]>(
+    {
+      queries: queries.map(({ path, input, fromResult }) => ({
+        queryKey: [path ?? defaultPath, merge(input, defaultInput)],
+        meta: { fromResult: fromResult ?? defaultFromResult },
+        enabled: !!opaClient,
+      })),
+    },
+    queryClient,
+  );
+
+  return data.map(convertResult);
 }
 
 function mergeInput(input?: Input, defaultInput?: Input): Input | undefined {
   if (!input) return defaultInput;
   if (!defaultInput) return input;
   return merge(input, defaultInput);
+}
+
+function convertResult<T>({
+  isFetching: isLoading,
+  data: result,
+  error,
+}: UseQueryResult<T>): UseAuthzResult<T> {
+  return {
+    isLoading,
+    result,
+    error: error != null ? error : undefined,
+  } as UseAuthzResult<T>;
 }
