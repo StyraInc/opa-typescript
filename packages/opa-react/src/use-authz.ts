@@ -21,50 +21,34 @@ export default function useAuthz(
   path?: string,
   input?: Input,
   fromResult?: (_?: Result) => boolean,
-): UseAuthzResult<Result> {
-  const context = useContext(AuthzContext);
-  if (context === undefined) {
-    throw Error("Authz/useAuthz can only be used inside an AuthzProvider");
-  }
-  const {
-    defaultPath,
-    defaultInput,
-    defaultFromResult,
-    queryClient,
-    opaClient,
-  } = context;
+): UseAuthzResult<Result>;
 
-  const queryKey = useMemo(
-    () => [path ?? defaultPath, mergeInput(input, defaultInput)],
-    [path, defaultPath, input, defaultInput],
-  );
-  const meta = useMemo(
-    () => ({ fromResult: fromResult ?? defaultFromResult }),
-    [fromResult, defaultFromResult],
-  );
-
-  const result = useQuery<Result>(
-    {
-      queryKey,
-      meta,
-      enabled: !!opaClient,
-    },
-    queryClient,
-  );
-  return convertResult(result);
-}
-
-export function useAuthzMultiple(
+/**
+ * For evaluating a dynamic number of requests, `useAuthz` can be supplied with
+ * an array of inputs of the form `{path, input, fromResult}`.
+ *
+ * @param queries An array of `{ path, input, fromResult }` objects. All keys are
+ * optional, but if batching is enabled, `path` cannot be omitted.
+ */
+export default function useAuthz(
   queries: {
     path?: string;
     input?: Input;
     fromResult?: (_?: Result) => boolean;
   }[],
-): UseAuthzResult<Result>[] {
+): UseAuthzResult<Result>[];
+export default function useAuthz(
+  pathOrArray:
+    | string
+    | { path?: string; input?: Input; fromResult?: (_?: Result) => boolean }[],
+  input?: Input,
+  fromResult?: (_?: Result) => boolean,
+): UseAuthzResult<Result> | UseAuthzResult<Result>[] {
   const context = useContext(AuthzContext);
   if (context === undefined) {
-    throw Error("useAuthzMultiple can only be used inside an AuthzProvider");
+    throw Error("Authz/useAuthz can only be used inside an AuthzProvider");
   }
+
   const {
     defaultPath,
     defaultInput,
@@ -73,7 +57,31 @@ export function useAuthzMultiple(
     opaClient,
   } = context;
 
-  const data = useQueries<Result[]>(
+  if (isString(pathOrArray)) {
+    const path = pathOrArray;
+    const queryKey = useMemo(
+      () => [path ?? defaultPath, mergeInput(input, defaultInput)],
+      [path, defaultPath, input, defaultInput],
+    );
+    const meta = useMemo(
+      () => ({ fromResult: fromResult ?? defaultFromResult }),
+      [fromResult, defaultFromResult],
+    );
+
+    const result = useQuery<Result>(
+      {
+        queryKey,
+        meta,
+        enabled: !!opaClient,
+      },
+      queryClient,
+    );
+    return convertResult(result);
+  }
+
+  // multi-query case
+  const queries = pathOrArray;
+  return useQueries<Result[]>(
     {
       queries: queries.map(({ path, input, fromResult }) => ({
         queryKey: [path ?? defaultPath, merge(input, defaultInput)],
@@ -82,9 +90,7 @@ export function useAuthzMultiple(
       })),
     },
     queryClient,
-  );
-
-  return data.map(convertResult);
+  ).map(convertResult);
 }
 
 function mergeInput(input?: Input, defaultInput?: Input): Input | undefined {
@@ -103,4 +109,8 @@ function convertResult<T>({
     result,
     error: error != null ? error : undefined,
   } as UseAuthzResult<T>;
+}
+
+function isString(x: any): x is string {
+  return x === undefined || typeof x === "string";
 }
