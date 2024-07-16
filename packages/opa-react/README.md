@@ -38,14 +38,14 @@ They can either be used by providing static children (`<button>Press Here</butto
 ```
 
 The `useAuthz` hook can be used if you need more low-level control about the authorization call.
-Furthermore, you can retrieve the prepared `sdk` instance of `AuthzProvider` for even more control, if need be:
+Furthermore, you can retrieve the prepared `opaClient` instance of `AuthzProvider` for even more control, if need be:
 
 ```tsx
 import { AuthzContext } from "@styra/opa-react";
 
 export default function Component() {
-  const { sdk } = useContext(AuthzContext);
-  // now you can use `sdk.evaluate()` etc directly
+  const { opaClient } = useContext(AuthzContext);
+  // now you can use `opaClient.evaluate()` etc directly
 }
 ```
 
