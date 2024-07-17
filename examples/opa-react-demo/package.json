@@ -1,6 +1,7 @@
 {
   "name": "opa-react-demo",
   "version": "0.1.0",
+  "proxy": "http://127.0.0.1:8181",
   "private": true,
   "prettier": "@geist-ui/prettier-config",
   "dependencies": {
@@ -11,9 +12,11 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.25.0",
     "react-pixel-grid": "^0.1.2",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@styra/opa-react": "latest"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -2,3 +2,4 @@
 node_modules/
 /docs/
 /packages/opa-react/docs/
+.envrc
