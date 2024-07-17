@@ -73,10 +73,33 @@ jobs:
         run: npx -w ${{ matrix.pkg }} jsr publish --dry-run
         if: matrix.pkg == 'packages/opa'
 
+  examples:
+    name: build examples
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        pkg: [opa-react-demo]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        with:
+          node-version: 22
+      - name: setup and build
+        # https://github.com/npm/cli/issues/3034#issuecomment-885211061
+        run: |
+          npm ci
+          npm run build
+        working-directory: examples/${{ matrix.pkg }}
+
   success:
     name: tests succeed
     runs-on: ubuntu-22.04
     needs:
       - packages
+      - examples
     steps:
       - run: echo yay

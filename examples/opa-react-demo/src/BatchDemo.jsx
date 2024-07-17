@@ -66,7 +66,13 @@ export default function BatchDemo() {
                     <Code>x^2</Code>: Number of policy evals
                   </Fieldset.Subtitle>
                   <Fieldset.Footer>
-                    <Slider auto max={50} step={10} onChange={setSliderNum} />
+                    <Slider
+                      auto
+                      max={50}
+                      step={10}
+                      initialValue={50}
+                      onChange={setSliderNum}
+                    />
                   </Fieldset.Footer>
                 </Fieldset>
               </Card>
