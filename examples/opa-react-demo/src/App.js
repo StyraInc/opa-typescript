@@ -1,5 +1,11 @@
-function App() {
-  return <div>Hi</div>;
-}
+import { GeistProvider, CssBaseline } from "@geist-ui/core";
+import { Outlet } from "react-router-dom";
 
-export default App;
+export default function App() {
+  return (
+    <GeistProvider>
+      <CssBaseline />
+      <Outlet />
+    </GeistProvider>
+  );
+}
