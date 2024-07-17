@@ -1,5 +1,11 @@
 # @styra/opa-react
 
+## 0.6.1
+
+### Patch Changes
+
+- 76cfb32: include sources in npm package
+
 ## 0.6.0
 
 ### Minor Changes
