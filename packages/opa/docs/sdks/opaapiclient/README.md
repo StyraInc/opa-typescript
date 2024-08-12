@@ -21,12 +21,11 @@ Execute the default decision  given an input
 
 ```typescript
 import { OpaApiClient } from "@styra/opa";
-import { GzipAcceptEncoding } from "@styra/opa/sdk/models/components";
 
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11, false, GzipAcceptEncoding.Gzip);
+  const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11);
 
   // Handle the result
   console.log(result)
@@ -210,9 +209,7 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-  const result = await opaApiClient.health(false, false, [
-    "<value>",
-  ]);
+  const result = await opaApiClient.health();
 
   // Handle the result
   console.log(result)

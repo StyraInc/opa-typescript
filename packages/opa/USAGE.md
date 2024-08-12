@@ -1,16 +1,11 @@
 <!-- Start SDK Example Usage [usage] -->
 ```typescript
 import { OpaApiClient } from "@styra/opa";
-import { GzipAcceptEncoding } from "@styra/opa/sdk/models/components";
 
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-    const result = await opaApiClient.executeDefaultPolicyWithInput(
-        8203.11,
-        false,
-        GzipAcceptEncoding.Gzip
-    );
+    const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11);
 
     // Handle the result
     console.log(result);
