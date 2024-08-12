@@ -3,3 +3,4 @@ LICENSE
 /src/index.ts
 /.eslintrc.js
 /.npmignore
+CONTRIBUTING.md
