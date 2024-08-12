@@ -53,8 +53,8 @@
     "testcontainers": "^10.10.1",
     "tshy": "^1.16.2",
     "tsx": "^4.16.2",
-    "typedoc": "^0.25.13",
-    "typedoc-plugin-extras": "^3.0.0",
+    "typedoc": "^0.26.5",
+    "typedoc-plugin-extras": "^3.1.0",
     "typedoc-plugin-replace-text": "^3.3.0",
     "typescript": "^5.4.5",
     "zod": "^3.23.4"
