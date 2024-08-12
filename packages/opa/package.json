@@ -1,8 +1,7 @@
 {
   "name": "@styra/opa",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "author": "Styra",
-  "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
   },
@@ -15,6 +14,7 @@
     "rbac",
     "role based access control"
   ],
+  "license": "Apache-2.0",
   "tshy": {
     "exports": {
       ".": "./src/index.ts",
