@@ -1,40 +1,52 @@
 lockVersion: 2.0.0
 id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
-  docChecksum: 965922378d3f89a95cf055454ae72ad7
+  docChecksum: 553ed43ff98c81b3e770c34850f0b5f5
   docVersion: 0.2.0
-  speakeasyVersion: 1.334.0
-  generationVersion: 2.369.0
-  releaseVersion: 1.3.0
-  configChecksum: 25eea4d12bca4a64556ebe5572cdafb3
+  speakeasyVersion: 1.361.1
+  generationVersion: 2.393.4
+  releaseVersion: 1.4.0
+  configChecksum: 931fe09dabde06c0b0a9d81cf9c8e1da
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
 features:
   typescript:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.1.5
-    core: 3.11.6
+    constsAndDefaults: 0.1.7
+    core: 3.13.1
     defaultEnabledRetries: 0.1.0
+    envVarSecurityUsage: 0.1.1
     examples: 2.81.4
     flattening: 2.81.1
+    globalSecurity: 2.82.11
     globalSecurityCallbacks: 0.1.0
+    globalSecurityFlattening: 0.1.0
     globalServerURLs: 2.82.4
     responseFormat: 0.2.3
     retries: 2.83.0
     sdkHooks: 0.1.0
-    unions: 2.85.5
+    unions: 2.85.7
 generatedFiles:
+  - src/funcs/executeDefaultPolicyWithInput.ts
+  - src/funcs/executePolicy.ts
+  - src/funcs/executePolicyWithInput.ts
+  - src/funcs/executeBatchPolicyWithInput.ts
+  - src/funcs/health.ts
   - src/sdk/sdk.ts
   - .eslintrc.cjs
   - RUNTIMES.md
   - jsr.json
   - package.json
+  - src/core.ts
   - src/lib/base64.ts
   - src/lib/config.ts
+  - src/lib/dlv.ts
   - src/lib/encodings.ts
   - src/lib/http.ts
   - src/lib/is-plain-object.ts
+  - src/lib/logger.ts
+  - src/lib/matchers.ts
   - src/lib/primitives.ts
   - src/lib/retries.ts
   - src/lib/schemas.ts
@@ -42,10 +54,13 @@ generatedFiles:
   - src/lib/security.ts
   - src/lib/url.ts
   - src/sdk/index.ts
+  - src/sdk/models/errors/httpclienterrors.ts
   - src/sdk/models/errors/sdkerror.ts
   - src/sdk/models/errors/sdkvalidationerror.ts
   - src/types/blobs.ts
+  - src/types/constdatetime.ts
   - src/types/enums.ts
+  - src/types/fp.ts
   - src/types/index.ts
   - src/types/operations.ts
   - src/types/rfcdate.ts
@@ -66,6 +81,7 @@ generatedFiles:
   - src/sdk/models/components/batchmixedresults.ts
   - src/sdk/models/components/batchsuccessfulpolicyevaluation.ts
   - src/sdk/models/components/healthyserver.ts
+  - src/sdk/models/components/security.ts
   - src/sdk/models/errors/clienterror.ts
   - src/sdk/models/errors/servererror.ts
   - src/sdk/models/errors/batchservererror.ts
@@ -102,6 +118,7 @@ generatedFiles:
   - docs/sdk/models/components/batchmixedresults.md
   - docs/sdk/models/components/batchsuccessfulpolicyevaluation.md
   - docs/sdk/models/components/healthyserver.md
+  - docs/sdk/models/components/security.md
   - docs/sdk/models/errors/location.md
   - docs/sdk/models/errors/errors.md
   - docs/sdk/models/errors/clienterror.md
@@ -117,3 +134,4 @@ generatedFiles:
   - src/hooks/hooks.ts
   - src/hooks/types.ts
   - src/hooks/index.ts
+  - CONTRIBUTING.md

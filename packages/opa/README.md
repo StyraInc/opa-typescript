@@ -301,28 +301,22 @@ Some of the endpoints in this SDK support retries.  If you use the SDK without a
 To change the default retry strategy for a single API call, simply provide a retryConfig object to the call:
 ```typescript
 import { OpaApiClient } from "@styra/opa";
-import { GzipAcceptEncoding } from "@styra/opa/sdk/models/components";
 
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-    const result = await opaApiClient.executeDefaultPolicyWithInput(
-        8203.11,
-        false,
-        GzipAcceptEncoding.Gzip,
-        {
-            retries: {
-                strategy: "backoff",
-                backoff: {
-                    initialInterval: 1,
-                    maxInterval: 50,
-                    exponent: 1.1,
-                    maxElapsedTime: 100,
-                },
-                retryConnectionErrors: false,
+    const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11, {
+        retries: {
+            strategy: "backoff",
+            backoff: {
+                initialInterval: 1,
+                maxInterval: 50,
+                exponent: 1.1,
+                maxElapsedTime: 100,
             },
-        }
-    );
+            retryConnectionErrors: false,
+        },
+    });
 
     // Handle the result
     console.log(result);
@@ -335,7 +329,6 @@ run();
 If you'd like to override the default retry strategy for all operations that support retries, you can provide a retryConfig at SDK initialization:
 ```typescript
 import { OpaApiClient } from "@styra/opa";
-import { GzipAcceptEncoding } from "@styra/opa/sdk/models/components";
 
 const opaApiClient = new OpaApiClient({
     retryConfig: {
@@ -351,11 +344,7 @@ const opaApiClient = new OpaApiClient({
 });
 
 async function run() {
-    const result = await opaApiClient.executeDefaultPolicyWithInput(
-        8203.11,
-        false,
-        GzipAcceptEncoding.Gzip
-    );
+    const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11);
 
     // Handle the result
     console.log(result);
@@ -365,6 +354,52 @@ run();
 
 ```
 <!-- End Retries [retries] -->
+
+<!-- Start Authentication [security] -->
+## Authentication
+
+### Per-Client Security Schemes
+
+This SDK supports the following security scheme globally:
+
+| Name         | Type         | Scheme       |
+| ------------ | ------------ | ------------ |
+| `bearerAuth` | http         | HTTP Bearer  |
+
+To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
+```typescript
+import { OpaApiClient } from "@styra/opa";
+
+const opaApiClient = new OpaApiClient({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+    const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11);
+
+    // Handle the result
+    console.log(result);
+}
+
+run();
+
+```
+<!-- End Authentication [security] -->
+
+<!-- Start Debugging [debug] -->
+## Debugging
+
+To log HTTP requests and responses, you can pass a logger that matches `console`'s interface as an SDK option.
+
+> [!WARNING]
+> Beware that debug logging will reveal secrets, like API tokens in headers, in log messages printed to a console or files. It's recommended to use this feature only during local development and not in production.
+
+```typescript
+import { OpaApiClient } from "@styra/opa";
+
+const sdk = new OpaApiClient({ debugLogger: console });
+```
+<!-- End Debugging [debug] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 

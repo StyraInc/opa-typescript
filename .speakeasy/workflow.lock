@@ -1,18 +1,18 @@
-speakeasyVersion: 1.334.0
+speakeasyVersion: 1.361.1
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:93669fe964484357296c2154d1c86aef99d8ca473969ee8d70e6710ed0d80ddb
-        sourceBlobDigest: sha256:bff74eb96d1677dce36fd84c18da761c1a7739ec423eb3eb1bab869e5bf48321
+        sourceRevisionDigest: sha256:041a9c6f5a9a2ad11fb0ecb4c958ee21331d4c1df411241715405a481a0842f4
+        sourceBlobDigest: sha256:1278b402479d50883b21bc284419cdd247db61f17087a97dd47531b54f0c326c
         tags:
             - latest
-            - main
+            - dependabot-npm_and_yarn-multi-875484771a
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:93669fe964484357296c2154d1c86aef99d8ca473969ee8d70e6710ed0d80ddb
-        sourceBlobDigest: sha256:bff74eb96d1677dce36fd84c18da761c1a7739ec423eb3eb1bab869e5bf48321
+        sourceRevisionDigest: sha256:041a9c6f5a9a2ad11fb0ecb4c958ee21331d4c1df411241715405a481a0842f4
+        sourceBlobDigest: sha256:1278b402479d50883b21bc284419cdd247db61f17087a97dd47531b54f0c326c
         outLocation: packages/opa
 workflow:
     workflowVersion: 1.0.0
