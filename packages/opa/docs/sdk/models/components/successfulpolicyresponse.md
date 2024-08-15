@@ -1,5 +1,14 @@
 # SuccessfulPolicyResponse
 
+## Example Usage
+
+```typescript
+import { SuccessfulPolicyResponse } from "@styra/opa/sdk/models/components";
+
+let value: SuccessfulPolicyResponse = {
+    result: "<value>",
+};
+```
 
 ## Fields
 

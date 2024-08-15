@@ -1,5 +1,14 @@
 # ExecuteDefaultPolicyWithInputRequest
 
+## Example Usage
+
+```typescript
+import { ExecuteDefaultPolicyWithInputRequest } from "@styra/opa/sdk/models/operations";
+
+let value: ExecuteDefaultPolicyWithInputRequest = {
+    input: ["<value>"],
+};
+```
 
 ## Fields
 

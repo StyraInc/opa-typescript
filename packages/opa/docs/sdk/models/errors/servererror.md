@@ -2,6 +2,13 @@
 
 Server Error
 
+## Example Usage
+
+```typescript
+import { ServerError } from "@styra/opa/sdk/models/errors";
+
+// No examples available for this model
+```
 
 ## Fields
 

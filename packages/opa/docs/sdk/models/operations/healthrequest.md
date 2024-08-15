@@ -1,5 +1,12 @@
 # HealthRequest
 
+## Example Usage
+
+```typescript
+import { HealthRequest } from "@styra/opa/sdk/models/operations";
+
+let value: HealthRequest = {};
+```
 
 ## Fields
 

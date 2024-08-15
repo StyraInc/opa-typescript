@@ -1,5 +1,19 @@
 # HealthResponse
 
+## Example Usage
+
+```typescript
+import { HealthResponse } from "@styra/opa/sdk/models/operations";
+
+let value: HealthResponse = {
+    httpMeta: {
+        response: new Response('{"message": "hello world"}', {
+            headers: { "Content-Type": "application/json" },
+        }),
+        request: new Request("https://example.com"),
+    },
+};
+```
 
 ## Fields
 

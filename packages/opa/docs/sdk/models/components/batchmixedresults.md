@@ -1,5 +1,19 @@
 # BatchMixedResults
 
+## Example Usage
+
+```typescript
+import { BatchMixedResults } from "@styra/opa/sdk/models/components";
+
+let value: BatchMixedResults = {
+    responses: {
+        key: {
+            result: 3927.85,
+            httpStatusCode: "200",
+        },
+    },
+};
+```
 
 ## Fields
 

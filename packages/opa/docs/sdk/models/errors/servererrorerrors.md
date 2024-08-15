@@ -1,5 +1,15 @@
 # ServerErrorErrors
 
+## Example Usage
+
+```typescript
+import { ServerErrorErrors } from "@styra/opa/sdk/models/errors";
+
+let value: ServerErrorErrors = {
+    code: "<value>",
+    message: "<value>",
+};
+```
 
 ## Fields
 

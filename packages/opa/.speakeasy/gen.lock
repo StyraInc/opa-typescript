@@ -1,20 +1,20 @@
 lockVersion: 2.0.0
 id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
-  docChecksum: 553ed43ff98c81b3e770c34850f0b5f5
+  docChecksum: 899b27d9399190d5ff40fc3e7c07c252
   docVersion: 0.2.0
-  speakeasyVersion: 1.361.1
-  generationVersion: 2.393.4
-  releaseVersion: 1.4.0
-  configChecksum: 931fe09dabde06c0b0a9d81cf9c8e1da
+  speakeasyVersion: 1.369.0
+  generationVersion: 2.399.0
+  releaseVersion: 1.4.1
+  configChecksum: c714d6cd61c0b03af384266ab1d93b6b
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
 features:
   typescript:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.1.7
-    core: 3.13.1
+    constsAndDefaults: 0.1.8
+    core: 3.13.2
     defaultEnabledRetries: 0.1.0
     envVarSecurityUsage: 0.1.1
     examples: 2.81.4
@@ -35,6 +35,7 @@ generatedFiles:
   - src/funcs/health.ts
   - src/sdk/sdk.ts
   - .eslintrc.cjs
+  - FUNCTIONS.md
   - RUNTIMES.md
   - jsr.json
   - package.json
@@ -134,4 +135,3 @@ generatedFiles:
   - src/hooks/hooks.ts
   - src/hooks/types.ts
   - src/hooks/index.ts
-  - CONTRIBUTING.md

@@ -2,6 +2,13 @@
 
 The base or virtual document referred to by the URL path. If the path is undefined, this key will be omitted.
 
+## Example Usage
+
+```typescript
+import { Result } from "@styra/opa/sdk/models/components";
+
+let value: Result = false;
+```
 
 ## Supported Types
 

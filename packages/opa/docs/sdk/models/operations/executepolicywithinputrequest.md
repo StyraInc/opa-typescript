@@ -1,5 +1,17 @@
 # ExecutePolicyWithInputRequest
 
+## Example Usage
+
+```typescript
+import { ExecutePolicyWithInputRequest } from "@styra/opa/sdk/models/operations";
+
+let value: ExecutePolicyWithInputRequest = {
+    path: "app/rbac",
+    requestBody: {
+        input: 8472.52,
+    },
+};
+```
 
 ## Fields
 
