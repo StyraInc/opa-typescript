@@ -3,7 +3,7 @@ speakeasyVersion: latest
 sources:
   openapi:
     inputs:
-      - location: https://raw.githubusercontent.com/StyraInc/enterprise-opa/main/openapi/openapi.yaml
+      - location: https://raw.githubusercontent.com/StyraInc/enterprise-opa/69a1ee48970384c68dba5b942c52c4c475cc860f/openapi/openapi.yaml
     registry:
       location: registry.speakeasyapi.dev/styra/styra/openapi
 targets:
