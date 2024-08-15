@@ -1,5 +1,16 @@
 # Location
 
+## Example Usage
+
+```typescript
+import { Location } from "@styra/opa/sdk/models/errors";
+
+let value: Location = {
+    file: "<value>",
+    row: 836079,
+    col: 71036,
+};
+```
 
 ## Fields
 

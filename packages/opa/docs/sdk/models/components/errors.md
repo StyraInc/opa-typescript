@@ -1,5 +1,15 @@
 # Errors
 
+## Example Usage
+
+```typescript
+import { Errors } from "@styra/opa/sdk/models/components";
+
+let value: Errors = {
+    code: "<value>",
+    message: "<value>",
+};
+```
 
 ## Fields
 

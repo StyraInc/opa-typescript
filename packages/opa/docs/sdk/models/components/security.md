@@ -1,5 +1,12 @@
 # Security
 
+## Example Usage
+
+```typescript
+import { Security } from "@styra/opa/sdk/models/components";
+
+let value: Security = {};
+```
 
 ## Fields
 

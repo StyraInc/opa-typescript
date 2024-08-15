@@ -1,5 +1,19 @@
 # ResponsesSuccessfulPolicyResponse
 
+## Example Usage
+
+```typescript
+import { ResponsesSuccessfulPolicyResponse } from "@styra/opa/sdk/models/components";
+
+let value: ResponsesSuccessfulPolicyResponse = {
+    result: {
+        allow: true,
+        user_is_admin: true,
+        user_is_granted: ["<value>"],
+    },
+    httpStatusCode: "200",
+};
+```
 
 ## Fields
 

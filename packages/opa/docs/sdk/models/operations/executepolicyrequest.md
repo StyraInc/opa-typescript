@@ -1,5 +1,14 @@
 # ExecutePolicyRequest
 
+## Example Usage
+
+```typescript
+import { ExecutePolicyRequest } from "@styra/opa/sdk/models/operations";
+
+let value: ExecutePolicyRequest = {
+    path: "app/rbac",
+};
+```
 
 ## Fields
 

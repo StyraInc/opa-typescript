@@ -1,5 +1,16 @@
 # ServerErrorLocation
 
+## Example Usage
+
+```typescript
+import { ServerErrorLocation } from "@styra/opa/sdk/models/errors";
+
+let value: ServerErrorLocation = {
+    file: "<value>",
+    row: 337396,
+    col: 87129,
+};
+```
 
 ## Fields
 

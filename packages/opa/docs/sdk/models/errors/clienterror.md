@@ -2,6 +2,13 @@
 
 Bad Request
 
+## Example Usage
+
+```typescript
+import { ClientError } from "@styra/opa/sdk/models/errors";
+
+// No examples available for this model
+```
 
 ## Fields
 

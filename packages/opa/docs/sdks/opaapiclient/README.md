@@ -34,6 +34,35 @@ async function run() {
 run();
 ```
 
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { OpaApiClientCore } from "@styra/opa/core.js";
+import { executeDefaultPolicyWithInput } from "@styra/opa/funcs/executeDefaultPolicyWithInput.js";
+
+// Use `OpaApiClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const opaApiClient = new OpaApiClientCore();
+
+async function run() {
+  const res = await executeDefaultPolicyWithInput(opaApiClient, "<value>");
+
+  if (!res.ok) {
+    throw res.error;
+  }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result)
+}
+
+run();
+```
+
 ### Parameters
 
 | Parameter                                                                                                                                                                                                     | Type                                                                                                                                                                                                          | Required                                                                                                                                                                                                      | Description                                                                                                                                                                                                   |
@@ -72,6 +101,37 @@ async function run() {
   const result = await opaApiClient.executePolicy({
     path: "app/rbac",
   });
+
+  // Handle the result
+  console.log(result)
+}
+
+run();
+```
+
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { OpaApiClientCore } from "@styra/opa/core.js";
+import { executePolicy } from "@styra/opa/funcs/executePolicy.js";
+
+// Use `OpaApiClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const opaApiClient = new OpaApiClientCore();
+
+async function run() {
+  const res = await executePolicy(opaApiClient, {
+    path: "app/rbac",
+  });
+
+  if (!res.ok) {
+    throw res.error;
+  }
+
+  const { value: result } = res;
 
   // Handle the result
   console.log(result)
@@ -119,6 +179,40 @@ async function run() {
     input: false,
     },
   });
+
+  // Handle the result
+  console.log(result)
+}
+
+run();
+```
+
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { OpaApiClientCore } from "@styra/opa/core.js";
+import { executePolicyWithInput } from "@styra/opa/funcs/executePolicyWithInput.js";
+
+// Use `OpaApiClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const opaApiClient = new OpaApiClientCore();
+
+async function run() {
+  const res = await executePolicyWithInput(opaApiClient, {
+    path: "app/rbac",
+    requestBody: {
+    input: "<value>",
+    },
+  });
+
+  if (!res.ok) {
+    throw res.error;
+  }
+
+  const { value: result } = res;
 
   // Handle the result
   console.log(result)
@@ -176,6 +270,42 @@ async function run() {
 run();
 ```
 
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { OpaApiClientCore } from "@styra/opa/core.js";
+import { executeBatchPolicyWithInput } from "@styra/opa/funcs/executeBatchPolicyWithInput.js";
+
+// Use `OpaApiClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const opaApiClient = new OpaApiClientCore();
+
+async function run() {
+  const res = await executeBatchPolicyWithInput(opaApiClient, {
+    path: "app/rbac",
+    requestBody: {
+      inputs: {
+        "key": 9561.78,
+      },
+    },
+  });
+
+  if (!res.ok) {
+    throw res.error;
+  }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result)
+}
+
+run();
+```
+
 ### Parameters
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
@@ -210,6 +340,35 @@ const opaApiClient = new OpaApiClient();
 
 async function run() {
   const result = await opaApiClient.health();
+
+  // Handle the result
+  console.log(result)
+}
+
+run();
+```
+
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { OpaApiClientCore } from "@styra/opa/core.js";
+import { health } from "@styra/opa/funcs/health.js";
+
+// Use `OpaApiClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const opaApiClient = new OpaApiClientCore();
+
+async function run() {
+  const res = await health(opaApiClient);
+
+  if (!res.ok) {
+    throw res.error;
+  }
+
+  const { value: result } = res;
 
   // Handle the result
   console.log(result)

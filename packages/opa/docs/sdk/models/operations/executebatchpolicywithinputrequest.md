@@ -1,5 +1,19 @@
 # ExecuteBatchPolicyWithInputRequest
 
+## Example Usage
+
+```typescript
+import { ExecuteBatchPolicyWithInputRequest } from "@styra/opa/sdk/models/operations";
+
+let value: ExecuteBatchPolicyWithInputRequest = {
+    path: "app/rbac",
+    requestBody: {
+        inputs: {
+            key: "<value>",
+        },
+    },
+};
+```
 
 ## Fields
 
