@@ -2,11 +2,10 @@ import { OpaApiClient } from "./sdk/index.js";
 import {
   type Input,
   type Result,
-  type ResponsesSuccessfulPolicyResponse,
-  type ServerError,
+  type SuccessfulPolicyResponse,
+  type ServerErrorWithStatusCode,
   BatchMixedResults,
   BatchSuccessfulPolicyEvaluation,
-  SuccessfulPolicyResponse,
 } from "./sdk/models/components/index.js";
 import {
   ExecutePolicyWithInputResponse,
@@ -178,7 +177,7 @@ export class OPAClient {
     path: string,
     inputs: { [k: string]: In },
     opts?: BatchRequestOptions<Res>,
-  ): Promise<{ [k: string]: Res | ServerError }> {
+  ): Promise<{ [k: string]: Res | ServerErrorWithStatusCode }> {
     const inps = Object.fromEntries(
       Object.entries(inputs).map(([k, inp]) => [
         k,
@@ -228,8 +227,10 @@ export class OPAClient {
     path: string,
     inputs: { [k: string]: Input },
     opts?: BatchRequestOptions<Res>,
-  ): Promise<{ [k: string]: ServerError | SuccessfulPolicyResponse }> {
-    let items: [string, ServerError | SuccessfulPolicyResponse][];
+  ): Promise<{
+    [k: string]: ServerErrorWithStatusCode | SuccessfulPolicyResponse;
+  }> {
+    let items: [string, ServerErrorWithStatusCode | SuccessfulPolicyResponse][];
     const keys = Object.keys(inputs);
     const ps = Object.values(inputs).map((input) =>
       this.opa
@@ -256,7 +257,7 @@ export class OPAClient {
                 ...(res.reason as ServerError_).data$,
                 httpStatusCode: "500",
               },
-            ] as [string, ServerError];
+            ] as [string, ServerErrorWithStatusCode];
           }
           return [keys[i], res.value] as [string, SuccessfulPolicyResponse];
         });
@@ -268,13 +269,14 @@ export class OPAClient {
 }
 
 function processResult<Res>(
-  res: ResponsesSuccessfulPolicyResponse | ServerError,
+  res: SuccessfulPolicyResponse | ServerErrorWithStatusCode,
   opts?: BatchRequestOptions<Res>,
-): Promise<Res | ServerError> {
+): Promise<Res | ServerErrorWithStatusCode> {
   if (res && "code" in res) {
-    if (opts?.rejectMixed) return Promise.reject(res as ServerError);
+    if (opts?.rejectMixed)
+      return Promise.reject(res as ServerErrorWithStatusCode);
 
-    return Promise.resolve(res as ServerError);
+    return Promise.resolve(res as ServerErrorWithStatusCode);
   }
 
   const fromResult = opts?.fromResult || id<Res>;
