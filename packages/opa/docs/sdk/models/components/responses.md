@@ -6,24 +6,24 @@
 import { Responses } from "@styra/opa/sdk/models/components";
 
 let value: Responses = {
+    httpStatusCode: "200",
     code: "<value>",
     message: "<value>",
     decisionId: "b84cf736-213c-4932-a8e4-bb5c648f1b4d",
-    httpStatusCode: "200",
 };
 ```
 
 ## Supported Types
 
-### `components.ResponsesSuccessfulPolicyResponse`
+### `components.SuccessfulPolicyResponseWithStatusCode`
 
 ```typescript
-const value: components.ResponsesSuccessfulPolicyResponse = /* values here */
+const value: components.SuccessfulPolicyResponseWithStatusCode = /* values here */
 ```
 
-### `components.ServerError`
+### `components.ServerErrorWithStatusCode`
 
 ```typescript
-const value: components.ServerError = /* values here */
+const value: components.ServerErrorWithStatusCode = /* values here */
 ```
 

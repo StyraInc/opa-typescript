@@ -1,19 +1,19 @@
 lockVersion: 2.0.0
 id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
-  docChecksum: 899b27d9399190d5ff40fc3e7c07c252
+  docChecksum: 54d33facef3aa19f358d15ab44e34141
   docVersion: 0.2.0
-  speakeasyVersion: 1.369.0
-  generationVersion: 2.399.0
-  releaseVersion: 1.4.1
-  configChecksum: c714d6cd61c0b03af384266ab1d93b6b
+  speakeasyVersion: 1.374.2
+  generationVersion: 2.401.2
+  releaseVersion: 1.4.2
+  configChecksum: df9477bd9bedce32e341140db014b81d
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
 features:
   typescript:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.1.8
+    constsAndDefaults: 0.1.10
     core: 3.13.2
     defaultEnabledRetries: 0.1.0
     envVarSecurityUsage: 0.1.1
@@ -113,8 +113,8 @@ generatedFiles:
   - docs/sdk/models/components/gzipcontentencoding.md
   - docs/sdk/models/components/location.md
   - docs/sdk/models/components/errors.md
-  - docs/sdk/models/components/servererror.md
-  - docs/sdk/models/components/responsessuccessfulpolicyresponse.md
+  - docs/sdk/models/components/servererrorwithstatuscode.md
+  - docs/sdk/models/components/successfulpolicyresponsewithstatuscode.md
   - docs/sdk/models/components/responses.md
   - docs/sdk/models/components/batchmixedresults.md
   - docs/sdk/models/components/batchsuccessfulpolicyevaluation.md
