@@ -13,7 +13,7 @@ import {
   type RequestOptions,
   type BatchRequestOptions,
 } from "@styra/opa";
-import { type ServerError } from "@styra/opa/sdk/models/components";
+import { type ServerErrorWithStatusCode } from "@styra/opa/sdk/models/components";
 import { create, windowScheduler } from "@yornaath/batshit";
 
 type EvalQuery = {
@@ -59,13 +59,13 @@ const evals = (sdk: OPAClient) =>
                 Object.entries(res).map(([k, res]) => [
                   k,
                   fromRs[k] ? fromRs[k](res) : res,
-                ]),
-              ),
+                ])
+              )
             );
-        }),
+        })
       ).then((all: object[]) =>
         // combine result arrays of objects (if there's more than one)
-        all.length == 1 ? all[0] : Object.assign({}, ...all),
+        all.length == 1 ? all[0] : Object.assign({}, ...all)
       );
     },
     resolver: (results, query) => results[key(query)] ?? null,
@@ -79,21 +79,21 @@ export interface OPAClient {
   evaluate<In extends Input | ToInput, Res>(
     path: string,
     input?: In,
-    opts?: RequestOptions<Res>,
+    opts?: RequestOptions<Res>
   ): Promise<Res>;
 
   /** Evaluate the server's default policy, with optional `input` and `RequestOptions`. */
   evaluateDefault<In extends Input | ToInput, Res>(
     input?: In,
-    opts?: RequestOptions<Res>,
+    opts?: RequestOptions<Res>
   ): Promise<Res>;
 
   /** Evaluate a policy against a batch of inputs. */
   evaluateBatch<In extends Input | ToInput, Res>(
     path: string,
     inputs: { [k: string]: In },
-    opts?: BatchRequestOptions<Res>,
-  ): Promise<{ [k: string]: Res | ServerError }>;
+    opts?: BatchRequestOptions<Res>
+  ): Promise<{ [k: string]: Res | ServerErrorWithStatusCode }>;
 }
 
 export type AuthzProviderContext = {
@@ -115,7 +115,7 @@ export type AuthzProviderContext = {
 
 // Reference: https://reacttraining.com/blog/react-context-with-typescript
 export const AuthzContext = createContext<AuthzProviderContext | undefined>(
-  undefined,
+  undefined
 );
 
 export interface AuthzProviderProps
@@ -151,7 +151,7 @@ export default function AuthzProvider({
 }: AuthzProviderProps) {
   const batcher = useMemo(
     () => batch && opaClient && evals(opaClient),
-    [opaClient, batch],
+    [opaClient, batch]
   );
   const defaultQueryFn = useCallback(
     async ({
@@ -182,7 +182,7 @@ export default function AuthzProvider({
 
       return batcher.fetch({ path, input, fromResult });
     },
-    [batcher, batch],
+    [batcher, batch]
   );
   const queryClient = useMemo(
     () =>
@@ -194,7 +194,7 @@ export default function AuthzProvider({
           },
         },
       }),
-    [defaultQueryFn, retry],
+    [defaultQueryFn, retry]
   );
 
   const context = useMemo<AuthzProviderContext>(
@@ -205,7 +205,7 @@ export default function AuthzProvider({
       defaultFromResult,
       queryClient: queryClient!,
     }),
-    [opaClient, defaultPath, defaultInput, defaultFromResult, queryClient],
+    [opaClient, defaultPath, defaultInput, defaultFromResult, queryClient]
   );
 
   if (!queryClient) return null;
