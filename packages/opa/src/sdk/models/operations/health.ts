@@ -32,8 +32,8 @@ export type HealthResponse = {
 /** @internal */
 export const HealthRequest$inboundSchema: z.ZodType<HealthRequest, z.ZodTypeDef, unknown> = z
     .object({
-        bundles: z.boolean().default(false),
-        plugins: z.boolean().default(false),
+        bundles: z.boolean(),
+        plugins: z.boolean(),
         "exclude-plugin": z.array(z.string()).optional(),
     })
     .transform((v) => {
