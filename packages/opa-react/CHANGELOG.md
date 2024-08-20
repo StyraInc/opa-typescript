@@ -1,5 +1,11 @@
 # @styra/opa-react
 
+## 0.7.0
+
+### Minor Changes
+
+- 410b448: update @styra/opa to v1.5.0
+
 ## 0.6.1
 
 ### Patch Changes
