@@ -19,6 +19,6 @@
     "@arethetypeswrong/cli": "^0.15.4",
     "@changesets/cli": "^2.27.7",
     "jsr": "^0.13.1",
-    "typedoc": "^0.26.5"
+    "typedoc": "^0.26.6"
   }
 }
