@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "rm -rf ./dist/*",
     "build": "tshy",
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "attw": "attw --pack",
     "test": "vitest",
     "docs": "typedoc --out docs"

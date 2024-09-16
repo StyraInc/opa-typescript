@@ -6,7 +6,7 @@
 import { ExecutePolicyRequest } from "@styra/opa/sdk/models/operations";
 
 let value: ExecutePolicyRequest = {
-    path: "app/rbac",
+  path: "app/rbac",
 };
 ```
 

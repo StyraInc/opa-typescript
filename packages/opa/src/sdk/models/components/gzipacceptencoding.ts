@@ -5,24 +5,26 @@
 import * as z from "zod";
 
 export enum GzipAcceptEncoding {
-    Gzip = "gzip",
+  Gzip = "gzip",
 }
 
 /** @internal */
-export const GzipAcceptEncoding$inboundSchema: z.ZodNativeEnum<typeof GzipAcceptEncoding> =
-    z.nativeEnum(GzipAcceptEncoding);
+export const GzipAcceptEncoding$inboundSchema: z.ZodNativeEnum<
+  typeof GzipAcceptEncoding
+> = z.nativeEnum(GzipAcceptEncoding);
 
 /** @internal */
-export const GzipAcceptEncoding$outboundSchema: z.ZodNativeEnum<typeof GzipAcceptEncoding> =
-    GzipAcceptEncoding$inboundSchema;
+export const GzipAcceptEncoding$outboundSchema: z.ZodNativeEnum<
+  typeof GzipAcceptEncoding
+> = GzipAcceptEncoding$inboundSchema;
 
 /**
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace GzipAcceptEncoding$ {
-    /** @deprecated use `GzipAcceptEncoding$inboundSchema` instead. */
-    export const inboundSchema = GzipAcceptEncoding$inboundSchema;
-    /** @deprecated use `GzipAcceptEncoding$outboundSchema` instead. */
-    export const outboundSchema = GzipAcceptEncoding$outboundSchema;
+  /** @deprecated use `GzipAcceptEncoding$inboundSchema` instead. */
+  export const inboundSchema = GzipAcceptEncoding$inboundSchema;
+  /** @deprecated use `GzipAcceptEncoding$outboundSchema` instead. */
+  export const outboundSchema = GzipAcceptEncoding$outboundSchema;
 }

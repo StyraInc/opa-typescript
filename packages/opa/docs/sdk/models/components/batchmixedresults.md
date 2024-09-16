@@ -6,12 +6,14 @@
 import { BatchMixedResults } from "@styra/opa/sdk/models/components";
 
 let value: BatchMixedResults = {
-    responses: {
-        key: {
-            httpStatusCode: "200",
-            result: 3927.85,
-        },
+  responses: {
+    "key": {
+      httpStatusCode: "200",
+      code: "<value>",
+      message: "<value>",
+      decisionId: "b84cf736-213c-4932-a8e4-bb5c648f1b4d",
     },
+  },
 };
 ```
 

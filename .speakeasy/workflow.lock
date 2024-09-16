@@ -1,19 +1,18 @@
-speakeasyVersion: 1.376.0
+speakeasyVersion: 1.396.10
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:3e6d52e3f6893aa962869edcca40f482a24867be190e6a4469914dfe62d872ff
+        sourceRevisionDigest: sha256:b66b8550bb20c2c2e33abc1290a446ee506dc51343321d637579bc11d3981288
         sourceBlobDigest: sha256:f76f9d1e8be466eef2d0e9612845ce19f9a5f507682e92d7a4355b3b13eaa921
         tags:
             - latest
-            - push-suoktzlvrumw
+            - main
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:3e6d52e3f6893aa962869edcca40f482a24867be190e6a4469914dfe62d872ff
+        sourceRevisionDigest: sha256:b66b8550bb20c2c2e33abc1290a446ee506dc51343321d637579bc11d3981288
         sourceBlobDigest: sha256:f76f9d1e8be466eef2d0e9612845ce19f9a5f507682e92d7a4355b3b13eaa921
-        outLocation: packages/opa
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest

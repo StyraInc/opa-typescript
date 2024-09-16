@@ -8,12 +8,9 @@ The input document
 import { ExecutePolicyWithInputRequestBody } from "@styra/opa/sdk/models/operations";
 
 let value: ExecutePolicyWithInputRequestBody = {
-    input: {
-        user: "alice",
-        action: "read",
-        object: "id123",
-        type: "dog",
-    },
+  input: [
+    "<value>",
+  ],
 };
 ```
 

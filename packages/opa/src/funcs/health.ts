@@ -10,11 +10,11 @@ import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
 import {
-    ConnectionError,
-    InvalidRequestError,
-    RequestAbortedError,
-    RequestTimeoutError,
-    UnexpectedClientError,
+  ConnectionError,
+  InvalidRequestError,
+  RequestAbortedError,
+  RequestTimeoutError,
+  UnexpectedClientError,
 } from "../sdk/models/errors/httpclienterrors.js";
 import * as errors from "../sdk/models/errors/index.js";
 import { SDKError } from "../sdk/models/errors/sdkerror.js";
@@ -29,113 +29,112 @@ import { Result } from "../types/fp.js";
  * The health API endpoint executes a simple built-in policy query to verify that the server is operational. Optionally it can account for bundle activation as well (useful for “ready” checks at startup).
  */
 export async function health(
-    client$: OpaApiClientCore,
-    bundles?: boolean | undefined,
-    plugins?: boolean | undefined,
-    excludePlugin?: Array<string> | undefined,
-    options?: RequestOptions
+  client$: OpaApiClientCore,
+  bundles?: boolean | undefined,
+  plugins?: boolean | undefined,
+  excludePlugin?: Array<string> | undefined,
+  options?: RequestOptions,
 ): Promise<
-    Result<
-        operations.HealthResponse,
-        | errors.UnhealthyServer
-        | SDKError
-        | SDKValidationError
-        | UnexpectedClientError
-        | InvalidRequestError
-        | RequestAbortedError
-        | RequestTimeoutError
-        | ConnectionError
-    >
+  Result<
+    operations.HealthResponse,
+    | errors.UnhealthyServer
+    | SDKError
+    | SDKValidationError
+    | UnexpectedClientError
+    | InvalidRequestError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | ConnectionError
+  >
 > {
-    const input$: operations.HealthRequest = {
-        bundles: bundles,
-        plugins: plugins,
-        excludePlugin: excludePlugin,
-    };
+  const input$: operations.HealthRequest = {
+    bundles: bundles,
+    plugins: plugins,
+    excludePlugin: excludePlugin,
+  };
 
-    const parsed$ = schemas$.safeParse(
-        input$,
-        (value$) => operations.HealthRequest$outboundSchema.parse(value$),
-        "Input validation failed"
-    );
-    if (!parsed$.ok) {
-        return parsed$;
-    }
-    const payload$ = parsed$.value;
-    const body$ = null;
+  const parsed$ = schemas$.safeParse(
+    input$,
+    (value$) => operations.HealthRequest$outboundSchema.parse(value$),
+    "Input validation failed",
+  );
+  if (!parsed$.ok) {
+    return parsed$;
+  }
+  const payload$ = parsed$.value;
+  const body$ = null;
 
-    const path$ = pathToFunc("/health")();
+  const path$ = pathToFunc("/health")();
 
-    const query$ = encodeFormQuery$({
-        bundles: payload$.bundles,
-        "exclude-plugin": payload$["exclude-plugin"],
-        plugins: payload$.plugins,
-    });
+  const query$ = encodeFormQuery$({
+    "bundles": payload$.bundles,
+    "exclude-plugin": payload$["exclude-plugin"],
+    "plugins": payload$.plugins,
+  });
 
-    const headers$ = new Headers({
-        Accept: "application/json",
-    });
+  const headers$ = new Headers({
+    Accept: "application/json",
+  });
 
-    const bearerAuth$ = await extractSecurity(client$.options$.bearerAuth);
-    const security$ = bearerAuth$ == null ? {} : { bearerAuth: bearerAuth$ };
-    const context = {
-        operationID: "health",
-        oAuth2Scopes: [],
-        securitySource: client$.options$.bearerAuth,
-    };
-    const securitySettings$ = resolveGlobalSecurity(security$);
+  const bearerAuth$ = await extractSecurity(client$.options$.bearerAuth);
+  const security$ = bearerAuth$ == null ? {} : { bearerAuth: bearerAuth$ };
+  const context = {
+    operationID: "health",
+    oAuth2Scopes: [],
+    securitySource: client$.options$.bearerAuth,
+  };
+  const securitySettings$ = resolveGlobalSecurity(security$);
 
-    const requestRes = client$.createRequest$(
-        context,
-        {
-            security: securitySettings$,
-            method: "GET",
-            path: path$,
-            headers: headers$,
-            query: query$,
-            body: body$,
-            timeoutMs: options?.timeoutMs || client$.options$.timeoutMs || -1,
-        },
-        options
-    );
-    if (!requestRes.ok) {
-        return requestRes;
-    }
-    const request$ = requestRes.value;
+  const requestRes = client$.createRequest$(context, {
+    security: securitySettings$,
+    method: "GET",
+    path: path$,
+    headers: headers$,
+    query: query$,
+    body: body$,
+    timeoutMs: options?.timeoutMs || client$.options$.timeoutMs || -1,
+  }, options);
+  if (!requestRes.ok) {
+    return requestRes;
+  }
+  const request$ = requestRes.value;
 
-    const doResult = await client$.do$(request$, {
-        context,
-        errorCodes: ["4XX", "500", "5XX"],
-        retryConfig: options?.retries || client$.options$.retryConfig,
-        retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
-    });
-    if (!doResult.ok) {
-        return doResult;
-    }
-    const response = doResult.value;
+  const doResult = await client$.do$(request$, {
+    context,
+    errorCodes: ["4XX", "500", "5XX"],
+    retryConfig: options?.retries
+      || client$.options$.retryConfig,
+    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+  });
+  if (!doResult.ok) {
+    return doResult;
+  }
+  const response = doResult.value;
 
-    const responseFields$ = {
-        HttpMeta: { Response: response, Request: request$ },
-    };
+  const responseFields$ = {
+    HttpMeta: { Response: response, Request: request$ },
+  };
 
-    const [result$] = await m$.match<
-        operations.HealthResponse,
-        | errors.UnhealthyServer
-        | SDKError
-        | SDKValidationError
-        | UnexpectedClientError
-        | InvalidRequestError
-        | RequestAbortedError
-        | RequestTimeoutError
-        | ConnectionError
-    >(
-        m$.json(200, operations.HealthResponse$inboundSchema, { key: "HealthyServer" }),
-        m$.jsonErr(500, errors.UnhealthyServer$inboundSchema),
-        m$.fail(["4XX", "5XX"])
-    )(response, request$, { extraFields: responseFields$ });
-    if (!result$.ok) {
-        return result$;
-    }
-
+  const [result$] = await m$.match<
+    operations.HealthResponse,
+    | errors.UnhealthyServer
+    | SDKError
+    | SDKValidationError
+    | UnexpectedClientError
+    | InvalidRequestError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | ConnectionError
+  >(
+    m$.json(200, operations.HealthResponse$inboundSchema, {
+      key: "HealthyServer",
+    }),
+    m$.jsonErr(500, errors.UnhealthyServer$inboundSchema),
+    m$.fail(["4XX", "5XX"]),
+  )(response, request$, { extraFields: responseFields$ });
+  if (!result$.ok) {
     return result$;
+  }
+
+  return result$;
 }

@@ -8,9 +8,9 @@ The batch of inputs
 import { ExecuteBatchPolicyWithInputRequestBody } from "@styra/opa/sdk/models/operations";
 
 let value: ExecuteBatchPolicyWithInputRequestBody = {
-    inputs: {
-        key: ["<value>"],
-    },
+  inputs: {
+    "key": 6235.64,
+  },
 };
 ```
 
