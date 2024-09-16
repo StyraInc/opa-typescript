@@ -6,8 +6,8 @@
 import { Errors } from "@styra/opa/sdk/models/errors";
 
 let value: Errors = {
-    code: "<value>",
-    message: "<value>",
+  code: "<value>",
+  message: "<value>",
 };
 ```
 

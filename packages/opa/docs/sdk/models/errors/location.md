@@ -6,9 +6,9 @@
 import { Location } from "@styra/opa/sdk/models/errors";
 
 let value: Location = {
-    file: "<value>",
-    row: 836079,
-    col: 71036,
+  file: "<value>",
+  row: 392785,
+  col: 925597,
 };
 ```
 

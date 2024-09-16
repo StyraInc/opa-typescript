@@ -1,10 +1,10 @@
 # OpaApiClient SDK
 
-
 ## Overview
 
 Enterprise OPA documentation
 <https://docs.styra.com/enterprise-opa>
+
 ### Available Operations
 
 * [executeDefaultPolicyWithInput](#executedefaultpolicywithinput) - Execute the default decision  given an input
@@ -25,15 +25,14 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11);
-
+  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11");
+  
   // Handle the result
   console.log(result)
 }
 
 run();
 ```
-
 
 ### Standalone function
 
@@ -48,7 +47,7 @@ import { executeDefaultPolicyWithInput } from "@styra/opa/funcs/executeDefaultPo
 const opaApiClient = new OpaApiClientCore();
 
 async function run() {
-  const res = await executeDefaultPolicyWithInput(opaApiClient, "<value>");
+  const res = await executeDefaultPolicyWithInput(opaApiClient, "8203.11");
 
   if (!res.ok) {
     throw res.error;
@@ -74,10 +73,10 @@ run();
 | `options.fetchOptions`                                                                                                                                                                                        | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                                                       | :heavy_minus_sign:                                                                                                                                                                                            | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed.                                |
 | `options.retries`                                                                                                                                                                                             | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                                                            | Enables retrying HTTP requests under certain failure conditions.                                                                                                                                              |
 
-
 ### Response
 
 **Promise\<[operations.ExecuteDefaultPolicyWithInputResponse](../../sdk/models/operations/executedefaultpolicywithinputresponse.md)\>**
+
 ### Errors
 
 | Error Object       | Status Code        | Content Type       |
@@ -85,6 +84,7 @@ run();
 | errors.ClientError | 400,404            | application/json   |
 | errors.ServerError | 500                | application/json   |
 | errors.SDKError    | 4xx-5xx            | */*                |
+
 
 ## executePolicy
 
@@ -101,14 +101,13 @@ async function run() {
   const result = await opaApiClient.executePolicy({
     path: "app/rbac",
   });
-
+  
   // Handle the result
   console.log(result)
 }
 
 run();
 ```
-
 
 ### Standalone function
 
@@ -149,10 +148,10 @@ run();
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
-
 ### Response
 
 **Promise\<[operations.ExecutePolicyResponse](../../sdk/models/operations/executepolicyresponse.md)\>**
+
 ### Errors
 
 | Error Object       | Status Code        | Content Type       |
@@ -160,6 +159,7 @@ run();
 | errors.ClientError | 400                | application/json   |
 | errors.ServerError | 500                | application/json   |
 | errors.SDKError    | 4xx-5xx            | */*                |
+
 
 ## executePolicyWithInput
 
@@ -176,17 +176,16 @@ async function run() {
   const result = await opaApiClient.executePolicyWithInput({
     path: "app/rbac",
     requestBody: {
-    input: false,
+      input: false,
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
 
 run();
 ```
-
 
 ### Standalone function
 
@@ -204,7 +203,7 @@ async function run() {
   const res = await executePolicyWithInput(opaApiClient, {
     path: "app/rbac",
     requestBody: {
-    input: "<value>",
+      input: "<value>",
     },
   });
 
@@ -230,10 +229,10 @@ run();
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
-
 ### Response
 
 **Promise\<[operations.ExecutePolicyWithInputResponse](../../sdk/models/operations/executepolicywithinputresponse.md)\>**
+
 ### Errors
 
 | Error Object       | Status Code        | Content Type       |
@@ -241,6 +240,7 @@ run();
 | errors.ClientError | 400                | application/json   |
 | errors.ServerError | 500                | application/json   |
 | errors.SDKError    | 4xx-5xx            | */*                |
+
 
 ## executeBatchPolicyWithInput
 
@@ -258,18 +258,19 @@ async function run() {
     path: "app/rbac",
     requestBody: {
       inputs: {
-        "key": "<value>",
+        "key": [
+          "<value>",
+        ],
       },
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
 
 run();
 ```
-
 
 ### Standalone function
 
@@ -288,7 +289,9 @@ async function run() {
     path: "app/rbac",
     requestBody: {
       inputs: {
-        "key": 9561.78,
+        "key": [
+          "<value>",
+        ],
       },
     },
   });
@@ -315,10 +318,10 @@ run();
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
-
 ### Response
 
 **Promise\<[operations.ExecuteBatchPolicyWithInputResponse](../../sdk/models/operations/executebatchpolicywithinputresponse.md)\>**
+
 ### Errors
 
 | Error Object            | Status Code             | Content Type            |
@@ -326,6 +329,7 @@ run();
 | errors.ClientError      | 400                     | application/json        |
 | errors.BatchServerError | 500                     | application/json        |
 | errors.SDKError         | 4xx-5xx                 | */*                     |
+
 
 ## health
 
@@ -340,14 +344,13 @@ const opaApiClient = new OpaApiClient();
 
 async function run() {
   const result = await opaApiClient.health();
-
+  
   // Handle the result
   console.log(result)
 }
 
 run();
 ```
-
 
 ### Standalone function
 
@@ -388,10 +391,10 @@ run();
 | `options.fetchOptions`                                                                                                                                                                                                                                                        | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                                                                                                                       | :heavy_minus_sign:                                                                                                                                                                                                                                                            | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed.                                                                                                |
 | `options.retries`                                                                                                                                                                                                                                                             | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                                                                                                                            | Enables retrying HTTP requests under certain failure conditions.                                                                                                                                                                                                              |
 
-
 ### Response
 
 **Promise\<[operations.HealthResponse](../../sdk/models/operations/healthresponse.md)\>**
+
 ### Errors
 
 | Error Object           | Status Code            | Content Type           |

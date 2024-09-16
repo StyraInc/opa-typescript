@@ -3,19 +3,19 @@
  */
 
 export class SDKError extends Error {
-    constructor(
-        message: string,
-        public readonly httpMeta: {
-            response: Response;
-            request: Request;
-        }
-    ) {
-        super(
-            `${message}: Status ${httpMeta.response.status} Content-Type ${
-                httpMeta.response.headers.get("content-type") || ""
-            }`
-        );
+  constructor(
+    message: string,
+    public readonly httpMeta: {
+      response: Response;
+      request: Request;
+    },
+  ) {
+    super(
+      `${message}: Status ${httpMeta.response.status} Content-Type ${
+        httpMeta.response.headers.get("content-type") || ""
+      }`,
+    );
 
-        this.name = "SDKError";
-    }
+    this.name = "SDKError";
+  }
 }

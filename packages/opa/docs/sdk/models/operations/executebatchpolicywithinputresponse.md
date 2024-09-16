@@ -6,33 +6,33 @@
 import { ExecuteBatchPolicyWithInputResponse } from "@styra/opa/sdk/models/operations";
 
 let value: ExecuteBatchPolicyWithInputResponse = {
-    httpMeta: {
-        response: new Response('{"message": "hello world"}', {
-            headers: { "Content-Type": "application/json" },
-        }),
-        request: new Request("https://example.com"),
+  httpMeta: {
+    response: new Response("{\"message\": \"hello world\"}", {
+      headers: { "Content-Type": "application/json" },
+    }),
+    request: new Request("https://example.com"),
+  },
+  batchSuccessfulPolicyEvaluation: {
+    batchDecisionId: "1bef6b7d-cd13-4890-bfe1-fd2e8de32189",
+    responses: {
+      "key": {
+        result: "<value>",
+      },
     },
-    batchSuccessfulPolicyEvaluation: {
-        batchDecisionId: "1bef6b7d-cd13-4890-bfe1-fd2e8de32189",
-        responses: {
-            key: {
-                result: 2975.34,
-            },
-        },
+  },
+  batchMixedResults: {
+    responses: {
+      "key": {
+        httpStatusCode: "200",
+        result: "<value>",
+      },
     },
-    batchMixedResults: {
-        responses: {
-            key: {
-                httpStatusCode: "200",
-                code: "<value>",
-                message: "<value>",
-                decisionId: "b84cf736-213c-4932-a8e4-bb5c648f1b4d",
-            },
-        },
-    },
-    headers: {
-        key: ["<value>"],
-    },
+  },
+  headers: {
+    "key": [
+      "<value>",
+    ],
+  },
 };
 ```
 

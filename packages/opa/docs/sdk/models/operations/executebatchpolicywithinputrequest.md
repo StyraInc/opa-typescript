@@ -6,12 +6,14 @@
 import { ExecuteBatchPolicyWithInputRequest } from "@styra/opa/sdk/models/operations";
 
 let value: ExecuteBatchPolicyWithInputRequest = {
-    path: "app/rbac",
-    requestBody: {
-        inputs: {
-            key: "<value>",
-        },
+  path: "app/rbac",
+  requestBody: {
+    inputs: {
+      "key": [
+        "<value>",
+      ],
     },
+  },
 };
 ```
 

@@ -5,25 +5,27 @@
 import * as z from "zod";
 
 export enum Explain {
-    Notes = "notes",
-    Fails = "fails",
-    Full = "full",
-    Debug = "debug",
+  Notes = "notes",
+  Fails = "fails",
+  Full = "full",
+  Debug = "debug",
 }
 
 /** @internal */
-export const Explain$inboundSchema: z.ZodNativeEnum<typeof Explain> = z.nativeEnum(Explain);
+export const Explain$inboundSchema: z.ZodNativeEnum<typeof Explain> = z
+  .nativeEnum(Explain);
 
 /** @internal */
-export const Explain$outboundSchema: z.ZodNativeEnum<typeof Explain> = Explain$inboundSchema;
+export const Explain$outboundSchema: z.ZodNativeEnum<typeof Explain> =
+  Explain$inboundSchema;
 
 /**
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace Explain$ {
-    /** @deprecated use `Explain$inboundSchema` instead. */
-    export const inboundSchema = Explain$inboundSchema;
-    /** @deprecated use `Explain$outboundSchema` instead. */
-    export const outboundSchema = Explain$outboundSchema;
+  /** @deprecated use `Explain$inboundSchema` instead. */
+  export const inboundSchema = Explain$inboundSchema;
+  /** @deprecated use `Explain$outboundSchema` instead. */
+  export const outboundSchema = Explain$outboundSchema;
 }

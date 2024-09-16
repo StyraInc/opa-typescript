@@ -40,6 +40,28 @@ yarn add @styra/opa zod
 ```
 <!-- No SDK Installation [installation] -->
 
+<!-- Start Summary [summary] -->
+## Summary
+
+For more information about the API: [Enterprise OPA documentation](https://docs.styra.com/enterprise-opa)
+<!-- End Summary [summary] -->
+
+<!-- Start Table of Contents [toc] -->
+## Table of Contents
+
+* [SDK Installation](#sdk-installation)
+* [Requirements](#requirements)
+* [SDK Example Usage](#sdk-example-usage)
+* [Available Resources and Operations](#available-resources-and-operations)
+* [Standalone functions](#standalone-functions)
+* [Retries](#retries)
+* [Error Handling](#error-handling)
+* [Server Selection](#server-selection)
+* [Custom HTTP Client](#custom-http-client)
+* [Authentication](#authentication)
+* [Debugging](#debugging)
+<!-- End Table of Contents [toc] -->
+
 <!-- Start Requirements [requirements] -->
 ## Requirements
 
@@ -278,6 +300,9 @@ We've removed most of the auto-generated Speakeasy examples because they generat
 <!-- Start Available Resources and Operations [operations] -->
 ## Available Resources and Operations
 
+<details open>
+<summary>Available methods</summary>
+
 ### [OpaApiClient SDK](docs/sdks/opaapiclient/README.md)
 
 * [executeDefaultPolicyWithInput](docs/sdks/opaapiclient/README.md#executedefaultpolicywithinput) - Execute the default decision  given an input
@@ -285,6 +310,8 @@ We've removed most of the auto-generated Speakeasy examples because they generat
 * [executePolicyWithInput](docs/sdks/opaapiclient/README.md#executepolicywithinput) - Execute a policy given an input
 * [executeBatchPolicyWithInput](docs/sdks/opaapiclient/README.md#executebatchpolicywithinput) - Execute a policy given a batch of inputs
 * [health](docs/sdks/opaapiclient/README.md#health) - Verify the server is operational
+
+</details>
 <!-- End Available Resources and Operations [operations] -->
 
 <!-- No Error Handling [errors] -->
@@ -305,21 +332,21 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-    const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11, {
-        retries: {
-            strategy: "backoff",
-            backoff: {
-                initialInterval: 1,
-                maxInterval: 50,
-                exponent: 1.1,
-                maxElapsedTime: 100,
-            },
-            retryConnectionErrors: false,
-        },
-    });
+  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11", {
+    retries: {
+      strategy: "backoff",
+      backoff: {
+        initialInterval: 1,
+        maxInterval: 50,
+        exponent: 1.1,
+        maxElapsedTime: 100,
+      },
+      retryConnectionErrors: false,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -331,23 +358,23 @@ If you'd like to override the default retry strategy for all operations that sup
 import { OpaApiClient } from "@styra/opa";
 
 const opaApiClient = new OpaApiClient({
-    retryConfig: {
-        strategy: "backoff",
-        backoff: {
-            initialInterval: 1,
-            maxInterval: 50,
-            exponent: 1.1,
-            maxElapsedTime: 100,
-        },
-        retryConnectionErrors: false,
+  retryConfig: {
+    strategy: "backoff",
+    backoff: {
+      initialInterval: 1,
+      maxInterval: 50,
+      exponent: 1.1,
+      maxElapsedTime: 100,
     },
+    retryConnectionErrors: false,
+  },
 });
 
 async function run() {
-    const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11);
+  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11");
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -371,14 +398,14 @@ To authenticate with the API the `bearerAuth` parameter must be set when initial
 import { OpaApiClient } from "@styra/opa";
 
 const opaApiClient = new OpaApiClient({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
 });
 
 async function run() {
-    const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11);
+  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11");
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();

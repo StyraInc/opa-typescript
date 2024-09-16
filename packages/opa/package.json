@@ -1,7 +1,8 @@
 {
   "name": "@styra/opa",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "author": "Styra",
+  "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
   },
@@ -14,7 +15,6 @@
     "rbac",
     "role based access control"
   ],
-  "license": "Apache-2.0",
   "tshy": {
     "exports": {
       ".": "./src/index.ts",
@@ -36,21 +36,20 @@
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
     "build": "tshy",
-    "prepare": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "zod": ">= 3"
   },
   "devDependencies": {
-    "@types/node": "^20.14.9",
+    "@types/node": "^22.5.5",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
     "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-markdown": "^4.0.1",
     "prettier": "3.2.5",
-    "testcontainers": "^10.10.1",
+    "testcontainers": "^10.13.1",
     "tshy": "^1.16.2",
     "tsx": "^4.16.2",
     "typedoc": "^0.26.5",

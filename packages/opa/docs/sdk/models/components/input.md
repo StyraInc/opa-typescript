@@ -7,12 +7,7 @@ Arbitrary JSON used within your policies by accessing `input`
 ```typescript
 import { Input } from "@styra/opa/sdk/models/components";
 
-let value: Input = {
-    user: "alice",
-    action: "read",
-    object: "id123",
-    type: "dog",
-};
+let value: Input = false;
 ```
 
 ## Supported Types

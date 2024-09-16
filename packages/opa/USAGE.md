@@ -5,10 +5,10 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-    const result = await opaApiClient.executeDefaultPolicyWithInput(8203.11);
+  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11");
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -21,15 +21,15 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-    const result = await opaApiClient.executePolicyWithInput({
-        path: "app/rbac",
-        requestBody: {
-            input: false,
-        },
-    });
+  const result = await opaApiClient.executePolicyWithInput({
+    path: "app/rbac",
+    requestBody: {
+      input: false,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -42,17 +42,19 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-    const result = await opaApiClient.executeBatchPolicyWithInput({
-        path: "app/rbac",
-        requestBody: {
-            inputs: {
-                key: "<value>",
-            },
-        },
-    });
+  const result = await opaApiClient.executeBatchPolicyWithInput({
+    path: "app/rbac",
+    requestBody: {
+      inputs: {
+        "key": [
+          "<value>",
+        ],
+      },
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();

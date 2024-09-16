@@ -3,19 +3,20 @@ id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
   docChecksum: 54d33facef3aa19f358d15ab44e34141
   docVersion: 0.2.0
-  speakeasyVersion: 1.376.0
-  generationVersion: 2.402.5
-  releaseVersion: 1.5.0
-  configChecksum: dc4ad85128f07abee67816f11d9d50e5
+  speakeasyVersion: 1.396.10
+  generationVersion: 2.415.7
+  releaseVersion: 1.6.0
+  configChecksum: cdbb0c75e719e150de542550878da2ae
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
 features:
   typescript:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.1.10
-    core: 3.14.1
+    constsAndDefaults: 0.1.11
+    core: 3.17.3
     defaultEnabledRetries: 0.1.0
+    enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.1
     examples: 2.81.4
     flattening: 2.81.1
@@ -28,22 +29,67 @@ features:
     sdkHooks: 0.1.0
     unions: 2.85.7
 generatedFiles:
-  - src/funcs/executeDefaultPolicyWithInput.ts
-  - src/funcs/executePolicy.ts
-  - src/funcs/executePolicyWithInput.ts
-  - src/funcs/executeBatchPolicyWithInput.ts
-  - src/funcs/health.ts
-  - src/sdk/sdk.ts
   - .eslintrc.cjs
+  - .gitattributes
   - FUNCTIONS.md
   - RUNTIMES.md
+  - USAGE.md
+  - docs/lib/utils/retryconfig.md
+  - docs/sdk/models/components/batchmixedresults.md
+  - docs/sdk/models/components/batchsuccessfulpolicyevaluation.md
+  - docs/sdk/models/components/errors.md
+  - docs/sdk/models/components/explain.md
+  - docs/sdk/models/components/gzipacceptencoding.md
+  - docs/sdk/models/components/gzipcontentencoding.md
+  - docs/sdk/models/components/healthyserver.md
+  - docs/sdk/models/components/httpmetadata.md
+  - docs/sdk/models/components/input.md
+  - docs/sdk/models/components/location.md
+  - docs/sdk/models/components/provenance.md
+  - docs/sdk/models/components/responses.md
+  - docs/sdk/models/components/result.md
+  - docs/sdk/models/components/revision.md
+  - docs/sdk/models/components/security.md
+  - docs/sdk/models/components/servererrorwithstatuscode.md
+  - docs/sdk/models/components/successfulpolicyresponse.md
+  - docs/sdk/models/components/successfulpolicyresponsewithstatuscode.md
+  - docs/sdk/models/errors/batchservererror.md
+  - docs/sdk/models/errors/clienterror.md
+  - docs/sdk/models/errors/errors.md
+  - docs/sdk/models/errors/location.md
+  - docs/sdk/models/errors/servererror.md
+  - docs/sdk/models/errors/servererrorerrors.md
+  - docs/sdk/models/errors/servererrorlocation.md
+  - docs/sdk/models/errors/unhealthyserver.md
+  - docs/sdk/models/operations/executebatchpolicywithinputrequest.md
+  - docs/sdk/models/operations/executebatchpolicywithinputrequestbody.md
+  - docs/sdk/models/operations/executebatchpolicywithinputresponse.md
+  - docs/sdk/models/operations/executedefaultpolicywithinputrequest.md
+  - docs/sdk/models/operations/executedefaultpolicywithinputresponse.md
+  - docs/sdk/models/operations/executepolicyrequest.md
+  - docs/sdk/models/operations/executepolicyresponse.md
+  - docs/sdk/models/operations/executepolicywithinputrequest.md
+  - docs/sdk/models/operations/executepolicywithinputrequestbody.md
+  - docs/sdk/models/operations/executepolicywithinputresponse.md
+  - docs/sdk/models/operations/healthrequest.md
+  - docs/sdk/models/operations/healthresponse.md
+  - docs/sdks/opaapiclient/README.md
   - jsr.json
   - package.json
   - src/core.ts
+  - src/funcs/executeBatchPolicyWithInput.ts
+  - src/funcs/executeDefaultPolicyWithInput.ts
+  - src/funcs/executePolicy.ts
+  - src/funcs/executePolicyWithInput.ts
+  - src/funcs/health.ts
+  - src/hooks/hooks.ts
+  - src/hooks/index.ts
+  - src/hooks/types.ts
   - src/lib/base64.ts
   - src/lib/config.ts
   - src/lib/dlv.ts
   - src/lib/encodings.ts
+  - src/lib/files.ts
   - src/lib/http.ts
   - src/lib/is-plain-object.ts
   - src/lib/logger.ts
@@ -55,9 +101,34 @@ generatedFiles:
   - src/lib/security.ts
   - src/lib/url.ts
   - src/sdk/index.ts
+  - src/sdk/models/components/batchmixedresults.ts
+  - src/sdk/models/components/batchsuccessfulpolicyevaluation.ts
+  - src/sdk/models/components/explain.ts
+  - src/sdk/models/components/gzipacceptencoding.ts
+  - src/sdk/models/components/gzipcontentencoding.ts
+  - src/sdk/models/components/healthyserver.ts
+  - src/sdk/models/components/httpmetadata.ts
+  - src/sdk/models/components/index.ts
+  - src/sdk/models/components/input.ts
+  - src/sdk/models/components/provenance.ts
+  - src/sdk/models/components/result.ts
+  - src/sdk/models/components/security.ts
+  - src/sdk/models/components/successfulpolicyresponse.ts
+  - src/sdk/models/errors/batchservererror.ts
+  - src/sdk/models/errors/clienterror.ts
   - src/sdk/models/errors/httpclienterrors.ts
+  - src/sdk/models/errors/index.ts
   - src/sdk/models/errors/sdkerror.ts
   - src/sdk/models/errors/sdkvalidationerror.ts
+  - src/sdk/models/errors/servererror.ts
+  - src/sdk/models/errors/unhealthyserver.ts
+  - src/sdk/models/operations/executebatchpolicywithinput.ts
+  - src/sdk/models/operations/executedefaultpolicywithinput.ts
+  - src/sdk/models/operations/executepolicy.ts
+  - src/sdk/models/operations/executepolicywithinput.ts
+  - src/sdk/models/operations/health.ts
+  - src/sdk/models/operations/index.ts
+  - src/sdk/sdk.ts
   - src/types/blobs.ts
   - src/types/constdatetime.ts
   - src/types/enums.ts
@@ -65,73 +136,67 @@ generatedFiles:
   - src/types/index.ts
   - src/types/operations.ts
   - src/types/rfcdate.ts
+  - src/types/streams.ts
   - tsconfig.json
-  - src/sdk/models/operations/executedefaultpolicywithinput.ts
-  - src/sdk/models/operations/executepolicy.ts
-  - src/sdk/models/operations/executepolicywithinput.ts
-  - src/sdk/models/operations/executebatchpolicywithinput.ts
-  - src/sdk/models/operations/health.ts
-  - src/sdk/models/components/result.ts
-  - src/sdk/models/components/httpmetadata.ts
-  - src/sdk/models/components/input.ts
-  - src/sdk/models/components/gzipacceptencoding.ts
-  - src/sdk/models/components/successfulpolicyresponse.ts
-  - src/sdk/models/components/provenance.ts
-  - src/sdk/models/components/explain.ts
-  - src/sdk/models/components/gzipcontentencoding.ts
-  - src/sdk/models/components/batchmixedresults.ts
-  - src/sdk/models/components/batchsuccessfulpolicyevaluation.ts
-  - src/sdk/models/components/healthyserver.ts
-  - src/sdk/models/components/security.ts
-  - src/sdk/models/errors/clienterror.ts
-  - src/sdk/models/errors/servererror.ts
-  - src/sdk/models/errors/batchservererror.ts
-  - src/sdk/models/errors/unhealthyserver.ts
-  - src/sdk/models/errors/index.ts
-  - src/sdk/models/operations/index.ts
-  - src/sdk/models/components/index.ts
-  - docs/sdk/models/operations/executedefaultpolicywithinputrequest.md
-  - docs/sdk/models/operations/executedefaultpolicywithinputresponse.md
-  - docs/sdk/models/operations/executepolicyrequest.md
-  - docs/sdk/models/operations/executepolicyresponse.md
-  - docs/sdk/models/operations/executepolicywithinputrequestbody.md
-  - docs/sdk/models/operations/executepolicywithinputrequest.md
-  - docs/sdk/models/operations/executepolicywithinputresponse.md
-  - docs/sdk/models/operations/executebatchpolicywithinputrequestbody.md
-  - docs/sdk/models/operations/executebatchpolicywithinputrequest.md
-  - docs/sdk/models/operations/executebatchpolicywithinputresponse.md
-  - docs/sdk/models/operations/healthrequest.md
-  - docs/sdk/models/operations/healthresponse.md
-  - docs/sdk/models/components/result.md
-  - docs/sdk/models/components/httpmetadata.md
-  - docs/sdk/models/components/input.md
-  - docs/sdk/models/components/gzipacceptencoding.md
-  - docs/sdk/models/components/successfulpolicyresponse.md
-  - docs/sdk/models/components/revision.md
-  - docs/sdk/models/components/provenance.md
-  - docs/sdk/models/components/explain.md
-  - docs/sdk/models/components/gzipcontentencoding.md
-  - docs/sdk/models/components/location.md
-  - docs/sdk/models/components/errors.md
-  - docs/sdk/models/components/servererrorwithstatuscode.md
-  - docs/sdk/models/components/successfulpolicyresponsewithstatuscode.md
-  - docs/sdk/models/components/responses.md
-  - docs/sdk/models/components/batchmixedresults.md
-  - docs/sdk/models/components/batchsuccessfulpolicyevaluation.md
-  - docs/sdk/models/components/healthyserver.md
-  - docs/sdk/models/components/security.md
-  - docs/sdk/models/errors/location.md
-  - docs/sdk/models/errors/errors.md
-  - docs/sdk/models/errors/clienterror.md
-  - docs/sdk/models/errors/servererrorlocation.md
-  - docs/sdk/models/errors/servererrorerrors.md
-  - docs/sdk/models/errors/servererror.md
-  - docs/sdk/models/errors/batchservererror.md
-  - docs/sdk/models/errors/unhealthyserver.md
-  - docs/lib/utils/retryconfig.md
-  - docs/sdks/opaapiclient/README.md
-  - USAGE.md
-  - .gitattributes
-  - src/hooks/hooks.ts
-  - src/hooks/types.ts
-  - src/hooks/index.ts
+examples:
+  executeDefaultPolicyWithInput:
+    speakeasy-default-execute-default-policy-with-input:
+      requestBody:
+        application/json: "8203.11"
+      responses:
+        "200":
+          application/json: "4113.99"
+        "400":
+          application/json: {"code": "<value>", "message": "<value>"}
+        "500":
+          application/json: {"code": "<value>", "message": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}
+  executePolicy:
+    speakeasy-default-execute-policy:
+      parameters:
+        path:
+          path: "app/rbac"
+        query: {}
+        header: {}
+      responses:
+        "200":
+          application/json: {"result": true}
+        "400":
+          application/json: {"code": "<value>", "message": "<value>"}
+        "500":
+          application/json: {"code": "<value>", "message": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}
+  executePolicyWithInput:
+    speakeasy-default-execute-policy-with-input:
+      parameters:
+        path:
+          path: "app/rbac"
+        query: {}
+        header: {}
+      requestBody:
+        application/json: {"input": false}
+      responses:
+        "200":
+          application/json: {"result": "<value>"}
+        "400":
+          application/json: {"code": "<value>", "message": "<value>"}
+        "500":
+          application/json: {"code": "<value>", "message": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}
+  executeBatchPolicyWithInput:
+    speakeasy-default-execute-batch-policy-with-input:
+      parameters:
+        path:
+          path: "app/rbac"
+        query: {}
+        header: {}
+      requestBody:
+        application/json: {"inputs": {"key": []}}
+      responses:
+        "200":
+          application/json: {"batch_decision_id": "1bef6b7d-cd13-4890-bfe1-fd2e8de32189", "responses": {"key": {"result": {"allow": true, "user_is_admin": true, "user_is_granted": []}}, "key1": {"result": []}}}
+        "207":
+          application/json: {"responses": {"key": {"http_status_code": "200", "result": "<value>"}}}
+        "400":
+          application/json: {"code": "<value>", "message": "<value>"}
+        "500":
+          application/json: {"responses": {}}
+  health:
+    speakeasy-default-health: {}

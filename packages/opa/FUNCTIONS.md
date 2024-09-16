@@ -28,7 +28,7 @@ import { SDKValidationError } from "@styra/opa/sdk/models/errors/sdkvalidationer
 const opaApiClient = new OpaApiClientCore();
 
 async function run() {
-  const res = await executeDefaultPolicyWithInput(opaApiClient, 5928.45);
+  const res = await executeDefaultPolicyWithInput(opaApiClient, "8203.11");
 
   switch (true) {
     case res.ok:

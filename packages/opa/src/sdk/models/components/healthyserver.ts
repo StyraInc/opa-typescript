@@ -7,17 +7,20 @@ import * as z from "zod";
 export type HealthyServer = {};
 
 /** @internal */
-export const HealthyServer$inboundSchema: z.ZodType<HealthyServer, z.ZodTypeDef, unknown> =
-    z.object({});
+export const HealthyServer$inboundSchema: z.ZodType<
+  HealthyServer,
+  z.ZodTypeDef,
+  unknown
+> = z.object({});
 
 /** @internal */
 export type HealthyServer$Outbound = {};
 
 /** @internal */
 export const HealthyServer$outboundSchema: z.ZodType<
-    HealthyServer$Outbound,
-    z.ZodTypeDef,
-    HealthyServer
+  HealthyServer$Outbound,
+  z.ZodTypeDef,
+  HealthyServer
 > = z.object({});
 
 /**
@@ -25,10 +28,10 @@ export const HealthyServer$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace HealthyServer$ {
-    /** @deprecated use `HealthyServer$inboundSchema` instead. */
-    export const inboundSchema = HealthyServer$inboundSchema;
-    /** @deprecated use `HealthyServer$outboundSchema` instead. */
-    export const outboundSchema = HealthyServer$outboundSchema;
-    /** @deprecated use `HealthyServer$Outbound` instead. */
-    export type Outbound = HealthyServer$Outbound;
+  /** @deprecated use `HealthyServer$inboundSchema` instead. */
+  export const inboundSchema = HealthyServer$inboundSchema;
+  /** @deprecated use `HealthyServer$outboundSchema` instead. */
+  export const outboundSchema = HealthyServer$outboundSchema;
+  /** @deprecated use `HealthyServer$Outbound` instead. */
+  export type Outbound = HealthyServer$Outbound;
 }

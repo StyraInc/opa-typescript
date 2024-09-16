@@ -6,7 +6,7 @@
 import { Revision } from "@styra/opa/sdk/models/components";
 
 let value: Revision = {
-    revision: "<value>",
+  revision: "<value>",
 };
 ```
 

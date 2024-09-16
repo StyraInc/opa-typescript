@@ -7,7 +7,13 @@ The base or virtual document referred to by the URL path. If the path is undefin
 ```typescript
 import { Result } from "@styra/opa/sdk/models/components";
 
-let value: Result = false;
+let value: Result = {
+  "allow": true,
+  "user_is_admin": true,
+  "user_is_granted": [
+    "<value>",
+  ],
+};
 ```
 
 ## Supported Types
