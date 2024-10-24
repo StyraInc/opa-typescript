@@ -1,0 +1,62 @@
+{
+  "name": "@styra/ucast-prisma",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StyraInc/opa-typescript.git",
+    "directory": "packages/ucast-prisma"
+  },
+  "description": "Styra-supported interpreter for using ucast conditions with Prisma.",
+  "scripts": {
+    "clean": "rm -rf ./dist/*",
+    "build": "tshy",
+    "prepublishOnly": "npm run build",
+    "attw": "attw --pack",
+    "test": "vitest",
+    "docs": "typedoc --out docs"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "author": "Styra Inc.",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/lodash.merge": "^4.6.9",
+    "tshy": "^3.0.2",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.7.0",
+    "vitest": "^2.1.1"
+  },
+  "dependencies": {
+    "@ucast/core": "^1.10.1",
+    "lodash.merge": "^4.6.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [],
+  "type": "module",
+  "tshy": {
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    }
+  },
+  "main": "./dist/commonjs/index.js",
+  "types": "./dist/commonjs/index.d.ts",
+  "module": "./dist/esm/index.js"
+}
