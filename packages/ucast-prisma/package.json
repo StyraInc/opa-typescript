@@ -35,7 +35,16 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": [],
+  "keywords": [
+    "OPA",
+    "Open Policy Agent",
+    "authorization",
+    "policy",
+    "permissions",
+    "rbac",
+    "role based access control",
+    "data filtering"
+  ],
   "type": "module",
   "tshy": {
     "exports": {
