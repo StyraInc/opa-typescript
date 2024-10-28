@@ -5,9 +5,8 @@
 
 This package contains helpers for using ucast conditions with Prisma queries.
 
-::: warning
-This is an experimental package and is subject to change.
-:::
+> [!WARNING]
+> This is an experimental package and is subject to change.
 
 
 ## Community
