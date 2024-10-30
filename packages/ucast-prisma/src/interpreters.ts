@@ -1,4 +1,9 @@
-import { CompoundCondition, FieldCondition, Comparable } from "@ucast/core";
+import {
+  CompoundCondition,
+  FieldCondition,
+  Condition,
+  Comparable,
+} from "@ucast/core";
 import { PrismaOperator } from "./interpreter.js";
 
 export const eq = op("equals");
@@ -31,22 +36,23 @@ export const or: PrismaOperator<CompoundCondition> = (
   query,
   { interpret }
 ) => {
-  const or: Record<string, any> = {};
+  const or: Record<string, any>[] = [];
   condition.value.forEach((cond) => {
     const q = query.child();
     interpret(cond, q);
     for (const [tbl, c] of Object.entries(q.toJSON())) {
-      or[tbl] = or[tbl] ?? [];
-      or[tbl].push(c);
+      if (query.isPrimary(tbl)) {
+        or.push(c);
+      } else {
+        or.push({ [tbl]: c });
+      }
     }
   });
 
-  for (const [tbl, cs] of Object.entries(or)) {
-    if (cs.length > 1) {
-      query.addCondition(tbl, { OR: cs });
-    } else {
-      query.addCondition(tbl, cs[0]);
-    }
+  if (or.length > 1) {
+    query.addPrimaryCondition({ OR: or });
+  } else {
+    query.addPrimaryCondition(or[0]);
   }
 
   return query;
