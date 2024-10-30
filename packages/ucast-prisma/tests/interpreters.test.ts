@@ -5,18 +5,18 @@ import { describe, it, expect } from "vitest";
 
 describe("Condition interpreter", () => {
   describe("field operators", () => {
-    const interpret = createPrismaInterpreter(interpreters);
+    const interpret = createPrismaInterpreter("table", interpreters);
 
     it('generates query with `equals operator for "eq"', () => {
       const condition = new FieldCondition("eq", "table.name", "test");
       const f = interpret(condition);
-      expect(f).toStrictEqual({ table: { name: { equals: "test" } } });
+      expect(f).toStrictEqual({ name: { equals: "test" } });
     });
 
     it('generates query with `not` operator for "ne"', () => {
       const condition = new FieldCondition("ne", "table.name", "test");
       const f = interpret(condition);
-      expect(f).toStrictEqual({ table: { name: { not: "test" } } });
+      expect(f).toStrictEqual({ name: { not: "test" } });
     });
 
     it('generates query with `in` operator for "in" with array value', () => {
@@ -25,7 +25,7 @@ describe("Condition interpreter", () => {
         "another",
       ]);
       const f = interpret(condition);
-      expect(f).toStrictEqual({ table: { name: { in: ["test", "another"] } } });
+      expect(f).toStrictEqual({ name: { in: ["test", "another"] } });
     });
 
     it('generates query with `notIn` operator for "notIn" with array value', () => {
@@ -34,14 +34,12 @@ describe("Condition interpreter", () => {
         "another",
       ]);
       const f = interpret(condition);
-      expect(f).toStrictEqual({
-        table: { name: { notIn: ["test", "another"] } },
-      });
+      expect(f).toStrictEqual({ name: { notIn: ["test", "another"] } });
     });
   });
 
   describe("compound operators", () => {
-    const interpret = createPrismaInterpreter(interpreters);
+    const interpret = createPrismaInterpreter("user", interpreters);
 
     it('generates query without extra fluff for "AND"', () => {
       const condition = new CompoundCondition("and", [
@@ -51,11 +49,9 @@ describe("Condition interpreter", () => {
       const f = interpret(condition);
 
       expect(f).toStrictEqual({
-        user: {
-          age: {
-            lt: 12,
-            gt: 40,
-          },
+        age: {
+          lt: 12,
+          gt: 40,
         },
       });
     });
@@ -68,20 +64,18 @@ describe("Condition interpreter", () => {
       const f = interpret(condition);
 
       expect(f).toStrictEqual({
-        user: {
-          OR: [
-            {
-              age: {
-                lt: 12,
-              },
+        OR: [
+          {
+            age: {
+              lt: 12,
             },
-            {
-              age: {
-                gt: 40,
-              },
+          },
+          {
+            age: {
+              gt: 40,
             },
-          ],
-        },
+          },
+        ],
       });
     });
 
@@ -95,25 +89,25 @@ describe("Condition interpreter", () => {
       const f = interpret(condition);
 
       expect(f).toStrictEqual({
-        user: {
-          OR: [
-            {
-              id: {
-                equals: 12,
-              },
+        OR: [
+          {
+            id: {
+              equals: 12,
             },
-            {
-              age: {
-                gt: 20,
-              },
-            },
-          ],
-        },
-        customer: {
-          id: {
-            equals: 40,
           },
-        },
+          {
+            age: {
+              gt: 20,
+            },
+          },
+          {
+            customer: {
+              id: {
+                equals: 40,
+              },
+            },
+          },
+        ],
       });
     });
   });
