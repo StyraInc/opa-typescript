@@ -22,7 +22,7 @@
   "author": "Styra Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.2",
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@types/lodash.merge": "^4.6.9",
     "@types/react": ">=18.3.12",
