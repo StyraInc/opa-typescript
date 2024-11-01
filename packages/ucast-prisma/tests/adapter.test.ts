@@ -42,5 +42,23 @@ describe("ucastToPrisma", () => {
         ],
       });
     });
+
+    it("handles 'or' with multiple conditions in one disjunct", () => {
+      const p = ucastToPrisma(
+        {
+          or: [
+            { "tickets.resolved": false, "tickets.private": true },
+            { "users.name": "ceasar" },
+          ],
+        },
+        "tickets"
+      );
+      expect(p).toStrictEqual({
+        OR: [
+          { resolved: { equals: false }, private: { equals: true } },
+          { users: { name: { equals: "ceasar" } } },
+        ],
+      });
+    });
   });
 });

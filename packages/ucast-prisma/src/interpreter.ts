@@ -8,6 +8,7 @@ import merge from "lodash.merge";
 export class Query {
   private _primary: string;
   private _tableConditions: Record<string, Object> = {};
+  private _relatedConditions: Record<string, Object> = {};
 
   constructor(primary: string) {
     this._primary = primary;
@@ -23,7 +24,10 @@ export class Query {
 
   addCondition(table: string, cond: Object) {
     if (table !== this._primary) {
-      this._tableConditions[table] = merge(this._tableConditions[table], cond);
+      this._relatedConditions[table] = merge(
+        this._relatedConditions[table],
+        cond
+      );
     } else {
       this._tableConditions = merge(this._tableConditions, cond);
     }
@@ -39,11 +43,15 @@ export class Query {
       this._tableConditions,
       other._tableConditions
     );
+    this._relatedConditions = merge(
+      this._relatedConditions,
+      other._relatedConditions
+    );
     return this;
   }
 
   toJSON() {
-    return this._tableConditions;
+    return { ...this._tableConditions, ...this._relatedConditions };
   }
 }
 

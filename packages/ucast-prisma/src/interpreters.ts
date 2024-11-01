@@ -40,13 +40,7 @@ export const or: PrismaOperator<CompoundCondition> = (
   condition.value.forEach((cond) => {
     const q = query.child();
     interpret(cond, q);
-    for (const [tbl, c] of Object.entries(q.toJSON())) {
-      if (query.isPrimary(tbl)) {
-        or.push(c);
-      } else {
-        or.push({ [tbl]: c });
-      }
-    }
+    or.push(q.toJSON());
   });
 
   if (or.length > 1) {

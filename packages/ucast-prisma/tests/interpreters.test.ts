@@ -86,11 +86,10 @@ describe("Condition interpreter", () => {
       expect(f).toStrictEqual({});
     });
 
-    it('generates query with OR for "or" per table', () => {
+    it('generates query with OR for "or", projected to primary table (user)', () => {
       const condition = new CompoundCondition("or", [
         new FieldCondition("eq", "user.id", 12),
         new FieldCondition("gt", "user.age", 20),
-        // This OR will be dropped as for this table, there is only one condition.
         new FieldCondition("eq", "customer.id", 40),
       ]);
       const f = interpret(condition);
@@ -113,6 +112,29 @@ describe("Condition interpreter", () => {
                 equals: 40,
               },
             },
+          },
+        ],
+      });
+    });
+
+    it('can deal with "AND" within "OR"', () => {
+      const condition = new CompoundCondition("or", [
+        new CompoundCondition("and", [
+          new FieldCondition("eq", "user.id", 12),
+          new FieldCondition("gt", "user.age", 20),
+        ]),
+        new FieldCondition("eq", "customer.id", 40),
+      ]);
+      const f = interpret(condition);
+
+      expect(f).toStrictEqual({
+        OR: [
+          {
+            id: { equals: 12 },
+            age: { gt: 20 },
+          },
+          {
+            customer: { id: { equals: 40 } },
           },
         ],
       });
