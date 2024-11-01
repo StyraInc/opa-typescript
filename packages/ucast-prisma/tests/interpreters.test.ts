@@ -79,6 +79,13 @@ describe("Condition interpreter", () => {
       });
     });
 
+    it("drops empty OR conditions", () => {
+      const condition = new CompoundCondition("or", []);
+      const f = interpret(condition);
+
+      expect(f).toStrictEqual({});
+    });
+
     it('generates query with OR for "or" per table', () => {
       const condition = new CompoundCondition("or", [
         new FieldCondition("eq", "user.id", 12),

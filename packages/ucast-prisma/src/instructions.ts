@@ -14,19 +14,9 @@ function ensureIsArray(instruction: { name: string }, value: any) {
   }
 }
 
-function ensureIsNonEmptyArray(instruction: { name: string }, value: any[]) {
-  ensureIsArray(instruction, value);
-
-  if (!value.length) {
-    throw new Error(
-      `"${instruction.name}" expects to have at least one element in array`
-    );
-  }
-}
-
 export const and = {
   type: "compound",
-  validate: ensureIsNonEmptyArray,
+  validate: ensureIsArray,
   parse(instruction: { name: string }, queries: any[], { parse }: any) {
     const conditions = queries.map((query) => parse(query));
     return new CompoundCondition(instruction.name, conditions);
