@@ -1,5 +1,11 @@
 # @styra/ucast-prisma
 
+## 0.0.5
+
+### Patch Changes
+
+- f717e3e: handle 'or' correctly when including compound disjuncts
+
 ## 0.0.4
 
 ### Patch Changes
