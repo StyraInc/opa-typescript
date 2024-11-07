@@ -3,8 +3,9 @@ import {
   FieldCondition,
   Condition,
   Comparable,
+  InterpretationContext,
 } from "@ucast/core";
-import { PrismaOperator } from "./interpreter.js";
+import { translateOpts, PrismaOperator } from "./interpreter.js";
 
 export const eq = op("equals");
 export const ne = op("not");
@@ -53,8 +54,11 @@ export const or: PrismaOperator<CompoundCondition> = (
 };
 
 function op<T>(name: string): PrismaOperator<FieldCondition<T>> {
-  return (condition, query) => {
-    const [tbl, field] = condition.field.split(".");
+  return (condition, query, options) => {
+    const translate =
+      (options as translateOpts)?.translate || // NOTE(sr): The 'as' here feels wrong, but I couldn't make it work otherwise.
+      ((...x: string[]) => [x[0], x[1]]);
+    const [tbl, field] = translate(...condition.field.split("."));
     return query.addCondition(tbl, { [field]: { [name]: condition.value } });
   };
 }

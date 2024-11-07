@@ -5,7 +5,7 @@ import { describe, it, expect } from "vitest";
 
 describe("Condition interpreter", () => {
   describe("field operators", () => {
-    const interpret = createPrismaInterpreter("table", interpreters);
+    const interpret = createPrismaInterpreter("table", { interpreters });
 
     it('generates query with `equals operator for "eq"', () => {
       const condition = new FieldCondition("eq", "table.name", "test");
@@ -39,7 +39,7 @@ describe("Condition interpreter", () => {
   });
 
   describe("compound operators", () => {
-    const interpret = createPrismaInterpreter("user", interpreters);
+    const interpret = createPrismaInterpreter("user", { interpreters });
 
     it('generates query without extra fluff for "AND"', () => {
       const condition = new CompoundCondition("and", [
