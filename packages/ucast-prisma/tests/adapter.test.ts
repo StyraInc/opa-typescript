@@ -61,4 +61,59 @@ describe("ucastToPrisma", () => {
       });
     });
   });
+  describe("translations", () => {
+    describe("field operators", () => {
+      it("converts column names", () => {
+        const p = ucastToPrisma({ "table.name": "test" }, "table", {
+          translations: { table: { name: "name_col" } },
+        });
+        expect(p).toStrictEqual({ name_col: { equals: "test" } });
+      });
+
+      it("converts table names", () => {
+        const p = ucastToPrisma({ "table.name": "test" }, "tbl", {
+          translations: { table: { $self: "tbl" } },
+        });
+        expect(p).toStrictEqual({ name: { equals: "test" } });
+      });
+
+      it("converts multiple table+col names", () => {
+        const p = ucastToPrisma(
+          { "table.name": "test", "user.name": "alice" },
+          "tbl",
+          {
+            translations: {
+              table: { $self: "tbl", name: "name_col" },
+              user: { $self: "usr", name: "name_col_0" },
+            },
+          }
+        );
+        expect(p).toStrictEqual({
+          name_col: { equals: "test" },
+          usr: { name_col_0: { equals: "alice" } },
+        });
+      });
+    });
+
+    describe("compound operators", () => {
+      it("supports translations for 'or'", () => {
+        const p = ucastToPrisma(
+          { or: [{ "tickets.resolved": false }, { "users.name": "ceasar" }] },
+          "tickets0",
+          {
+            translations: {
+              tickets: { $self: "tickets0", resolved: "resolved0" },
+              users: { $self: "users0", name: "name0" },
+            },
+          }
+        );
+        expect(p).toStrictEqual({
+          OR: [
+            { resolved0: { equals: false } },
+            { users0: { name0: { equals: "ceasar" } } },
+          ],
+        });
+      });
+    });
+  });
 });

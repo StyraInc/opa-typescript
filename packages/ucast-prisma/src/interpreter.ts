@@ -61,11 +61,24 @@ export type PrismaOperator<C extends Condition> = (
   context: InterpretationContext<PrismaOperator<C>>
 ) => Query;
 
+export type interpreterOpts = {
+  interpreters: Record<string, PrismaOperator<any>>; // TODO(sr): this <any> doesn't feel right.
+} & translateOpts;
+
+export type translateOpts = {
+  translate?: (tbl: string, col: string) => [string, string];
+};
+
 export function createPrismaInterpreter(
   primary: string,
-  operators: Record<string, PrismaOperator<any>> // TODO(sr): this <any> doesn't feel right.
+  { interpreters, translate }: interpreterOpts
 ) {
-  const interpret = createInterpreter<PrismaOperator<any>>(operators);
+  const interpret = createInterpreter<PrismaOperator<any>, translateOpts>(
+    interpreters,
+    {
+      translate,
+    }
+  );
   return (condition: Condition) =>
     interpret(condition, new Query(primary)).toJSON();
 }
