@@ -17,7 +17,7 @@
     "npm": ">=8"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.16.4",
+    "@arethetypeswrong/cli": "^0.17.0",
     "@changesets/cli": "^2.27.9",
     "jsr": "^0.13.2",
     "typedoc": "^0.26.5"
