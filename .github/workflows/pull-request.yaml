@@ -61,12 +61,12 @@ jobs:
       - name: test
         run: npm run -w ${{ matrix.pkg }} --if-present test
       - name: docs
-        run: npx -w ${{ matrix.pkg }} --if-present typedoc
+        run: npx -w ${{ matrix.pkg }} typedoc
       - name: are the types wrong?
         run: npx -w ${{ matrix.pkg }} attw --pack
         if: matrix.pkg != 'packages/opa'
       - name: are the types wrong? (opa)
-        run: npx -w ${{ matrix.pkg }} attw --pack --ignore-rules no-resolution
+        run: npx -w ${{ matrix.pkg }} attw --pack --profile node16
         if: matrix.pkg == 'packages/opa'
       - name: jsr publish dry-run
         run: npx -w ${{ matrix.pkg }} jsr publish --dry-run
