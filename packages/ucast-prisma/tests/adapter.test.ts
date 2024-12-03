@@ -8,6 +8,14 @@ describe("ucastToPrisma", () => {
       expect(p).toStrictEqual({ name: { equals: "test" } });
     });
 
+    it("deals with expanded input", () => {
+      const p = ucastToPrisma(
+        { type: "field", operator: "eq", value: "test", field: "table.name" },
+        "table"
+      );
+      expect(p).toStrictEqual({ name: { equals: "test" } });
+    });
+
     it("converts 'eq' to 'equals'", () => {
       const p = ucastToPrisma({ "table.name": { eq: "test" } }, "table");
       expect(p).toStrictEqual({ name: { equals: "test" } });
@@ -60,7 +68,50 @@ describe("ucastToPrisma", () => {
         ],
       });
     });
+
+    it("handles 'or' with multiple conditions in one disjunct (expanded format)", () => {
+      const p = ucastToPrisma(
+        {
+          type: "compound",
+          operator: "or",
+          value: [
+            {
+              type: "compound",
+              operator: "and",
+              value: [
+                {
+                  type: "field",
+                  operator: "eq",
+                  field: "tickets.resolved",
+                  value: false,
+                },
+                {
+                  type: "field",
+                  operator: "eq",
+                  field: "tickets.assignee",
+                  value: null,
+                },
+              ],
+            },
+            {
+              type: "field",
+              operator: "eq",
+              field: "users.name",
+              value: "ceasar",
+            },
+          ],
+        },
+        "tickets"
+      );
+      expect(p).toStrictEqual({
+        OR: [
+          { resolved: { equals: false }, assignee: { equals: null } },
+          { users: { name: { equals: "ceasar" } } },
+        ],
+      });
+    });
   });
+
   describe("translations", () => {
     describe("field operators", () => {
       it("converts column names", () => {
