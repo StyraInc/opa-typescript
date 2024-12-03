@@ -1,4 +1,4 @@
-import { ObjectQueryParser } from "@ucast/core";
+import { ObjectQueryParser, type Condition } from "@ucast/core";
 import { createPrismaInterpreter } from "./interpreter.js";
 import * as instructions from "./instructions.js";
 import * as interpreters from "./interpreters.js";
@@ -12,7 +12,10 @@ export function ucastToPrisma(
   primary: string,
   { translations }: Options = {}
 ): Record<string, any> {
-  const parsed = new ObjectQueryParser(instructions).parse(ucast);
+  const parsed =
+    "type" in ucast && "value" in ucast && "operator" in ucast
+      ? (ucast as Condition<unknown>)
+      : new ObjectQueryParser(instructions).parse(ucast);
   return createPrismaInterpreter(primary, {
     interpreters,
     translate: (tbl: string, col: string): [string, string] => {
