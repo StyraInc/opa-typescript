@@ -2,4 +2,4 @@
 "@styra/ucast-prisma": patch
 ---
 
-support previously-expanded conditions output
+support previously-expanded conditions input
