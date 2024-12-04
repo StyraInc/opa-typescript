@@ -1,5 +1,11 @@
 # @styra/ucast-prisma
 
+## 0.0.7
+
+### Patch Changes
+
+- c31016a: support previously-expanded conditions input
+
 ## 0.0.6
 
 ### Patch Changes
