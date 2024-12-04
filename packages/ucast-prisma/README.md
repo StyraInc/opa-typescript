@@ -8,48 +8,68 @@ This package contains helpers for using ucast conditions with Prisma queries.
 > [!WARNING]
 > This is an experimental package and is subject to change.
 
-
 ## Usage
 
 This package can be used to add filtering to Prisma queries from ucast conditions.
 
 ```diff
-router.get("/tickets", async (req, res) => {
-- const { allow, reason } = await authz.authorized(
-+ const { allow, reason, conditions } = await authz.authorized(path, { action: "list" }, req);
-  if (!allow) return res.status(FORBIDDEN).json({ reason });
++ import { ucastToPrisma } from "@styra/ucast-prisma";
 
-+ const filters = ucastToPrisma(conditions, "tickets");
-  const tickets = (
-    await prisma.tickets.findMany({
-      where: {
-        tenant: req.auth.tenant.id,
-+       ...filters,
-      },
-      include: {
-        customers: true,
-        users: true,
-      },
-    })
-    ).map((ticket) => toTicket(ticket));
-  return res.status(OK).json({ tickets });
-});
+  router.get("/tickets", async (req, res) => {
+-   const { allow, reason } = await authz.authorized(
++   const { allow, reason, conditions } = await authz.authorized(path, { action: "list" }, req);
+    if (!allow) return res.status(FORBIDDEN).json({ reason });
+
++   const filters = ucastToPrisma(conditions, "tickets");
+    const tickets = (
+      await prisma.tickets.findMany({
++       where: filters,
+        include: {
+          customers: true,
+          users: true,
+        },
+      })
+      ).map((ticket) => toTicket(ticket));
+    return res.status(OK).json({ tickets });
+  });
 ```
 
-The conditions returned by the OPA policy evaluation looks like this:
+The conditions returned by the OPA policy evaluation look like this:
 
 ```json
 {
   "conditions": {
-    "or": [
-      { "tickets.resolved": false },
-      { "users.name": "ceasar" }
+    "or": [{ "tickets.resolved": false }, { "users.name": "caesar" }]
+  }
+}
+```
+
+Note that an expanded, more verbose format is supported, too:
+
+```json
+{
+  "conditions": {
+    "type": "compound",
+    "operator": "or",
+    "value": [
+      {
+        "type": "field",
+        "operator": "eq",
+        "field": "tickets.resolved",
+        "value": false
+      },
+      {
+        "type": "field",
+        "operator": "eq",
+        "field": "users.name",
+        "value": "caesar"
+      }
     ]
   }
 }
 ```
 
-and the call to `ucastToPrisma(conditions, "tickets")` turns it into this
+The call to `ucastToPrisma(conditions, "tickets")` turns both into this
 Prisma query:
 
 ```json
@@ -70,7 +90,6 @@ Prisma query:
   ]
 }
 ```
-
 
 ## Community
 
