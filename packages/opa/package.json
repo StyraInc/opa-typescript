@@ -54,7 +54,7 @@
     "tsx": "^4.16.2",
     "typedoc": "^0.26.5",
     "typedoc-plugin-extras": "^3.1.0",
-    "typedoc-plugin-replace-text": "^4.0.0",
+    "typedoc-plugin-replace-text": "^4.1.0",
     "typescript": "^5.4.5",
     "zod": "^3.23.4"
   },
