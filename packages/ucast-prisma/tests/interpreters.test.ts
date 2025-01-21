@@ -7,10 +7,16 @@ describe("Condition interpreter", () => {
   describe("field operators", () => {
     const interpret = createPrismaInterpreter("table", { interpreters });
 
-    it('generates query with `equals operator for "eq"', () => {
+    it('generates query with `equals` operator for "eq"', () => {
       const condition = new FieldCondition("eq", "table.name", "test");
       const f = interpret(condition);
       expect(f).toStrictEqual({ name: { equals: "test" } });
+    });
+
+    it('generates query with `startsWith` operator for "startswith"', () => {
+      const condition = new FieldCondition("startswith", "table.name", "test");
+      const f = interpret(condition);
+      expect(f).toStrictEqual({ name: { startsWith: "test" } });
     });
 
     it('generates query with `not` operator for "ne"', () => {
