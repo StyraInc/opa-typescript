@@ -11,6 +11,9 @@ import {
 
 export const eq = op("equals");
 export const ne = op("not");
+export const startswith = op("startsWith");
+export const endswith = op("endsWith");
+export const contains = op("contains");
 export const lt = op<Comparable>("lt");
 export const lte = op<Comparable>("lte");
 export const gt = op<Comparable>("gt");
@@ -84,6 +87,8 @@ function op<T>(name: string): PrismaOperator<FieldCondition<T>> {
       (options as translateOpts)?.translate || // NOTE(sr): The 'as' here feels wrong, but I couldn't make it work otherwise.
       ((...x: string[]) => [x[0], x[1]]);
     const [tbl, field] = translate(...condition.field.split("."));
-    return query.addCondition(tbl, { [field]: { [name]: condition.value } });
+    return query.addCondition(tbl, {
+      [field]: { [name]: condition.value },
+    });
   };
 }
