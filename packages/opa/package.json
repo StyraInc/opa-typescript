@@ -49,7 +49,7 @@
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "prettier": "3.2.5",
-    "testcontainers": "^10.13.1",
+    "testcontainers": "^10.17.1",
     "tshy": "^1.16.2",
     "tsx": "^4.16.2",
     "typedoc": "^0.26.5",
