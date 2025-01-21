@@ -1,11 +1,9 @@
-import {
+import type {
   CompoundCondition,
   FieldCondition,
-  Condition,
   Comparable,
-  InterpretationContext,
 } from "@ucast/core";
-import { translateOpts, PrismaOperator } from "./interpreter.js";
+import type { translateOpts, PrismaOperator } from "./interpreter.js";
 
 export const eq = op("equals");
 export const ne = op("not");
@@ -17,19 +15,25 @@ const in_ = op<unknown[]>("in");
 export { in_ as in };
 export const notIn = op<unknown[]>("notIn");
 
-// TODO(sr): This `and` returns a flat object, but this would be wrong for
-// conditions that are for the same field. E.g. lt: 12 AND lt: 13.
-// It's an edge case, but it shouldn't be wrong.
 export const and: PrismaOperator<CompoundCondition> = (
   condition,
   query,
   { interpret }
 ) => {
-  const q = query.child();
-  condition.value.forEach((cond) => {
+  const and: Record<string, any>[] = [];
+  for (const cond of condition.value) {
+    const q = query.child();
     interpret(cond, q);
-  });
-  return query.merge(q);
+    and.push(q.toJSON());
+  }
+
+  if (and.length > 1) {
+    query.addPrimaryCondition({ AND: and });
+  } else {
+    query.addPrimaryCondition(and[0]);
+  }
+
+  return query;
 };
 
 export const or: PrismaOperator<CompoundCondition> = (
@@ -38,11 +42,11 @@ export const or: PrismaOperator<CompoundCondition> = (
   { interpret }
 ) => {
   const or: Record<string, any>[] = [];
-  condition.value.forEach((cond) => {
+  for (const cond of condition.value) {
     const q = query.child();
     interpret(cond, q);
     or.push(q.toJSON());
-  });
+  }
 
   if (or.length > 1) {
     query.addPrimaryCondition({ OR: or });

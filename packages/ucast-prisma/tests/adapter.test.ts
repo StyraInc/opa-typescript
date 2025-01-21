@@ -63,7 +63,12 @@ describe("ucastToPrisma", () => {
       );
       expect(p).toStrictEqual({
         OR: [
-          { resolved: { equals: false }, private: { equals: true } },
+          {
+            AND: [
+              { resolved: { equals: false } },
+              { private: { equals: true } },
+            ],
+          },
           { users: { name: { equals: "ceasar" } } },
         ],
       });
@@ -105,7 +110,12 @@ describe("ucastToPrisma", () => {
       );
       expect(p).toStrictEqual({
         OR: [
-          { resolved: { equals: false }, assignee: { equals: null } },
+          {
+            AND: [
+              { resolved: { equals: false } },
+              { assignee: { equals: null } },
+            ],
+          },
           { users: { name: { equals: "ceasar" } } },
         ],
       });
@@ -140,8 +150,10 @@ describe("ucastToPrisma", () => {
           }
         );
         expect(p).toStrictEqual({
-          name_col: { equals: "test" },
-          usr: { name_col_0: { equals: "alice" } },
+          AND: [
+            { name_col: { equals: "test" } },
+            { usr: { name_col_0: { equals: "alice" } } },
+          ],
         });
       });
     });
