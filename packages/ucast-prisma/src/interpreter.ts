@@ -1,7 +1,7 @@
 import {
   createInterpreter,
-  Condition,
-  InterpretationContext,
+  type Condition,
+  type InterpretationContext,
 } from "@ucast/core";
 import merge from "lodash.merge";
 

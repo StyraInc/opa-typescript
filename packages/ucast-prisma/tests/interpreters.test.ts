@@ -81,7 +81,7 @@ describe("Condition interpreter", () => {
       });
     });
 
-    it('generates query with with OR for "or"', () => {
+    it('generates query with OR for "or"', () => {
       const condition = new CompoundCondition("or", [
         new FieldCondition("lt", "user.age", 12),
         new FieldCondition("gt", "user.age", 40),
@@ -139,6 +139,33 @@ describe("Condition interpreter", () => {
             },
           },
         ],
+      });
+    });
+
+    it('generates query with NOT for "not", projected to primary table (user)', () => {
+      const condition = new CompoundCondition("not", [
+        new FieldCondition("lt", "user.age", 18),
+      ]);
+      const f = interpret(condition);
+
+      expect(f).toStrictEqual({
+        NOT: {
+          age: {
+            lt: 18,
+          },
+        },
+      });
+    });
+
+    it('generates query with NOT for "not", threaded in for secondary table (customer)', () => {
+      const condition = new CompoundCondition("not", [
+        new FieldCondition("eq", "customer.id", 40),
+      ]);
+      const f = interpret(condition);
+      expect(f).toStrictEqual({
+        customer: {
+          NOT: { id: { equals: 40 } },
+        },
       });
     });
 

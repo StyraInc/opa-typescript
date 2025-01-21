@@ -3,7 +3,11 @@ import type {
   FieldCondition,
   Comparable,
 } from "@ucast/core";
-import type { translateOpts, PrismaOperator } from "./interpreter.js";
+import {
+  type translateOpts,
+  type PrismaOperator,
+  Query,
+} from "./interpreter.js";
 
 export const eq = op("equals");
 export const ne = op("not");
@@ -54,6 +58,23 @@ export const or: PrismaOperator<CompoundCondition> = (
     query.addPrimaryCondition(or[0]);
   }
 
+  return query;
+};
+
+export const not: PrismaOperator<CompoundCondition> = (
+  condition,
+  query,
+  { interpret }
+) => {
+  if (condition.value.length > 1) {
+    throw new Error("NOT condition must have exactly one child");
+  }
+
+  const [tbl] = (condition.value[0] as FieldCondition).field.split(".");
+  const not = new Query(tbl);
+  interpret(condition.value[0], not);
+
+  query.addCondition(tbl, { NOT: not.toJSON() });
   return query;
 };
 
