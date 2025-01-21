@@ -41,7 +41,9 @@ describe("Condition interpreter", () => {
   describe("compound operators", () => {
     const interpret = createPrismaInterpreter("user", { interpreters });
 
-    it('generates query without extra fluff for "AND"', () => {
+    it.skip('generates query without extra fluff for "AND"', () => {
+      // NOTE(sr): Correctness is more important than conciseness of generated
+      // query filters. So let's deal with this if we find a real reason to.
       const condition = new CompoundCondition("and", [
         new FieldCondition("lt", "user.age", 12),
         new FieldCondition("gt", "user.age", 40),
@@ -53,6 +55,29 @@ describe("Condition interpreter", () => {
           lt: 12,
           gt: 40,
         },
+      });
+    });
+
+    it('keeps "AND" when it has to', () => {
+      const condition = new CompoundCondition("and", [
+        new FieldCondition("ne", "user.name", "bob"),
+        new FieldCondition("ne", "user.name", "alice"),
+      ]);
+      const f = interpret(condition);
+
+      expect(f).toStrictEqual({
+        AND: [
+          {
+            name: {
+              not: "bob",
+            },
+          },
+          {
+            name: {
+              not: "alice",
+            },
+          },
+        ],
       });
     });
 
@@ -130,8 +155,14 @@ describe("Condition interpreter", () => {
       expect(f).toStrictEqual({
         OR: [
           {
-            id: { equals: 12 },
-            age: { gt: 20 },
+            AND: [
+              {
+                id: { equals: 12 },
+              },
+              {
+                age: { gt: 20 },
+              },
+            ],
           },
           {
             customer: { id: { equals: 40 } },
