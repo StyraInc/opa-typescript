@@ -1,5 +1,9 @@
 # BatchSuccessfulPolicyEvaluation
 
+All batched policy executions succeeded.
+The server also returns 200 if the path refers to an undefined document. In this case, responses will be empty.
+
+
 ## Example Usage
 
 ```typescript
@@ -9,7 +13,7 @@ let value: BatchSuccessfulPolicyEvaluation = {
   batchDecisionId: "1bef6b7d-cd13-4890-bfe1-fd2e8de32189",
   responses: {
     "key": {
-      result: 5680.45,
+      result: false,
     },
   },
 };

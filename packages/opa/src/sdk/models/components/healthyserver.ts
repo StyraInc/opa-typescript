@@ -3,7 +3,13 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
+/**
+ * OPA service is healthy. If the bundles option is specified then all configured bundles have been activated. If the plugins option is specified then all plugins are in an OK state.
+ */
 export type HealthyServer = {};
 
 /** @internal */
@@ -34,4 +40,18 @@ export namespace HealthyServer$ {
   export const outboundSchema = HealthyServer$outboundSchema;
   /** @deprecated use `HealthyServer$Outbound` instead. */
   export type Outbound = HealthyServer$Outbound;
+}
+
+export function healthyServerToJSON(healthyServer: HealthyServer): string {
+  return JSON.stringify(HealthyServer$outboundSchema.parse(healthyServer));
+}
+
+export function healthyServerFromJSON(
+  jsonString: string,
+): SafeParseResult<HealthyServer, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => HealthyServer$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'HealthyServer' from JSON`,
+  );
 }

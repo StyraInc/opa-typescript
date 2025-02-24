@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 import {
   Provenance,
   Provenance$inboundSchema,
@@ -17,6 +20,12 @@ import {
   Result$outboundSchema,
 } from "./result.js";
 
+/**
+ * Success.
+ *
+ * @remarks
+ * The server also returns 200 if the path refers to an undefined document. In this case, the response will not contain a result property.
+ */
 export type SuccessfulPolicyResponse = {
   /**
    * The base or virtual document referred to by the URL path. If the path is undefined, this key will be omitted.
@@ -87,4 +96,22 @@ export namespace SuccessfulPolicyResponse$ {
   export const outboundSchema = SuccessfulPolicyResponse$outboundSchema;
   /** @deprecated use `SuccessfulPolicyResponse$Outbound` instead. */
   export type Outbound = SuccessfulPolicyResponse$Outbound;
+}
+
+export function successfulPolicyResponseToJSON(
+  successfulPolicyResponse: SuccessfulPolicyResponse,
+): string {
+  return JSON.stringify(
+    SuccessfulPolicyResponse$outboundSchema.parse(successfulPolicyResponse),
+  );
+}
+
+export function successfulPolicyResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<SuccessfulPolicyResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SuccessfulPolicyResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SuccessfulPolicyResponse' from JSON`,
+  );
 }

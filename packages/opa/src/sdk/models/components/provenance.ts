@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type Revision = {
   revision: string;
@@ -54,6 +57,20 @@ export namespace Revision$ {
   export const outboundSchema = Revision$outboundSchema;
   /** @deprecated use `Revision$Outbound` instead. */
   export type Outbound = Revision$Outbound;
+}
+
+export function revisionToJSON(revision: Revision): string {
+  return JSON.stringify(Revision$outboundSchema.parse(revision));
+}
+
+export function revisionFromJSON(
+  jsonString: string,
+): SafeParseResult<Revision, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Revision$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Revision' from JSON`,
+  );
 }
 
 /** @internal */
@@ -116,4 +133,18 @@ export namespace Provenance$ {
   export const outboundSchema = Provenance$outboundSchema;
   /** @deprecated use `Provenance$Outbound` instead. */
   export type Outbound = Provenance$Outbound;
+}
+
+export function provenanceToJSON(provenance: Provenance): string {
+  return JSON.stringify(Provenance$outboundSchema.parse(provenance));
+}
+
+export function provenanceFromJSON(
+  jsonString: string,
+): SafeParseResult<Provenance, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Provenance$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Provenance' from JSON`,
+  );
 }

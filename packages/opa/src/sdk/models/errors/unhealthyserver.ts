@@ -4,12 +4,21 @@
 
 import * as z from "zod";
 
+/**
+ * OPA service is not healthy. If the bundles option is specified this can mean any of the configured bundles have not yet been activated. If the plugins option is specified then at least one plugin is in a non-OK state.
+ */
 export type UnhealthyServerData = {
-  code?: string | undefined;
+  code: string;
+  error?: string | undefined;
+  message?: string | undefined;
 };
 
+/**
+ * OPA service is not healthy. If the bundles option is specified this can mean any of the configured bundles have not yet been activated. If the plugins option is specified then at least one plugin is in a non-OK state.
+ */
 export class UnhealthyServer extends Error {
-  code?: string | undefined;
+  code: string;
+  error?: string | undefined;
 
   /** The original data that was passed to this error instance. */
   data$: UnhealthyServerData;
@@ -21,7 +30,8 @@ export class UnhealthyServer extends Error {
     super(message);
     this.data$ = err;
 
-    if (err.code != null) this.code = err.code;
+    this.code = err.code;
+    if (err.error != null) this.error = err.error;
 
     this.name = "UnhealthyServer";
   }
@@ -33,7 +43,9 @@ export const UnhealthyServer$inboundSchema: z.ZodType<
   z.ZodTypeDef,
   unknown
 > = z.object({
-  code: z.string().optional(),
+  code: z.string(),
+  error: z.string().optional(),
+  message: z.string().optional(),
 })
   .transform((v) => {
     return new UnhealthyServer(v);
@@ -41,7 +53,9 @@ export const UnhealthyServer$inboundSchema: z.ZodType<
 
 /** @internal */
 export type UnhealthyServer$Outbound = {
-  code?: string | undefined;
+  code: string;
+  error?: string | undefined;
+  message?: string | undefined;
 };
 
 /** @internal */
@@ -52,7 +66,9 @@ export const UnhealthyServer$outboundSchema: z.ZodType<
 > = z.instanceof(UnhealthyServer)
   .transform(v => v.data$)
   .pipe(z.object({
-    code: z.string().optional(),
+    code: z.string(),
+    error: z.string().optional(),
+    message: z.string().optional(),
   }));
 
 /**

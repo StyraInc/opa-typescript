@@ -11,6 +11,7 @@ Enterprise OPA documentation
 * [executePolicy](#executepolicy) - Execute a policy
 * [executePolicyWithInput](#executepolicywithinput) - Execute a policy given an input
 * [executeBatchPolicyWithInput](#executebatchpolicywithinput) - Execute a policy given a batch of inputs
+* [compileQueryWithPartialEvaluation](#compilequerywithpartialevaluation) - Partially evaluate a query
 * [health](#health) - Verify the server is operational
 
 ## executeDefaultPolicyWithInput
@@ -25,10 +26,10 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11");
-  
+  const result = await opaApiClient.executeDefaultPolicyWithInput(4963.69);
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -47,7 +48,7 @@ import { executeDefaultPolicyWithInput } from "@styra/opa/funcs/executeDefaultPo
 const opaApiClient = new OpaApiClientCore();
 
 async function run() {
-  const res = await executeDefaultPolicyWithInput(opaApiClient, "8203.11");
+  const res = await executeDefaultPolicyWithInput(opaApiClient, 4963.69);
 
   if (!res.ok) {
     throw res.error;
@@ -56,7 +57,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -79,12 +80,11 @@ run();
 
 ### Errors
 
-| Error Object       | Status Code        | Content Type       |
+| Error Type         | Status Code        | Content Type       |
 | ------------------ | ------------------ | ------------------ |
-| errors.ClientError | 400,404            | application/json   |
+| errors.ClientError | 400, 404           | application/json   |
 | errors.ServerError | 500                | application/json   |
-| errors.SDKError    | 4xx-5xx            | */*                |
-
+| errors.SDKError    | 4XX, 5XX           | \*/\*              |
 
 ## executePolicy
 
@@ -101,9 +101,9 @@ async function run() {
   const result = await opaApiClient.executePolicy({
     path: "app/rbac",
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -133,7 +133,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -154,12 +154,11 @@ run();
 
 ### Errors
 
-| Error Object       | Status Code        | Content Type       |
+| Error Type         | Status Code        | Content Type       |
 | ------------------ | ------------------ | ------------------ |
 | errors.ClientError | 400                | application/json   |
 | errors.ServerError | 500                | application/json   |
-| errors.SDKError    | 4xx-5xx            | */*                |
-
+| errors.SDKError    | 4XX, 5XX           | \*/\*              |
 
 ## executePolicyWithInput
 
@@ -176,12 +175,12 @@ async function run() {
   const result = await opaApiClient.executePolicyWithInput({
     path: "app/rbac",
     requestBody: {
-      input: false,
+      input: true,
     },
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -203,7 +202,7 @@ async function run() {
   const res = await executePolicyWithInput(opaApiClient, {
     path: "app/rbac",
     requestBody: {
-      input: "<value>",
+      input: true,
     },
   });
 
@@ -214,7 +213,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -235,12 +234,11 @@ run();
 
 ### Errors
 
-| Error Object       | Status Code        | Content Type       |
+| Error Type         | Status Code        | Content Type       |
 | ------------------ | ------------------ | ------------------ |
 | errors.ClientError | 400                | application/json   |
 | errors.ServerError | 500                | application/json   |
-| errors.SDKError    | 4xx-5xx            | */*                |
-
+| errors.SDKError    | 4XX, 5XX           | \*/\*              |
 
 ## executeBatchPolicyWithInput
 
@@ -258,15 +256,13 @@ async function run() {
     path: "app/rbac",
     requestBody: {
       inputs: {
-        "key": [
-          "<value>",
-        ],
+        "key": 6919.52,
       },
     },
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -289,9 +285,7 @@ async function run() {
     path: "app/rbac",
     requestBody: {
       inputs: {
-        "key": [
-          "<value>",
-        ],
+        "key": 6919.52,
       },
     },
   });
@@ -303,7 +297,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -324,12 +318,95 @@ run();
 
 ### Errors
 
-| Error Object            | Status Code             | Content Type            |
+| Error Type              | Status Code             | Content Type            |
 | ----------------------- | ----------------------- | ----------------------- |
 | errors.ClientError      | 400                     | application/json        |
 | errors.BatchServerError | 500                     | application/json        |
-| errors.SDKError         | 4xx-5xx                 | */*                     |
+| errors.SDKError         | 4XX, 5XX                | \*/\*                   |
 
+## compileQueryWithPartialEvaluation
+
+Partially evaluate a query
+
+### Example Usage
+
+```typescript
+import { OpaApiClient } from "@styra/opa";
+
+const opaApiClient = new OpaApiClient();
+
+async function run() {
+  const result = await opaApiClient.compileQueryWithPartialEvaluation({
+    requestBody: {
+      query: "<value>",
+      input: [
+
+      ],
+    },
+  });
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { OpaApiClientCore } from "@styra/opa/core.js";
+import { compileQueryWithPartialEvaluation } from "@styra/opa/funcs/compileQueryWithPartialEvaluation.js";
+
+// Use `OpaApiClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const opaApiClient = new OpaApiClientCore();
+
+async function run() {
+  const res = await compileQueryWithPartialEvaluation(opaApiClient, {
+    requestBody: {
+      query: "<value>",
+      input: [
+  
+      ],
+    },
+  });
+
+  if (!res.ok) {
+    throw res.error;
+  }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [operations.CompileQueryWithPartialEvaluationRequest](../../sdk/models/operations/compilequerywithpartialevaluationrequest.md)                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[operations.CompileQueryWithPartialEvaluationResponse](../../sdk/models/operations/compilequerywithpartialevaluationresponse.md)\>**
+
+### Errors
+
+| Error Type         | Status Code        | Content Type       |
+| ------------------ | ------------------ | ------------------ |
+| errors.ClientError | 400                | application/json   |
+| errors.ServerError | 500                | application/json   |
+| errors.SDKError    | 4XX, 5XX           | \*/\*              |
 
 ## health
 
@@ -344,9 +421,9 @@ const opaApiClient = new OpaApiClient();
 
 async function run() {
   const result = await opaApiClient.health();
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -374,7 +451,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -397,7 +474,7 @@ run();
 
 ### Errors
 
-| Error Object           | Status Code            | Content Type           |
+| Error Type             | Status Code            | Content Type           |
 | ---------------------- | ---------------------- | ---------------------- |
 | errors.UnhealthyServer | 500                    | application/json       |
-| errors.SDKError        | 4xx-5xx                | */*                    |
+| errors.SDKError        | 4XX, 5XX               | \*/\*                  |

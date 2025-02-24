@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type HTTPMetadata = {
   /**
@@ -67,4 +70,18 @@ export namespace HTTPMetadata$ {
   export const outboundSchema = HTTPMetadata$outboundSchema;
   /** @deprecated use `HTTPMetadata$Outbound` instead. */
   export type Outbound = HTTPMetadata$Outbound;
+}
+
+export function httpMetadataToJSON(httpMetadata: HTTPMetadata): string {
+  return JSON.stringify(HTTPMetadata$outboundSchema.parse(httpMetadata));
+}
+
+export function httpMetadataFromJSON(
+  jsonString: string,
+): SafeParseResult<HTTPMetadata, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => HTTPMetadata$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'HTTPMetadata' from JSON`,
+  );
 }

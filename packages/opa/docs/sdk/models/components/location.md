@@ -7,8 +7,8 @@ import { Location } from "@styra/opa/sdk/models/components";
 
 let value: Location = {
   file: "<value>",
-  row: 383441,
-  col: 477665,
+  row: 978619,
+  col: 799159,
 };
 ```
 

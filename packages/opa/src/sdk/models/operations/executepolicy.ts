@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type ExecutePolicyRequest = {
   /**
@@ -120,6 +123,24 @@ export namespace ExecutePolicyRequest$ {
   export type Outbound = ExecutePolicyRequest$Outbound;
 }
 
+export function executePolicyRequestToJSON(
+  executePolicyRequest: ExecutePolicyRequest,
+): string {
+  return JSON.stringify(
+    ExecutePolicyRequest$outboundSchema.parse(executePolicyRequest),
+  );
+}
+
+export function executePolicyRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecutePolicyRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ExecutePolicyRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecutePolicyRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExecutePolicyResponse$inboundSchema: z.ZodType<
   ExecutePolicyResponse,
@@ -176,4 +197,22 @@ export namespace ExecutePolicyResponse$ {
   export const outboundSchema = ExecutePolicyResponse$outboundSchema;
   /** @deprecated use `ExecutePolicyResponse$Outbound` instead. */
   export type Outbound = ExecutePolicyResponse$Outbound;
+}
+
+export function executePolicyResponseToJSON(
+  executePolicyResponse: ExecutePolicyResponse,
+): string {
+  return JSON.stringify(
+    ExecutePolicyResponse$outboundSchema.parse(executePolicyResponse),
+  );
+}
+
+export function executePolicyResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecutePolicyResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ExecutePolicyResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecutePolicyResponse' from JSON`,
+  );
 }
