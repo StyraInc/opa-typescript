@@ -5,7 +5,7 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11");
+  const result = await opaApiClient.executeDefaultPolicyWithInput(4963.69);
 
   // Handle the result
   console.log(result);
@@ -24,7 +24,7 @@ async function run() {
   const result = await opaApiClient.executePolicyWithInput({
     path: "app/rbac",
     requestBody: {
-      input: false,
+      input: true,
     },
   });
 
@@ -46,9 +46,7 @@ async function run() {
     path: "app/rbac",
     requestBody: {
       inputs: {
-        "key": [
-          "<value>",
-        ],
+        "key": 6919.52,
       },
     },
   });

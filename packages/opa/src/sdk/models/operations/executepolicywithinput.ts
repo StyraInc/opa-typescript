@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * The input document
@@ -108,6 +111,26 @@ export namespace ExecutePolicyWithInputRequestBody$ {
   export type Outbound = ExecutePolicyWithInputRequestBody$Outbound;
 }
 
+export function executePolicyWithInputRequestBodyToJSON(
+  executePolicyWithInputRequestBody: ExecutePolicyWithInputRequestBody,
+): string {
+  return JSON.stringify(
+    ExecutePolicyWithInputRequestBody$outboundSchema.parse(
+      executePolicyWithInputRequestBody,
+    ),
+  );
+}
+
+export function executePolicyWithInputRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecutePolicyWithInputRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ExecutePolicyWithInputRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecutePolicyWithInputRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExecutePolicyWithInputRequest$inboundSchema: z.ZodType<
   ExecutePolicyWithInputRequest,
@@ -185,6 +208,26 @@ export namespace ExecutePolicyWithInputRequest$ {
   export type Outbound = ExecutePolicyWithInputRequest$Outbound;
 }
 
+export function executePolicyWithInputRequestToJSON(
+  executePolicyWithInputRequest: ExecutePolicyWithInputRequest,
+): string {
+  return JSON.stringify(
+    ExecutePolicyWithInputRequest$outboundSchema.parse(
+      executePolicyWithInputRequest,
+    ),
+  );
+}
+
+export function executePolicyWithInputRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecutePolicyWithInputRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ExecutePolicyWithInputRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecutePolicyWithInputRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExecutePolicyWithInputResponse$inboundSchema: z.ZodType<
   ExecutePolicyWithInputResponse,
@@ -241,4 +284,24 @@ export namespace ExecutePolicyWithInputResponse$ {
   export const outboundSchema = ExecutePolicyWithInputResponse$outboundSchema;
   /** @deprecated use `ExecutePolicyWithInputResponse$Outbound` instead. */
   export type Outbound = ExecutePolicyWithInputResponse$Outbound;
+}
+
+export function executePolicyWithInputResponseToJSON(
+  executePolicyWithInputResponse: ExecutePolicyWithInputResponse,
+): string {
+  return JSON.stringify(
+    ExecutePolicyWithInputResponse$outboundSchema.parse(
+      executePolicyWithInputResponse,
+    ),
+  );
+}
+
+export function executePolicyWithInputResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecutePolicyWithInputResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ExecutePolicyWithInputResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecutePolicyWithInputResponse' from JSON`,
+  );
 }

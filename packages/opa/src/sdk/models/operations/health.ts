@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type HealthRequest = {
   /**
@@ -79,6 +82,20 @@ export namespace HealthRequest$ {
   export type Outbound = HealthRequest$Outbound;
 }
 
+export function healthRequestToJSON(healthRequest: HealthRequest): string {
+  return JSON.stringify(HealthRequest$outboundSchema.parse(healthRequest));
+}
+
+export function healthRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<HealthRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => HealthRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'HealthRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const HealthResponse$inboundSchema: z.ZodType<
   HealthResponse,
@@ -126,4 +143,18 @@ export namespace HealthResponse$ {
   export const outboundSchema = HealthResponse$outboundSchema;
   /** @deprecated use `HealthResponse$Outbound` instead. */
   export type Outbound = HealthResponse$Outbound;
+}
+
+export function healthResponseToJSON(healthResponse: HealthResponse): string {
+  return JSON.stringify(HealthResponse$outboundSchema.parse(healthResponse));
+}
+
+export function healthResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<HealthResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => HealthResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'HealthResponse' from JSON`,
+  );
 }

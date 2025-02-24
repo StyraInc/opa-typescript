@@ -48,18 +48,19 @@ For more information about the API: [Enterprise OPA documentation](https://docs.
 
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
+<!-- $toc-max-depth=2 -->
+* [OPA Typescript SDK](#opa-typescript-sdk)
+  * [SDK Installation](#sdk-installation)
+  * [Requirements](#requirements)
+  * [SDK Example Usage (high-level)](#sdk-example-usage-high-level)
+* [OPA OpenAPI SDK (low-level)](#opa-openapi-sdk-low-level)
+  * [Available Resources and Operations](#available-resources-and-operations)
+  * [Retries](#retries)
+  * [Authentication](#authentication)
+  * [Debugging](#debugging)
+  * [Standalone functions](#standalone-functions)
+  * [Community](#community)
 
-* [SDK Installation](#sdk-installation)
-* [Requirements](#requirements)
-* [SDK Example Usage](#sdk-example-usage)
-* [Available Resources and Operations](#available-resources-and-operations)
-* [Standalone functions](#standalone-functions)
-* [Retries](#retries)
-* [Error Handling](#error-handling)
-* [Server Selection](#server-selection)
-* [Custom HTTP Client](#custom-http-client)
-* [Authentication](#authentication)
-* [Debugging](#debugging)
 <!-- End Table of Contents [toc] -->
 
 <!-- Start Requirements [requirements] -->
@@ -309,6 +310,7 @@ We've removed most of the auto-generated Speakeasy examples because they generat
 * [executePolicy](docs/sdks/opaapiclient/README.md#executepolicy) - Execute a policy
 * [executePolicyWithInput](docs/sdks/opaapiclient/README.md#executepolicywithinput) - Execute a policy given an input
 * [executeBatchPolicyWithInput](docs/sdks/opaapiclient/README.md#executebatchpolicywithinput) - Execute a policy given a batch of inputs
+* [compileQueryWithPartialEvaluation](docs/sdks/opaapiclient/README.md#compilequerywithpartialevaluation) - Partially evaluate a query
 * [health](docs/sdks/opaapiclient/README.md#health) - Verify the server is operational
 
 </details>
@@ -332,7 +334,7 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11", {
+  const result = await opaApiClient.executeDefaultPolicyWithInput(4963.69, {
     retries: {
       strategy: "backoff",
       backoff: {
@@ -371,7 +373,7 @@ const opaApiClient = new OpaApiClient({
 });
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11");
+  const result = await opaApiClient.executeDefaultPolicyWithInput(4963.69);
 
   // Handle the result
   console.log(result);
@@ -389,9 +391,9 @@ run();
 
 This SDK supports the following security scheme globally:
 
-| Name         | Type         | Scheme       |
-| ------------ | ------------ | ------------ |
-| `bearerAuth` | http         | HTTP Bearer  |
+| Name         | Type | Scheme      |
+| ------------ | ---- | ----------- |
+| `bearerAuth` | http | HTTP Bearer |
 
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
@@ -402,7 +404,7 @@ const opaApiClient = new OpaApiClient({
 });
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput("8203.11");
+  const result = await opaApiClient.executeDefaultPolicyWithInput(4963.69);
 
   // Handle the result
   console.log(result);
@@ -445,12 +447,12 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [executeBatchPolicyWithInput](docs/sdks/opaapiclient/README.md#executebatchpolicywithinput)
-- [executeDefaultPolicyWithInput](docs/sdks/opaapiclient/README.md#executedefaultpolicywithinput)
-- [executePolicyWithInput](docs/sdks/opaapiclient/README.md#executepolicywithinput)
-- [executePolicy](docs/sdks/opaapiclient/README.md#executepolicy)
-- [health](docs/sdks/opaapiclient/README.md#health)
-
+- [`compileQueryWithPartialEvaluation`](docs/sdks/opaapiclient/README.md#compilequerywithpartialevaluation) - Partially evaluate a query
+- [`executeBatchPolicyWithInput`](docs/sdks/opaapiclient/README.md#executebatchpolicywithinput) - Execute a policy given a batch of inputs
+- [`executeDefaultPolicyWithInput`](docs/sdks/opaapiclient/README.md#executedefaultpolicywithinput) - Execute the default decision  given an input
+- [`executePolicy`](docs/sdks/opaapiclient/README.md#executepolicy) - Execute a policy
+- [`executePolicyWithInput`](docs/sdks/opaapiclient/README.md#executepolicywithinput) - Execute a policy given an input
+- [`health`](docs/sdks/opaapiclient/README.md#health) - Verify the server is operational
 
 </details>
 <!-- End Standalone functions [standalone-funcs] -->

@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "./sdkvalidationerror.js";
 
 export type ServerErrorLocation = {
   file: string;
@@ -95,6 +98,24 @@ export namespace ServerErrorLocation$ {
   export type Outbound = ServerErrorLocation$Outbound;
 }
 
+export function serverErrorLocationToJSON(
+  serverErrorLocation: ServerErrorLocation,
+): string {
+  return JSON.stringify(
+    ServerErrorLocation$outboundSchema.parse(serverErrorLocation),
+  );
+}
+
+export function serverErrorLocationFromJSON(
+  jsonString: string,
+): SafeParseResult<ServerErrorLocation, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ServerErrorLocation$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ServerErrorLocation' from JSON`,
+  );
+}
+
 /** @internal */
 export const ServerErrorErrors$inboundSchema: z.ZodType<
   ServerErrorErrors,
@@ -135,6 +156,24 @@ export namespace ServerErrorErrors$ {
   export const outboundSchema = ServerErrorErrors$outboundSchema;
   /** @deprecated use `ServerErrorErrors$Outbound` instead. */
   export type Outbound = ServerErrorErrors$Outbound;
+}
+
+export function serverErrorErrorsToJSON(
+  serverErrorErrors: ServerErrorErrors,
+): string {
+  return JSON.stringify(
+    ServerErrorErrors$outboundSchema.parse(serverErrorErrors),
+  );
+}
+
+export function serverErrorErrorsFromJSON(
+  jsonString: string,
+): SafeParseResult<ServerErrorErrors, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ServerErrorErrors$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ServerErrorErrors' from JSON`,
+  );
 }
 
 /** @internal */

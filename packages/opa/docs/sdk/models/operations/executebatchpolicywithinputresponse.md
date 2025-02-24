@@ -16,7 +16,7 @@ let value: ExecuteBatchPolicyWithInputResponse = {
     batchDecisionId: "1bef6b7d-cd13-4890-bfe1-fd2e8de32189",
     responses: {
       "key": {
-        result: "<value>",
+        result: 5680.45,
       },
     },
   },
@@ -24,7 +24,9 @@ let value: ExecuteBatchPolicyWithInputResponse = {
     responses: {
       "key": {
         httpStatusCode: "200",
-        result: "<value>",
+        code: "<value>",
+        message: "<value>",
+        decisionId: "b84cf736-213c-4932-a8e4-bb5c648f1b4d",
       },
     },
   },

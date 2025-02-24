@@ -4,21 +4,26 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
-import {
-  ServerError,
-  ServerError$inboundSchema,
-  ServerError$Outbound,
-  ServerError$outboundSchema,
-} from "./servererror.js";
+import * as components from "../components/index.js";
 
+/**
+ * Server Error. All requests returned a 500 error.
+ *
+ * @remarks
+ */
 export type BatchServerErrorData = {
   batchDecisionId?: string | undefined;
-  responses?: { [k: string]: ServerError } | undefined;
+  responses?: { [k: string]: components.ServerError } | undefined;
 };
 
+/**
+ * Server Error. All requests returned a 500 error.
+ *
+ * @remarks
+ */
 export class BatchServerError extends Error {
   batchDecisionId?: string | undefined;
-  responses?: { [k: string]: ServerError } | undefined;
+  responses?: { [k: string]: components.ServerError } | undefined;
 
   /** The original data that was passed to this error instance. */
   data$: BatchServerErrorData;
@@ -44,7 +49,7 @@ export const BatchServerError$inboundSchema: z.ZodType<
   unknown
 > = z.object({
   batch_decision_id: z.string().optional(),
-  responses: z.record(ServerError$inboundSchema).optional(),
+  responses: z.record(components.ServerError$inboundSchema).optional(),
 })
   .transform((v) => {
     const remapped = remap$(v, {
@@ -57,7 +62,7 @@ export const BatchServerError$inboundSchema: z.ZodType<
 /** @internal */
 export type BatchServerError$Outbound = {
   batch_decision_id?: string | undefined;
-  responses?: { [k: string]: ServerError$Outbound } | undefined;
+  responses?: { [k: string]: components.ServerError$Outbound } | undefined;
 };
 
 /** @internal */
@@ -70,7 +75,7 @@ export const BatchServerError$outboundSchema: z.ZodType<
   .pipe(
     z.object({
       batchDecisionId: z.string().optional(),
-      responses: z.record(ServerError$outboundSchema).optional(),
+      responses: z.record(components.ServerError$outboundSchema).optional(),
     }).transform((v) => {
       return remap$(v, {
         batchDecisionId: "batch_decision_id",
