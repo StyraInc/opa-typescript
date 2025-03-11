@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type ExecuteDefaultPolicyWithInputRequest = {
   /**
@@ -85,6 +88,27 @@ export namespace ExecuteDefaultPolicyWithInputRequest$ {
   export type Outbound = ExecuteDefaultPolicyWithInputRequest$Outbound;
 }
 
+export function executeDefaultPolicyWithInputRequestToJSON(
+  executeDefaultPolicyWithInputRequest: ExecuteDefaultPolicyWithInputRequest,
+): string {
+  return JSON.stringify(
+    ExecuteDefaultPolicyWithInputRequest$outboundSchema.parse(
+      executeDefaultPolicyWithInputRequest,
+    ),
+  );
+}
+
+export function executeDefaultPolicyWithInputRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecuteDefaultPolicyWithInputRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExecuteDefaultPolicyWithInputRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecuteDefaultPolicyWithInputRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExecuteDefaultPolicyWithInputResponse$inboundSchema: z.ZodType<
   ExecuteDefaultPolicyWithInputResponse,
@@ -137,4 +161,25 @@ export namespace ExecuteDefaultPolicyWithInputResponse$ {
     ExecuteDefaultPolicyWithInputResponse$outboundSchema;
   /** @deprecated use `ExecuteDefaultPolicyWithInputResponse$Outbound` instead. */
   export type Outbound = ExecuteDefaultPolicyWithInputResponse$Outbound;
+}
+
+export function executeDefaultPolicyWithInputResponseToJSON(
+  executeDefaultPolicyWithInputResponse: ExecuteDefaultPolicyWithInputResponse,
+): string {
+  return JSON.stringify(
+    ExecuteDefaultPolicyWithInputResponse$outboundSchema.parse(
+      executeDefaultPolicyWithInputResponse,
+    ),
+  );
+}
+
+export function executeDefaultPolicyWithInputResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecuteDefaultPolicyWithInputResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExecuteDefaultPolicyWithInputResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecuteDefaultPolicyWithInputResponse' from JSON`,
+  );
 }

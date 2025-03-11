@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * The batch of inputs
@@ -112,6 +115,28 @@ export namespace ExecuteBatchPolicyWithInputRequestBody$ {
   export type Outbound = ExecuteBatchPolicyWithInputRequestBody$Outbound;
 }
 
+export function executeBatchPolicyWithInputRequestBodyToJSON(
+  executeBatchPolicyWithInputRequestBody:
+    ExecuteBatchPolicyWithInputRequestBody,
+): string {
+  return JSON.stringify(
+    ExecuteBatchPolicyWithInputRequestBody$outboundSchema.parse(
+      executeBatchPolicyWithInputRequestBody,
+    ),
+  );
+}
+
+export function executeBatchPolicyWithInputRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecuteBatchPolicyWithInputRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExecuteBatchPolicyWithInputRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecuteBatchPolicyWithInputRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExecuteBatchPolicyWithInputRequest$inboundSchema: z.ZodType<
   ExecuteBatchPolicyWithInputRequest,
@@ -194,6 +219,27 @@ export namespace ExecuteBatchPolicyWithInputRequest$ {
   export type Outbound = ExecuteBatchPolicyWithInputRequest$Outbound;
 }
 
+export function executeBatchPolicyWithInputRequestToJSON(
+  executeBatchPolicyWithInputRequest: ExecuteBatchPolicyWithInputRequest,
+): string {
+  return JSON.stringify(
+    ExecuteBatchPolicyWithInputRequest$outboundSchema.parse(
+      executeBatchPolicyWithInputRequest,
+    ),
+  );
+}
+
+export function executeBatchPolicyWithInputRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecuteBatchPolicyWithInputRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExecuteBatchPolicyWithInputRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecuteBatchPolicyWithInputRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExecuteBatchPolicyWithInputResponse$inboundSchema: z.ZodType<
   ExecuteBatchPolicyWithInputResponse,
@@ -257,4 +303,25 @@ export namespace ExecuteBatchPolicyWithInputResponse$ {
     ExecuteBatchPolicyWithInputResponse$outboundSchema;
   /** @deprecated use `ExecuteBatchPolicyWithInputResponse$Outbound` instead. */
   export type Outbound = ExecuteBatchPolicyWithInputResponse$Outbound;
+}
+
+export function executeBatchPolicyWithInputResponseToJSON(
+  executeBatchPolicyWithInputResponse: ExecuteBatchPolicyWithInputResponse,
+): string {
+  return JSON.stringify(
+    ExecuteBatchPolicyWithInputResponse$outboundSchema.parse(
+      executeBatchPolicyWithInputResponse,
+    ),
+  );
+}
+
+export function executeBatchPolicyWithInputResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<ExecuteBatchPolicyWithInputResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExecuteBatchPolicyWithInputResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExecuteBatchPolicyWithInputResponse' from JSON`,
+  );
 }

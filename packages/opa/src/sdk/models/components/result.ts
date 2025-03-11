@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * The base or virtual document referred to by the URL path. If the path is undefined, this key will be omitted.
@@ -50,4 +53,18 @@ export namespace Result$ {
   export const outboundSchema = Result$outboundSchema;
   /** @deprecated use `Result$Outbound` instead. */
   export type Outbound = Result$Outbound;
+}
+
+export function resultToJSON(result: Result): string {
+  return JSON.stringify(Result$outboundSchema.parse(result));
+}
+
+export function resultFromJSON(
+  jsonString: string,
+): SafeParseResult<Result, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Result$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Result' from JSON`,
+  );
 }

@@ -1,18 +1,18 @@
 # SuccessfulPolicyResponse
 
+Success.
+The server also returns 200 if the path refers to an undefined document. In this case, the response will not contain a result property.
+
+
 ## Example Usage
 
 ```typescript
 import { SuccessfulPolicyResponse } from "@styra/opa/sdk/models/components";
 
 let value: SuccessfulPolicyResponse = {
-  result: {
-    "allow": true,
-    "user_is_admin": true,
-    "user_is_granted": [
-      "<value>",
-    ],
-  },
+  result: [
+    "<value>",
+  ],
 };
 ```
 

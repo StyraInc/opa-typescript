@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Arbitrary JSON used within your policies by accessing `input`
@@ -50,4 +53,18 @@ export namespace Input$ {
   export const outboundSchema = Input$outboundSchema;
   /** @deprecated use `Input$Outbound` instead. */
   export type Outbound = Input$Outbound;
+}
+
+export function inputToJSON(input: Input): string {
+  return JSON.stringify(Input$outboundSchema.parse(input));
+}
+
+export function inputFromJSON(
+  jsonString: string,
+): SafeParseResult<Input, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Input$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Input' from JSON`,
+  );
 }

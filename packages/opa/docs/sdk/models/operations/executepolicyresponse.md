@@ -13,13 +13,7 @@ let value: ExecutePolicyResponse = {
     request: new Request("https://example.com"),
   },
   successfulPolicyResponse: {
-    result: {
-      "allow": true,
-      "user_is_admin": true,
-      "user_is_granted": [
-        "<value>",
-      ],
-    },
+    result: 4236.55,
   },
   headers: {
     "key": [

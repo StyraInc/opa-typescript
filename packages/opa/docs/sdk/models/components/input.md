@@ -2,43 +2,43 @@
 
 Arbitrary JSON used within your policies by accessing `input`
 
-## Example Usage
-
-```typescript
-import { Input } from "@styra/opa/sdk/models/components";
-
-let value: Input = false;
-```
 
 ## Supported Types
 
 ### `boolean`
 
 ```typescript
-const value: boolean = /* values here */
+const value: boolean = false;
 ```
 
 ### `string`
 
 ```typescript
-const value: string = /* values here */
+const value: string = "<value>";
 ```
 
 ### `number`
 
 ```typescript
-const value: number = /* values here */
+const value: number = 8326.2;
 ```
 
 ### `any[]`
 
 ```typescript
-const value: any[] = /* values here */
+const value: any[] = [
+  "<value>",
+];
 ```
 
 ### `{ [k: string]: any }`
 
 ```typescript
-const value: { [k: string]: any } = /* values here */
+const value: { [k: string]: any } = {
+  "user": "alice",
+  "action": "read",
+  "object": "id123",
+  "type": "dog",
+};
 ```
 
