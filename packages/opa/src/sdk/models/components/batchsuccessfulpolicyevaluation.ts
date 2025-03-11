@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 import {
   SuccessfulPolicyResponse,
   SuccessfulPolicyResponse$inboundSchema,
@@ -11,6 +14,12 @@ import {
   SuccessfulPolicyResponse$outboundSchema,
 } from "./successfulpolicyresponse.js";
 
+/**
+ * All batched policy executions succeeded.
+ *
+ * @remarks
+ * The server also returns 200 if the path refers to an undefined document. In this case, responses will be empty.
+ */
 export type BatchSuccessfulPolicyEvaluation = {
   batchDecisionId?: string | undefined;
   /**
@@ -68,4 +77,24 @@ export namespace BatchSuccessfulPolicyEvaluation$ {
   export const outboundSchema = BatchSuccessfulPolicyEvaluation$outboundSchema;
   /** @deprecated use `BatchSuccessfulPolicyEvaluation$Outbound` instead. */
   export type Outbound = BatchSuccessfulPolicyEvaluation$Outbound;
+}
+
+export function batchSuccessfulPolicyEvaluationToJSON(
+  batchSuccessfulPolicyEvaluation: BatchSuccessfulPolicyEvaluation,
+): string {
+  return JSON.stringify(
+    BatchSuccessfulPolicyEvaluation$outboundSchema.parse(
+      batchSuccessfulPolicyEvaluation,
+    ),
+  );
+}
+
+export function batchSuccessfulPolicyEvaluationFromJSON(
+  jsonString: string,
+): SafeParseResult<BatchSuccessfulPolicyEvaluation, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => BatchSuccessfulPolicyEvaluation$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'BatchSuccessfulPolicyEvaluation' from JSON`,
+  );
 }

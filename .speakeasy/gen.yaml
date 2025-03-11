@@ -7,12 +7,15 @@ generation:
   useClassNamesForArrayFields: true
   fixes:
     nameResolutionDec2023: true
+    nameResolutionFeb2025: false
     parameterOrderingFeb2024: true
     requestResponseComponentNamesFeb2024: true
+    securityFeb2025: false
   auth:
     oAuth2ClientCredentialsEnabled: false
+    oAuth2PasswordEnabled: false
 typescript:
-  version: 1.6.0
+  version: 1.7.0
   additionalDependencies:
     dependencies: {}
     devDependencies:
@@ -38,8 +41,13 @@ typescript:
       access: public
   author: Styra
   clientServerStatusCodesAsErrors: true
+  defaultErrorName: SDKError
+  enableCustomCodeRegions: false
+  enableMCPServer: true
+  enableReactQuery: false
   enumFormat: enum
   flattenGlobalSecurity: true
+  flatteningOrder: parameters-first
   imports:
     option: openapi
     paths:
@@ -49,6 +57,7 @@ typescript:
       shared: sdk/models/components
       webhooks: sdk/models/webhooks
   inputModelSuffix: input
+  jsonpath: legacy
   maxMethodParams: 4
   methodArguments: require-security-and-request
   moduleFormat: dual

@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 import {
   Provenance,
   Provenance$inboundSchema,
@@ -30,7 +33,7 @@ export type Errors = {
 };
 
 export type ServerErrorWithStatusCode = {
-  httpStatusCode?: string | undefined;
+  httpStatusCode: string;
   code: string;
   message: string;
   errors?: Array<Errors> | undefined;
@@ -38,7 +41,7 @@ export type ServerErrorWithStatusCode = {
 };
 
 export type SuccessfulPolicyResponseWithStatusCode = {
-  httpStatusCode?: string | undefined;
+  httpStatusCode: string;
   /**
    * The base or virtual document referred to by the URL path. If the path is undefined, this key will be omitted.
    */
@@ -61,6 +64,9 @@ export type Responses =
   | (SuccessfulPolicyResponseWithStatusCode & { httpStatusCode: "200" })
   | (ServerErrorWithStatusCode & { httpStatusCode: "500" });
 
+/**
+ * Mixed success and failures.
+ */
 export type BatchMixedResults = {
   batchDecisionId?: string | undefined;
   /**
@@ -116,6 +122,20 @@ export namespace Location$ {
   export type Outbound = Location$Outbound;
 }
 
+export function locationToJSON(location: Location): string {
+  return JSON.stringify(Location$outboundSchema.parse(location));
+}
+
+export function locationFromJSON(
+  jsonString: string,
+): SafeParseResult<Location, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Location$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Location' from JSON`,
+  );
+}
+
 /** @internal */
 export const Errors$inboundSchema: z.ZodType<Errors, z.ZodTypeDef, unknown> = z
   .object({
@@ -155,13 +175,27 @@ export namespace Errors$ {
   export type Outbound = Errors$Outbound;
 }
 
+export function errorsToJSON(errors: Errors): string {
+  return JSON.stringify(Errors$outboundSchema.parse(errors));
+}
+
+export function errorsFromJSON(
+  jsonString: string,
+): SafeParseResult<Errors, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Errors$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Errors' from JSON`,
+  );
+}
+
 /** @internal */
 export const ServerErrorWithStatusCode$inboundSchema: z.ZodType<
   ServerErrorWithStatusCode,
   z.ZodTypeDef,
   unknown
 > = z.object({
-  http_status_code: z.string().optional(),
+  http_status_code: z.string(),
   code: z.string(),
   message: z.string(),
   errors: z.array(z.lazy(() => Errors$inboundSchema)).optional(),
@@ -175,7 +209,7 @@ export const ServerErrorWithStatusCode$inboundSchema: z.ZodType<
 
 /** @internal */
 export type ServerErrorWithStatusCode$Outbound = {
-  http_status_code?: string | undefined;
+  http_status_code: string;
   code: string;
   message: string;
   errors?: Array<Errors$Outbound> | undefined;
@@ -188,7 +222,7 @@ export const ServerErrorWithStatusCode$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   ServerErrorWithStatusCode
 > = z.object({
-  httpStatusCode: z.string().optional(),
+  httpStatusCode: z.string(),
   code: z.string(),
   message: z.string(),
   errors: z.array(z.lazy(() => Errors$outboundSchema)).optional(),
@@ -213,13 +247,31 @@ export namespace ServerErrorWithStatusCode$ {
   export type Outbound = ServerErrorWithStatusCode$Outbound;
 }
 
+export function serverErrorWithStatusCodeToJSON(
+  serverErrorWithStatusCode: ServerErrorWithStatusCode,
+): string {
+  return JSON.stringify(
+    ServerErrorWithStatusCode$outboundSchema.parse(serverErrorWithStatusCode),
+  );
+}
+
+export function serverErrorWithStatusCodeFromJSON(
+  jsonString: string,
+): SafeParseResult<ServerErrorWithStatusCode, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ServerErrorWithStatusCode$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ServerErrorWithStatusCode' from JSON`,
+  );
+}
+
 /** @internal */
 export const SuccessfulPolicyResponseWithStatusCode$inboundSchema: z.ZodType<
   SuccessfulPolicyResponseWithStatusCode,
   z.ZodTypeDef,
   unknown
 > = z.object({
-  http_status_code: z.string().optional(),
+  http_status_code: z.string(),
   result: Result$inboundSchema.optional(),
   metrics: z.record(z.any()).optional(),
   decision_id: z.string().optional(),
@@ -233,7 +285,7 @@ export const SuccessfulPolicyResponseWithStatusCode$inboundSchema: z.ZodType<
 
 /** @internal */
 export type SuccessfulPolicyResponseWithStatusCode$Outbound = {
-  http_status_code?: string | undefined;
+  http_status_code: string;
   result?: Result$Outbound | undefined;
   metrics?: { [k: string]: any } | undefined;
   decision_id?: string | undefined;
@@ -246,7 +298,7 @@ export const SuccessfulPolicyResponseWithStatusCode$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   SuccessfulPolicyResponseWithStatusCode
 > = z.object({
-  httpStatusCode: z.string().optional(),
+  httpStatusCode: z.string(),
   result: Result$outboundSchema.optional(),
   metrics: z.record(z.any()).optional(),
   decisionId: z.string().optional(),
@@ -271,6 +323,28 @@ export namespace SuccessfulPolicyResponseWithStatusCode$ {
     SuccessfulPolicyResponseWithStatusCode$outboundSchema;
   /** @deprecated use `SuccessfulPolicyResponseWithStatusCode$Outbound` instead. */
   export type Outbound = SuccessfulPolicyResponseWithStatusCode$Outbound;
+}
+
+export function successfulPolicyResponseWithStatusCodeToJSON(
+  successfulPolicyResponseWithStatusCode:
+    SuccessfulPolicyResponseWithStatusCode,
+): string {
+  return JSON.stringify(
+    SuccessfulPolicyResponseWithStatusCode$outboundSchema.parse(
+      successfulPolicyResponseWithStatusCode,
+    ),
+  );
+}
+
+export function successfulPolicyResponseWithStatusCodeFromJSON(
+  jsonString: string,
+): SafeParseResult<SuccessfulPolicyResponseWithStatusCode, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      SuccessfulPolicyResponseWithStatusCode$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SuccessfulPolicyResponseWithStatusCode' from JSON`,
+  );
 }
 
 /** @internal */
@@ -327,6 +401,20 @@ export namespace Responses$ {
   export const outboundSchema = Responses$outboundSchema;
   /** @deprecated use `Responses$Outbound` instead. */
   export type Outbound = Responses$Outbound;
+}
+
+export function responsesToJSON(responses: Responses): string {
+  return JSON.stringify(Responses$outboundSchema.parse(responses));
+}
+
+export function responsesFromJSON(
+  jsonString: string,
+): SafeParseResult<Responses, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Responses$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Responses' from JSON`,
+  );
 }
 
 /** @internal */
@@ -413,4 +501,22 @@ export namespace BatchMixedResults$ {
   export const outboundSchema = BatchMixedResults$outboundSchema;
   /** @deprecated use `BatchMixedResults$Outbound` instead. */
   export type Outbound = BatchMixedResults$Outbound;
+}
+
+export function batchMixedResultsToJSON(
+  batchMixedResults: BatchMixedResults,
+): string {
+  return JSON.stringify(
+    BatchMixedResults$outboundSchema.parse(batchMixedResults),
+  );
+}
+
+export function batchMixedResultsFromJSON(
+  jsonString: string,
+): SafeParseResult<BatchMixedResults, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => BatchMixedResults$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'BatchMixedResults' from JSON`,
+  );
 }

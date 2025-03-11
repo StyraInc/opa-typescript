@@ -5,7 +5,7 @@
 ```typescript
 import { Explain } from "@styra/opa/sdk/models/components";
 
-let value: Explain = Explain.Fails;
+let value: Explain = Explain.Debug;
 ```
 
 ## Values

@@ -1,6 +1,6 @@
 {
   "name": "@styra/opa",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "author": "Styra",
   "license": "Apache-2.0",
   "publishConfig": {
@@ -15,7 +15,11 @@
     "rbac",
     "role based access control"
   ],
+  "type": "module",
   "tshy": {
+    "sourceDialects": [
+      "@styra/opa/source"
+    ],
     "exports": {
       ".": "./src/index.ts",
       "./package.json": "./package.json",
@@ -34,7 +38,7 @@
     "directory": "packages/opa"
   },
   "scripts": {
-    "lint": "eslint --max-warnings=0 src",
+    "lint": "eslint --cache --max-warnings=0 src",
     "build": "tshy",
     "prepublishOnly": "npm run build"
   },
@@ -42,32 +46,30 @@
     "zod": ">= 3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.19.0",
     "@types/node": "^22.5.5",
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
-    "@typescript-eslint/parser": "^7.7.1",
-    "eslint": "^8.57.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
     "prettier": "3.2.5",
     "testcontainers": "^10.13.1",
-    "tshy": "^1.16.2",
+    "tshy": "^2.0.0",
     "tsx": "^4.16.2",
     "typedoc": "^0.26.5",
     "typedoc-plugin-extras": "^3.1.0",
     "typedoc-plugin-replace-text": "^4.0.0",
     "typescript": "^5.4.5",
+    "typescript-eslint": "^8.22.0",
     "zod": "^3.23.4"
   },
   "dependencies": {},
   "exports": {
     ".": {
       "import": {
-        "source": "./src/index.ts",
+        "@styra/opa/source": "./src/index.ts",
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
       },
       "require": {
-        "source": "./src/index.ts",
         "types": "./dist/commonjs/index.d.ts",
         "default": "./dist/commonjs/index.js"
       }
@@ -75,72 +77,66 @@
     "./package.json": "./package.json",
     "./types": {
       "import": {
-        "source": "./src/types/index.ts",
+        "@styra/opa/source": "./src/types/index.ts",
         "types": "./dist/esm/types/index.d.ts",
         "default": "./dist/esm/types/index.js"
       },
       "require": {
-        "source": "./src/types/index.ts",
         "types": "./dist/commonjs/types/index.d.ts",
         "default": "./dist/commonjs/types/index.js"
       }
     },
     "./sdk/models/errors": {
       "import": {
-        "source": "./src/sdk/models/errors/index.ts",
+        "@styra/opa/source": "./src/sdk/models/errors/index.ts",
         "types": "./dist/esm/sdk/models/errors/index.d.ts",
         "default": "./dist/esm/sdk/models/errors/index.js"
       },
       "require": {
-        "source": "./src/sdk/models/errors/index.ts",
         "types": "./dist/commonjs/sdk/models/errors/index.d.ts",
         "default": "./dist/commonjs/sdk/models/errors/index.js"
       }
     },
     "./sdk/models/components": {
       "import": {
-        "source": "./src/sdk/models/components/index.ts",
+        "@styra/opa/source": "./src/sdk/models/components/index.ts",
         "types": "./dist/esm/sdk/models/components/index.d.ts",
         "default": "./dist/esm/sdk/models/components/index.js"
       },
       "require": {
-        "source": "./src/sdk/models/components/index.ts",
         "types": "./dist/commonjs/sdk/models/components/index.d.ts",
         "default": "./dist/commonjs/sdk/models/components/index.js"
       }
     },
     "./sdk/models/operations": {
       "import": {
-        "source": "./src/sdk/models/operations/index.ts",
+        "@styra/opa/source": "./src/sdk/models/operations/index.ts",
         "types": "./dist/esm/sdk/models/operations/index.d.ts",
         "default": "./dist/esm/sdk/models/operations/index.js"
       },
       "require": {
-        "source": "./src/sdk/models/operations/index.ts",
         "types": "./dist/commonjs/sdk/models/operations/index.d.ts",
         "default": "./dist/commonjs/sdk/models/operations/index.js"
       }
     },
     "./*.js": {
       "import": {
-        "source": "./src/*.ts",
+        "@styra/opa/source": "./src/*.ts",
         "types": "./dist/esm/*.d.ts",
         "default": "./dist/esm/*.js"
       },
       "require": {
-        "source": "./src/*.ts",
         "types": "./dist/commonjs/*.d.ts",
         "default": "./dist/commonjs/*.js"
       }
     },
     "./*": {
       "import": {
-        "source": "./src/*.ts",
+        "@styra/opa/source": "./src/*.ts",
         "types": "./dist/esm/*.d.ts",
         "default": "./dist/esm/*.js"
       },
       "require": {
-        "source": "./src/*.ts",
         "types": "./dist/commonjs/*.d.ts",
         "default": "./dist/commonjs/*.js"
       }
@@ -148,6 +144,5 @@
   },
   "main": "./dist/commonjs/index.js",
   "types": "./dist/commonjs/index.d.ts",
-  "type": "module",
   "module": "./dist/esm/index.js"
 }
