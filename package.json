@@ -20,6 +20,9 @@
     "@arethetypeswrong/cli": "^0.17.2",
     "@changesets/cli": "^2.27.11",
     "jsr": "^0.13.2",
-    "typedoc": "^0.26.5"
+    "typedoc": "^0.26.5",
+    "esbuild": "^0.25.1",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.8"
   }
 }
