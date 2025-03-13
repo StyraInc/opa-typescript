@@ -21,7 +21,7 @@
     "@changesets/cli": "^2.28.1",
     "esbuild": "^0.25.1",
     "jsr": "^0.13.4",
-    "typedoc": "^0.26.5",
+    "typedoc": "^0.27.9",
     "vite": "^6.2.1",
     "vitest": "^3.0.8"
   }
