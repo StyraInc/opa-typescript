@@ -17,7 +17,7 @@
     "npm": ">=8"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.17.2",
+    "@arethetypeswrong/cli": "^0.17.4",
     "@changesets/cli": "^2.28.1",
     "esbuild": "^0.25.1",
     "jsr": "^0.13.4",
