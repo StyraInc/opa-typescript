@@ -14,8 +14,15 @@ permissions:
   schedule:
     - cron: 0 0 * * *
 jobs:
+  init:
+    name: Prereqs
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: StyraInc/styra-init-action@main # ratchet:exclude
+
   generate:
-    uses: speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@v15
+    needs: init
+    uses: speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@cfe2047dd20fdbad35c77e5a0dca237f5377ab4c # ratchet:speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@v15
     with:
       force: ${{ github.event.inputs.force }}
       mode: pr
