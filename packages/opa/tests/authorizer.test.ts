@@ -90,7 +90,7 @@ allow if {
         const opa = await prepareOPA(
           network,
           authzPolicy,
-          "ghcr.io/styrainc/enterprise-opa:1.22.0",
+          "ghcr.io/styrainc/enterprise-opa:1.36.2",
           policies,
           "eopa",
         );
