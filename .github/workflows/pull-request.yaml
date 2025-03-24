@@ -14,8 +14,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  prereqs:
+    name: Prereqs
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: StyraInc/styra-init-action@main # ratchet:exclude
+
   init:
     runs-on: ubuntu-22.04
+    needs: prereqs
     outputs:
       packages: ${{ steps.workspaces.outputs.packages }}
     steps:

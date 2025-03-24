@@ -8,9 +8,15 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+  init:
+    name: Prereqs
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: StyraInc/styra-init-action@main # ratchet:exclude
+
   jsr:
     name: Publish @styra/opa to JSR
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
       - release
     if: contains(fromJSON(needs.release.outputs.publishedPackages).*.name, '@styra/opa')
@@ -29,6 +35,7 @@ jobs:
 
   release:
     name: Release
+    needs: init
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages  }}
