@@ -1,21 +1,30 @@
-import { OpaApiClient } from "./sdk/index.js";
-import {
-  type Input,
-  type Result,
-  type SuccessfulPolicyResponse,
-  type ServerErrorWithStatusCode,
-  BatchMixedResults,
-  BatchSuccessfulPolicyEvaluation,
-} from "./sdk/models/components/index.js";
-import {
-  ExecutePolicyWithInputResponse,
-  ExecutePolicyResponse,
-} from "./sdk/models/operations/index.js";
-import { SDKError } from "./sdk/models/errors/sdkerror.js";
-import { ServerError as ServerError_ } from "./sdk/models/errors/servererror.js";
 import { SDKOptions } from "./lib/config.js";
 import { HTTPClient } from "./lib/http.js";
 import { RequestOptions as FetchOptions } from "./lib/sdks.js";
+import {
+  CompileQueryWithPartialEvaluationAcceptEnum,
+  OpaApiClient,
+} from "./sdk/index.js";
+import {
+  BatchMixedResults,
+  BatchSuccessfulPolicyEvaluation,
+  CompileOptions,
+  CompileResultMultitargetResult,
+  CompileResultSQLResult,
+  CompileResultUCASTResult,
+  TargetDialects,
+  type Input,
+  type Result,
+  type ServerErrorWithStatusCode,
+  type SuccessfulPolicyResponse,
+} from "./sdk/models/components/index.js";
+import { SDKError } from "./sdk/models/errors/sdkerror.js";
+import { ServerError as ServerError_ } from "./sdk/models/errors/servererror.js";
+import {
+  CompileQueryWithPartialEvaluationResponse,
+  ExecutePolicyResponse,
+  ExecutePolicyWithInputResponse,
+} from "./sdk/models/operations/index.js";
 
 export type { Input, Result };
 
@@ -62,6 +71,114 @@ export interface RequestOptions<Res> extends FetchOptions {
    */
   fromResult?: (res?: Result) => Res;
 }
+
+/** Extra per-request options for using the high-level SDK's
+ * filter method ({@link OPAClient.getFilters | getFilters }.
+ */
+export interface FiltersRequestOptions extends FiltersOptions {
+  /**
+   * The compilation target for translating a policy into queries.
+   */
+  target: FilterCompileTargetsEnum;
+  /*
+   * Table and column name mappings for the translation.
+   */
+  tableMappings?: Record<string, string>;
+}
+
+/** Per-request options for using the high-level SDK's
+ * filter method {@link OPAClient.getMultipleFilters | getMultipleFilters }.
+ */
+export interface MultipleFiltersRequestOptions extends FiltersOptions {
+  /**
+   * The compilation targets for translating a policy into queries.
+   */
+  targets: Exclude<FilterCompileTargetsEnum, FilterCompileTargetsEnum.multi>[];
+  /*
+   * Table and column name mappings for the translation, keyed by target.
+   */
+  tableMappings?: Record<
+    Exclude<FilterCompileTargetsEnum, FilterCompileTargetsEnum.multi>,
+    Record<string, string>
+  >;
+}
+
+/** Common extra per-request options for using the high-level SDK's
+ * filter methods ({@link OPAClient.getFilters | getFilters } and
+ * {@link OPAClient.getMultipleFilters | getMultipleFilters }.
+ */
+export interface FiltersOptions extends FetchOptions {
+  /**
+   * Low-level compilation options.
+   */
+  compileOptions?: CompileOptions;
+  /**
+   * The unknowns for partial evaluation of the policy in the translation process.
+   * Optional if provided via policy metadata.
+   *
+   * @example ["input.users", "input.fruits"]
+   */
+  unknowns?: string[];
+}
+
+export type Filters = {
+  query?: string | {} | undefined;
+  masks?: { [k: string]: any } | undefined;
+};
+
+export type MultipleFilters = {
+  targets?: { [k: string]: Filters } | undefined; // TODO(sr): refine type
+};
+
+export enum FilterCompileTargetsEnum {
+  multi,
+  mysql,
+  postgresql,
+  sqlserver,
+  sqlite,
+  ucastALL,
+  ucastLinq,
+  ucastMinimal,
+  ucastPrisma,
+}
+
+const enumMap: Record<
+  FilterCompileTargetsEnum,
+  CompileQueryWithPartialEvaluationAcceptEnum
+> = {
+  [FilterCompileTargetsEnum.multi]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraMultitargetPlusJson,
+  [FilterCompileTargetsEnum.mysql]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraSqlMysqlPlusJson,
+  [FilterCompileTargetsEnum.postgresql]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraSqlPostgresqlPlusJson,
+  [FilterCompileTargetsEnum.sqlserver]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraSqlSqlserverPlusJson,
+  [FilterCompileTargetsEnum.sqlite]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraSqlSqlitePlusJson,
+  [FilterCompileTargetsEnum.ucastALL]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastAllPlusJson,
+  [FilterCompileTargetsEnum.ucastLinq]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastLinqPlusJson,
+  [FilterCompileTargetsEnum.ucastMinimal]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastMinimalPlusJson,
+  [FilterCompileTargetsEnum.ucastPrisma]:
+    CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastPrismaPlusJson,
+};
+
+const shortNameMap: Record<
+  Exclude<FilterCompileTargetsEnum, FilterCompileTargetsEnum.multi>,
+  TargetDialects
+> = {
+  [FilterCompileTargetsEnum.mysql]: TargetDialects.SqlPlusMysql,
+  [FilterCompileTargetsEnum.postgresql]: TargetDialects.SqlPlusPostgresql,
+  [FilterCompileTargetsEnum.sqlserver]: TargetDialects.SqlPlusSqlserver,
+  [FilterCompileTargetsEnum.sqlite]: TargetDialects.SqlPlusSqlite,
+  [FilterCompileTargetsEnum.ucastALL]: TargetDialects.UcastPlusAll,
+  [FilterCompileTargetsEnum.ucastLinq]: TargetDialects.UcastPlusLinq,
+  [FilterCompileTargetsEnum.ucastMinimal]: TargetDialects.UcastPlusMinimal,
+  [FilterCompileTargetsEnum.ucastPrisma]: TargetDialects.UcastPlusPrisma,
+};
 
 /** Extra per-request options for using the high-level SDK's
  * evaluateBatch method.
@@ -266,6 +383,99 @@ export class OPAClient {
     }
     return Object.fromEntries(items);
   }
+
+  /** `getFilters` is used to translate the policy at the specified path into query filters of
+   * the desired target type, with optional input.
+   * Returns a promise that resolves to an object containing the query filters (key `query`) and optional masks (key `masks`).
+   *
+   * @param path - The path to the policy, without `/v1/compile`: use `filters/include` to translate the policy `data.filters.include`.
+   * @param input - The input to the policy, if needed.
+   * @param opts - Per-request options to control how the policy is translated into query filters, and low-level fetch options.
+   */
+  async getFilters<In extends Input | ToInput>(
+    path: string,
+    input?: In,
+    opts?: FiltersRequestOptions,
+  ): Promise<Filters> {
+    let inp: Input | undefined = undefined;
+    if (input !== undefined) {
+      if (implementsToInput(input)) {
+        inp = input.toInput();
+      } else {
+        inp = input;
+      }
+    }
+    const target = opts?.target;
+    if (!target) {
+      throw new Error("target option is required");
+    }
+    const res = await this.opa.compileQueryWithPartialEvaluation(
+      {
+        requestBody: {
+          query: queryFromPath(path),
+          input: inp,
+          options: {
+            // targetSQLTableMappings: {
+            //   postgresql: { foo: { $self: "foo" } },
+            // },
+            additionalProperties: {}, // TODO(sr): fix our OpenAPI spec
+            ...opts?.compileOptions,
+          },
+          unknowns: opts?.unknowns,
+        },
+      },
+      { ...opts.fetchOptions, acceptHeaderOverride: enumMap[target] },
+    );
+    // console.log({ res });
+    return byTarget(res, opts?.target) as Filters;
+  }
+
+  /** `getMultipleFilters` is used to translate the policy at the specified path into query filters of
+   * the multiple target types in one request, with optional input.
+   * Returns a promise that resolves to an object containing the query filters (key `query`) and optional masks (key `masks`) _for each requested target_.
+   *
+   * @param path - The path to the policy, without `/v1/compile`: use `filters/include` to translate the policy `data.filters.include`.
+   * @param input - The input to the policy, if needed.
+   * @param opts - Per-request options to control how the policy is translated into query filters, and low-level fetch options.
+   */
+  async getMultipleFilters<In extends Input | ToInput>(
+    path: string,
+    input?: In,
+    opts?: MultipleFiltersRequestOptions,
+  ): Promise<MultipleFilters> {
+    let inp: Input | undefined = undefined;
+    if (input !== undefined) {
+      if (implementsToInput(input)) {
+        inp = input.toInput();
+      } else {
+        inp = input;
+      }
+    }
+    const targets = opts?.targets;
+    if (!targets) {
+      throw new Error("targets option is required");
+    }
+    const targetDialects = opts?.targets.map((t) => shortNameMap[t]);
+    const res = await this.opa.compileQueryWithPartialEvaluation(
+      {
+        requestBody: {
+          query: queryFromPath(path),
+          input: inp,
+          options: {
+            targetDialects,
+            additionalProperties: {}, // TODO(sr): fix our OpenAPI spec
+            ...opts?.compileOptions,
+          },
+          unknowns: opts?.unknowns,
+        },
+      },
+      {
+        ...opts.fetchOptions,
+        acceptHeaderOverride: enumMap[FilterCompileTargetsEnum.multi],
+      },
+    );
+    return byTarget(res, FilterCompileTargetsEnum.multi) as MultipleFilters;
+  }
 }
 
 function processResult<Res>(
@@ -285,4 +495,51 @@ function processResult<Res>(
 
 function id<T>(x: any): T {
   return x as T;
+}
+
+function queryFromPath(p: string): string {
+  const t = p.split("/");
+  t.unshift("data");
+  return t.join(".");
+}
+
+async function byTarget(
+  res: CompileQueryWithPartialEvaluationResponse,
+  target: FilterCompileTargetsEnum,
+): Promise<Filters | MultipleFilters> {
+  const result:
+    | undefined
+    | CompileResultSQLResult
+    | CompileResultUCASTResult
+    | CompileResultMultitargetResult = res[targetType(target)]?.result;
+  if (!result) throw new Error(`No result for target ${target}`);
+
+  if (target === FilterCompileTargetsEnum.multi) {
+    return result.additionalProperties as MultipleFilters;
+  }
+  return result as Filters;
+}
+
+function targetType(
+  t: FilterCompileTargetsEnum,
+): Exclude<
+  keyof CompileQueryWithPartialEvaluationResponse,
+  "httpMeta" | "compileResultJSON"
+> {
+  switch (t) {
+    case FilterCompileTargetsEnum.multi:
+      return "compileResultMultitarget";
+    case FilterCompileTargetsEnum.postgresql:
+    case FilterCompileTargetsEnum.mysql:
+    case FilterCompileTargetsEnum.sqlserver:
+    case FilterCompileTargetsEnum.sqlite:
+      return "compileResultSQL";
+    case FilterCompileTargetsEnum.ucastALL:
+    case FilterCompileTargetsEnum.ucastPrisma:
+    case FilterCompileTargetsEnum.ucastLinq:
+    case FilterCompileTargetsEnum.ucastMinimal:
+      return "compileResultUCAST";
+    default:
+      throw new Error(`Unknown target type: ${t}`);
+  }
 }
