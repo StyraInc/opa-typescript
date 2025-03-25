@@ -1,0 +1,21 @@
+overlay: 1.0.0
+info:
+  title: Overlay to patch the CompileOptions' targetSQLTableMappings payloads
+  version: 0.0.1
+actions:
+  - target: "$.components..CompileOptions..targetSQLTableMappings.properties.postgresql"
+    description: add additional properties to the request payload
+    update:
+      additionalProperties: true
+  - target: "$.components..CompileOptions..targetSQLTableMappings.properties.mysql"
+    description: add additional properties to the request payload
+    update:
+      additionalProperties: true
+  - target: "$.components..CompileOptions..targetSQLTableMappings.properties.sqlserver"
+    description: add additional properties to the request payload
+    update:
+      additionalProperties: true
+  - target: "$.components..CompileOptions..targetSQLTableMappings.properties.sqlite"
+    description: add additional properties to the request payload
+    update:
+      additionalProperties: true
