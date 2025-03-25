@@ -18,18 +18,13 @@ import {
 } from "./maskingrule.js";
 
 /**
- * UCAST JSON object describing the conditions under which the query is true.
- */
-export type CompileResultUCASTQuery = {};
-
-/**
  * The partially evaluated result of the query as UCAST.
  */
 export type CompileResultUCASTResult = {
   /**
    * UCAST JSON object describing the conditions under which the query is true.
    */
-  query?: CompileResultUCASTQuery | undefined;
+  query?: { [k: string]: any } | undefined;
   /**
    * Column masking rules, where the key is the column name, and the value describes which masking function to use.
    */
@@ -48,61 +43,13 @@ export type CompileResultUCAST = {
 };
 
 /** @internal */
-export const CompileResultUCASTQuery$inboundSchema: z.ZodType<
-  CompileResultUCASTQuery,
-  z.ZodTypeDef,
-  unknown
-> = z.object({});
-
-/** @internal */
-export type CompileResultUCASTQuery$Outbound = {};
-
-/** @internal */
-export const CompileResultUCASTQuery$outboundSchema: z.ZodType<
-  CompileResultUCASTQuery$Outbound,
-  z.ZodTypeDef,
-  CompileResultUCASTQuery
-> = z.object({});
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace CompileResultUCASTQuery$ {
-  /** @deprecated use `CompileResultUCASTQuery$inboundSchema` instead. */
-  export const inboundSchema = CompileResultUCASTQuery$inboundSchema;
-  /** @deprecated use `CompileResultUCASTQuery$outboundSchema` instead. */
-  export const outboundSchema = CompileResultUCASTQuery$outboundSchema;
-  /** @deprecated use `CompileResultUCASTQuery$Outbound` instead. */
-  export type Outbound = CompileResultUCASTQuery$Outbound;
-}
-
-export function compileResultUCASTQueryToJSON(
-  compileResultUCASTQuery: CompileResultUCASTQuery,
-): string {
-  return JSON.stringify(
-    CompileResultUCASTQuery$outboundSchema.parse(compileResultUCASTQuery),
-  );
-}
-
-export function compileResultUCASTQueryFromJSON(
-  jsonString: string,
-): SafeParseResult<CompileResultUCASTQuery, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => CompileResultUCASTQuery$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'CompileResultUCASTQuery' from JSON`,
-  );
-}
-
-/** @internal */
 export const CompileResultUCASTResult$inboundSchema: z.ZodType<
   CompileResultUCASTResult,
   z.ZodTypeDef,
   unknown
 > = collectExtraKeys$(
   z.object({
-    query: z.lazy(() => CompileResultUCASTQuery$inboundSchema).optional(),
+    query: z.record(z.any()).optional(),
     masks: z.record(MaskingRule$inboundSchema).optional(),
   }).catchall(z.any()),
   "additionalProperties",
@@ -111,7 +58,7 @@ export const CompileResultUCASTResult$inboundSchema: z.ZodType<
 
 /** @internal */
 export type CompileResultUCASTResult$Outbound = {
-  query?: CompileResultUCASTQuery$Outbound | undefined;
+  query?: { [k: string]: any } | undefined;
   masks?: { [k: string]: MaskingRule$Outbound } | undefined;
   [additionalProperties: string]: unknown;
 };
@@ -122,7 +69,7 @@ export const CompileResultUCASTResult$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   CompileResultUCASTResult
 > = z.object({
-  query: z.lazy(() => CompileResultUCASTQuery$outboundSchema).optional(),
+  query: z.record(z.any()).optional(),
   masks: z.record(MaskingRule$outboundSchema).optional(),
   additionalProperties: z.record(z.any()),
 }).transform((v) => {

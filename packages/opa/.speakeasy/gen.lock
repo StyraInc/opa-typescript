@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
-  docChecksum: 59e61ed3e99e4e9a49731cb41f562cd6
+  docChecksum: 96157a842c7d98bd0febca4ef3841f25
   docVersion: 0.2.0
-  speakeasyVersion: 1.514.1
-  generationVersion: 2.546.3
-  releaseVersion: 1.7.0
-  configChecksum: fd47c38a770e191507bb68b0a2dcb034
+  speakeasyVersion: 1.523.2
+  generationVersion: 2.560.1
+  releaseVersion: 1.7.1
+  configChecksum: ca86d97af886dbbd810c6347db9152c9
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
@@ -16,7 +16,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.1
     constsAndDefaults: 0.1.11
-    core: 3.21.3
+    core: 3.21.4
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
@@ -50,7 +50,6 @@ generatedFiles:
   - docs/sdk/models/components/compileresultsql.md
   - docs/sdk/models/components/compileresultsqlresult.md
   - docs/sdk/models/components/compileresultucast.md
-  - docs/sdk/models/components/compileresultucastquery.md
   - docs/sdk/models/components/compileresultucastresult.md
   - docs/sdk/models/components/errors.md
   - docs/sdk/models/components/explain.md
@@ -217,7 +216,7 @@ examples:
         application/json: {"input": true}
       responses:
         "200":
-          application/json: {"result": false}
+          application/json: {"result": true}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
@@ -235,7 +234,7 @@ examples:
         "200":
           application/json: {"batch_decision_id": "1bef6b7d-cd13-4890-bfe1-fd2e8de32189", "responses": {"key": {"result": "<value>"}, "key1": {"result": 8210.24}}}
         "207":
-          application/json: {"responses": {"key": {"http_status_code": "200", "code": "<value>", "message": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}, "key1": {"http_status_code": "200", "code": "<value>", "message": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}}}
+          application/json: {"responses": {"key": {"http_status_code": "200", "result": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}, "key1": {"http_status_code": "200", "result": 6919.52, "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}}}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":

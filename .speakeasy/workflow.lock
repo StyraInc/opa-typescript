@@ -1,21 +1,21 @@
-speakeasyVersion: 1.514.1
+speakeasyVersion: 1.523.2
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:dc5d3a752e84d12e5e71f91f2ea4c8adc185d37fb9a10fb62c983f928b64c404
-        sourceBlobDigest: sha256:b36d28bd4a763a8c99dfe92a7116e1f5d333fbdb3fc85e7c8f1370149a088d42
+        sourceRevisionDigest: sha256:f4692369ab8ae653b0d5839420cba90a6e5f0747f338dbfa2d25befa5ab12f31
+        sourceBlobDigest: sha256:e357335827e3cc1c15da861d15dda9e6d08463daea7268cbea7da77f5b8ffde1
         tags:
             - latest
-            - speakeasy-sdk-regen-1740011033
+            - speakeasy-sdk-regen-1742907516
             - 0.2.0
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:dc5d3a752e84d12e5e71f91f2ea4c8adc185d37fb9a10fb62c983f928b64c404
-        sourceBlobDigest: sha256:b36d28bd4a763a8c99dfe92a7116e1f5d333fbdb3fc85e7c8f1370149a088d42
+        sourceRevisionDigest: sha256:f4692369ab8ae653b0d5839420cba90a6e5f0747f338dbfa2d25befa5ab12f31
+        sourceBlobDigest: sha256:e357335827e3cc1c15da861d15dda9e6d08463daea7268cbea7da77f5b8ffde1
         codeSamplesNamespace: openapi-typescript-code-samples
-        codeSamplesRevisionDigest: sha256:83680a33c141902a3bd32909f1b3d61c05751871c5cb2cf01965d911dde8d828
+        codeSamplesRevisionDigest: sha256:a2e9c69218861c508770abceb00a32b65e5c2d82e1cd0d904c52fbc1de4b041c
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -23,6 +23,8 @@ workflow:
         openapi:
             inputs:
                 - location: https://raw.githubusercontent.com/StyraInc/enterprise-opa/main/openapi/openapi.yaml
+            overlays:
+                - location: ./.speakeasy/overlay.yaml
             registry:
                 location: registry.speakeasyapi.dev/styra/styra/openapi
     targets:
