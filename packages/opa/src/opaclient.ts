@@ -411,7 +411,6 @@ export class OPAClient {
           input: inp,
           options: {
             targetSQLTableMappings,
-            additionalProperties: {}, // TODO(sr): fix our OpenAPI spec
             ...opts?.compileOptions,
           },
           unknowns: opts?.unknowns,
@@ -458,7 +457,6 @@ export class OPAClient {
           options: {
             targetDialects,
             targetSQLTableMappings,
-            additionalProperties: {}, // TODO(sr): fix our OpenAPI spec
             ...opts?.compileOptions,
           },
           unknowns: opts?.unknowns,

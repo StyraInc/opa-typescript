@@ -1,0 +1,8 @@
+overlay: 1.0.0
+info:
+  title: Overlay to patch the CompileOptions' payloads
+  version: 0.0.1
+actions:
+  - target: "$.components..CompileOptions.additionalProperties"
+    description: remove additional properties from the top-level request payload
+    remove: true
