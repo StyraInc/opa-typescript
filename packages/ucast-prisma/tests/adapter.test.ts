@@ -1,5 +1,64 @@
-import { ucastToPrisma } from "../src";
-import { describe, it, expect } from "vitest";
+import { GenericContainer, StartedTestContainer, Wait } from "testcontainers";
+import { ucastToPrisma, Adapter } from "../src";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+
+describe("adapter", async () => {
+  const policies = {
+    filters: `package filters
+# METADATA
+# scope: document
+# custom:
+#   unknowns: [input.fruits]
+include if input.fruits.colour in input.fav_colours
+include if {
+not input.fav_colours
+endswith(input.fruits.name, "apple")
+}
+`,
+  };
+  describe(
+    "with eopa",
+    {
+      // Skip these tests when there's no license env var (like dependabot PRs)
+      skip: !process.env["EOPA_LICENSE_KEY"],
+    },
+    () => {
+      let container: StartedTestContainer;
+      let serverURL: string;
+
+      afterAll(async () => {
+        await container.stop();
+      });
+
+      beforeAll(async () => {
+        const opa = await prepareOPA(
+          "ghcr.io/styrainc/enterprise-opa:latest",
+          policies
+        );
+        container = opa.container;
+        serverURL = opa.serverURL;
+      });
+
+      it("returns prisma-specific query (without specifying it)", async () => {
+        const res = await new Adapter(serverURL).filters(
+          "filters/include",
+          "fruits",
+          { fav_colours: ["red", "green"] }
+        );
+        const { query, mask } = res;
+        expect(mask).toBeInstanceOf(Function);
+        expect(query).toEqual({
+          colour: {
+            in: ["red", "green"],
+          },
+        });
+        // ensure noop mask:
+        const fruit = { name: "apple", colour: "red" };
+        expect(mask(fruit)).toEqual(fruit);
+      });
+    }
+  );
+});
 
 describe("ucastToPrisma", () => {
   describe("field operators", () => {
@@ -180,3 +239,44 @@ describe("ucastToPrisma", () => {
     });
   });
 });
+
+async function prepareOPA(
+  img: string,
+  policies: { [k: string]: string }
+): Promise<{
+  serverURL: string;
+  container: StartedTestContainer;
+}> {
+  const container = await new GenericContainer(img)
+    .withCommand([
+      "run",
+      "--server",
+      "--addr=0.0.0.0:8181",
+      "--disable-telemetry",
+      "--log-level=debug",
+      "--set=decision_logs.console=true",
+    ])
+    .withEnvironment({
+      EOPA_LICENSE_KEY: process.env["EOPA_LICENSE_KEY"] ?? "",
+    })
+    .withExposedPorts(8181)
+    .withWaitStrategy(Wait.forHttp("/health", 8181).forStatusCode(200))
+    .start();
+  const serverURL = `http://${container.getHost()}:${container.getMappedPort(
+    8181
+  )}`;
+
+  for (const [id, body] of Object.entries(policies)) {
+    const response = await fetch(serverURL + "/v1/policies/" + id, {
+      method: "PUT",
+      headers: { "Content-Type": "text/plain" },
+      body,
+    });
+    expect(response.ok);
+  }
+
+  return {
+    container,
+    serverURL,
+  };
+}
