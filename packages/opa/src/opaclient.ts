@@ -121,7 +121,7 @@ export interface FiltersOptions extends FetchOptions {
 }
 
 export type Filters = {
-  query?: string | {} | undefined;
+  query?: string | Record<string, any> | undefined;
   masks?: { [k: string]: any } | undefined;
 };
 
