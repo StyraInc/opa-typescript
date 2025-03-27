@@ -31,6 +31,8 @@ export enum CompileQueryWithPartialEvaluationAcceptEnum {
   applicationVndStyraSqlMysqlPlusJson = "application/vnd.styra.sql.mysql+json",
   applicationVndStyraSqlPostgresqlPlusJson =
     "application/vnd.styra.sql.postgresql+json",
+  applicationVndStyraSqlSqlitePlusJson =
+    "application/vnd.styra.sql.sqlite+json",
   applicationVndStyraSqlSqlserverPlusJson =
     "application/vnd.styra.sql.sqlserver+json",
   applicationVndStyraUcastAllPlusJson = "application/vnd.styra.ucast.all+json",
@@ -121,7 +123,7 @@ async function $do(
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: options?.acceptHeaderOverride
-      || "application/json;q=1, application/vnd.styra.multitarget+json;q=0.9, application/vnd.styra.sql.mysql+json;q=0.8, application/vnd.styra.sql.postgresql+json;q=0.7, application/vnd.styra.sql.sqlserver+json;q=0.6, application/vnd.styra.ucast.all+json;q=0.4, application/vnd.styra.ucast.linq+json;q=0.3, application/vnd.styra.ucast.minimal+json;q=0.2, application/vnd.styra.ucast.prisma+json;q=0",
+      || "application/json;q=1, application/vnd.styra.multitarget+json;q=0.90, application/vnd.styra.sql.mysql+json;q=0.80, application/vnd.styra.sql.postgresql+json;q=0.70, application/vnd.styra.sql.sqlite+json;q=0.60, application/vnd.styra.sql.sqlserver+json;q=0.50, application/vnd.styra.ucast.all+json;q=0.40, application/vnd.styra.ucast.linq+json;q=0.30, application/vnd.styra.ucast.minimal+json;q=0.20, application/vnd.styra.ucast.prisma+json;q=0",
     "Accept-Encoding": encodeSimple(
       "Accept-Encoding",
       payload["Accept-Encoding"],
@@ -141,7 +143,7 @@ async function $do(
   const context = {
     baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "compileQueryWithPartialEvaluation",
-    oAuth2Scopes: [],
+    oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
 
@@ -252,6 +254,14 @@ async function $do(
       operations.CompileQueryWithPartialEvaluationResponse$inboundSchema,
       {
         ctype: "application/vnd.styra.sql.postgresql+json",
+        key: "CompileResultSQL",
+      },
+    ),
+    M.json(
+      200,
+      operations.CompileQueryWithPartialEvaluationResponse$inboundSchema,
+      {
+        ctype: "application/vnd.styra.sql.sqlite+json",
         key: "CompileResultSQL",
       },
     ),

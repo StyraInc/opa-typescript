@@ -66,11 +66,23 @@ export type CompileResultMultitargetPostgresql = {
   masks?: { [k: string]: MaskingRule } | undefined;
 };
 
+export type CompileResultMultitargetSqlite = {
+  /**
+   * String representing the SQL equivalent of the conditions under which the query is true
+   */
+  query?: string | undefined;
+  /**
+   * Column masking functions, where the key is the column name, and the value describes which masking function to use.
+   */
+  masks?: { [k: string]: MaskingRule } | undefined;
+};
+
 export type Targets = {
   ucast?: Ucast | undefined;
   sqlserver?: CompileResultMultitargetSqlserver | undefined;
   mysql?: CompileResultMultitargetMysql | undefined;
   postgresql?: CompileResultMultitargetPostgresql | undefined;
+  sqlite?: CompileResultMultitargetSqlite | undefined;
 };
 
 /**
@@ -372,6 +384,65 @@ export function compileResultMultitargetPostgresqlFromJSON(
 }
 
 /** @internal */
+export const CompileResultMultitargetSqlite$inboundSchema: z.ZodType<
+  CompileResultMultitargetSqlite,
+  z.ZodTypeDef,
+  unknown
+> = z.object({
+  query: z.string().optional(),
+  masks: z.record(MaskingRule$inboundSchema).optional(),
+});
+
+/** @internal */
+export type CompileResultMultitargetSqlite$Outbound = {
+  query?: string | undefined;
+  masks?: { [k: string]: MaskingRule$Outbound } | undefined;
+};
+
+/** @internal */
+export const CompileResultMultitargetSqlite$outboundSchema: z.ZodType<
+  CompileResultMultitargetSqlite$Outbound,
+  z.ZodTypeDef,
+  CompileResultMultitargetSqlite
+> = z.object({
+  query: z.string().optional(),
+  masks: z.record(MaskingRule$outboundSchema).optional(),
+});
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace CompileResultMultitargetSqlite$ {
+  /** @deprecated use `CompileResultMultitargetSqlite$inboundSchema` instead. */
+  export const inboundSchema = CompileResultMultitargetSqlite$inboundSchema;
+  /** @deprecated use `CompileResultMultitargetSqlite$outboundSchema` instead. */
+  export const outboundSchema = CompileResultMultitargetSqlite$outboundSchema;
+  /** @deprecated use `CompileResultMultitargetSqlite$Outbound` instead. */
+  export type Outbound = CompileResultMultitargetSqlite$Outbound;
+}
+
+export function compileResultMultitargetSqliteToJSON(
+  compileResultMultitargetSqlite: CompileResultMultitargetSqlite,
+): string {
+  return JSON.stringify(
+    CompileResultMultitargetSqlite$outboundSchema.parse(
+      compileResultMultitargetSqlite,
+    ),
+  );
+}
+
+export function compileResultMultitargetSqliteFromJSON(
+  jsonString: string,
+): SafeParseResult<CompileResultMultitargetSqlite, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CompileResultMultitargetSqlite$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CompileResultMultitargetSqlite' from JSON`,
+  );
+}
+
+/** @internal */
 export const Targets$inboundSchema: z.ZodType<Targets, z.ZodTypeDef, unknown> =
   z.object({
     ucast: z.lazy(() => Ucast$inboundSchema).optional(),
@@ -379,6 +450,8 @@ export const Targets$inboundSchema: z.ZodType<Targets, z.ZodTypeDef, unknown> =
       .optional(),
     mysql: z.lazy(() => CompileResultMultitargetMysql$inboundSchema).optional(),
     postgresql: z.lazy(() => CompileResultMultitargetPostgresql$inboundSchema)
+      .optional(),
+    sqlite: z.lazy(() => CompileResultMultitargetSqlite$inboundSchema)
       .optional(),
   });
 
@@ -388,6 +461,7 @@ export type Targets$Outbound = {
   sqlserver?: CompileResultMultitargetSqlserver$Outbound | undefined;
   mysql?: CompileResultMultitargetMysql$Outbound | undefined;
   postgresql?: CompileResultMultitargetPostgresql$Outbound | undefined;
+  sqlite?: CompileResultMultitargetSqlite$Outbound | undefined;
 };
 
 /** @internal */
@@ -401,6 +475,8 @@ export const Targets$outboundSchema: z.ZodType<
     .optional(),
   mysql: z.lazy(() => CompileResultMultitargetMysql$outboundSchema).optional(),
   postgresql: z.lazy(() => CompileResultMultitargetPostgresql$outboundSchema)
+    .optional(),
+  sqlite: z.lazy(() => CompileResultMultitargetSqlite$outboundSchema)
     .optional(),
 });
 

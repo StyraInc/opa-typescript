@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
-  docChecksum: 6febd075f21858ee81dac1243c2b1dba
+  docChecksum: 8d99a981f29e9be66467696a325875bd
   docVersion: 0.2.0
-  speakeasyVersion: 1.523.2
-  generationVersion: 2.560.1
-  releaseVersion: 1.7.1
-  configChecksum: ca86d97af886dbbd810c6347db9152c9
+  speakeasyVersion: 1.524.0
+  generationVersion: 2.562.2
+  releaseVersion: 1.7.2
+  configChecksum: 75e0a853929a2a3853062e26773d0dfe
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
@@ -46,6 +46,7 @@ generatedFiles:
   - docs/sdk/models/components/compileresultmultitargetpostgresql.md
   - docs/sdk/models/components/compileresultmultitargetquery.md
   - docs/sdk/models/components/compileresultmultitargetresult.md
+  - docs/sdk/models/components/compileresultmultitargetsqlite.md
   - docs/sdk/models/components/compileresultmultitargetsqlserver.md
   - docs/sdk/models/components/compileresultsql.md
   - docs/sdk/models/components/compileresultsqlresult.md
@@ -72,6 +73,7 @@ generatedFiles:
   - docs/sdk/models/components/security.md
   - docs/sdk/models/components/servererror.md
   - docs/sdk/models/components/servererrorwithstatuscode.md
+  - docs/sdk/models/components/sqlite.md
   - docs/sdk/models/components/sqlserver.md
   - docs/sdk/models/components/successfulpolicyresponse.md
   - docs/sdk/models/components/successfulpolicyresponsewithstatuscode.md
@@ -254,6 +256,7 @@ examples:
           application/vnd.styra.sql.mysql+json: {}
           application/vnd.styra.sql.postgresql+json: {}
           application/vnd.styra.sql.sqlserver+json: {}
+          application/vnd.styra.sql.sqlite+json: {}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
