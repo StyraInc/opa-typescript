@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
-  docChecksum: 8d99a981f29e9be66467696a325875bd
+  docChecksum: e4aad9ebc1c9f5f6db7775fc9d4ee3e6
   docVersion: 0.2.0
-  speakeasyVersion: 1.524.0
+  speakeasyVersion: 1.525.0
   generationVersion: 2.562.2
-  releaseVersion: 1.7.2
-  configChecksum: 75e0a853929a2a3853062e26773d0dfe
+  releaseVersion: 1.7.3
+  configChecksum: f087ab86c40d9d3d4528578d2cdaf6dd
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
@@ -42,12 +42,8 @@ generatedFiles:
   - docs/sdk/models/components/compileresultjson.md
   - docs/sdk/models/components/compileresultjsonresult.md
   - docs/sdk/models/components/compileresultmultitarget.md
-  - docs/sdk/models/components/compileresultmultitargetmysql.md
-  - docs/sdk/models/components/compileresultmultitargetpostgresql.md
   - docs/sdk/models/components/compileresultmultitargetquery.md
   - docs/sdk/models/components/compileresultmultitargetresult.md
-  - docs/sdk/models/components/compileresultmultitargetsqlite.md
-  - docs/sdk/models/components/compileresultmultitargetsqlserver.md
   - docs/sdk/models/components/compileresultsql.md
   - docs/sdk/models/components/compileresultsqlresult.md
   - docs/sdk/models/components/compileresultucast.md

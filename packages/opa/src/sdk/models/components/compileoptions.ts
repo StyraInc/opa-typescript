@@ -22,19 +22,11 @@ export enum TargetDialects {
   SqlPlusSqlite = "sql+sqlite",
 }
 
-export type Sqlserver = {};
-
-export type Mysql = {};
-
-export type Postgresql = {};
-
-export type Sqlite = {};
-
 export type TargetSQLTableMappings = {
-  sqlserver?: Sqlserver | undefined;
-  mysql?: Mysql | undefined;
-  postgresql?: Postgresql | undefined;
-  sqlite?: Sqlite | undefined;
+  sqlserver?: { [k: string]: any } | undefined;
+  mysql?: { [k: string]: any } | undefined;
+  postgresql?: { [k: string]: any } | undefined;
+  sqlite?: { [k: string]: any } | undefined;
 };
 
 /**
@@ -75,193 +67,23 @@ export namespace TargetDialects$ {
 }
 
 /** @internal */
-export const Sqlserver$inboundSchema: z.ZodType<
-  Sqlserver,
-  z.ZodTypeDef,
-  unknown
-> = z.object({});
-
-/** @internal */
-export type Sqlserver$Outbound = {};
-
-/** @internal */
-export const Sqlserver$outboundSchema: z.ZodType<
-  Sqlserver$Outbound,
-  z.ZodTypeDef,
-  Sqlserver
-> = z.object({});
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace Sqlserver$ {
-  /** @deprecated use `Sqlserver$inboundSchema` instead. */
-  export const inboundSchema = Sqlserver$inboundSchema;
-  /** @deprecated use `Sqlserver$outboundSchema` instead. */
-  export const outboundSchema = Sqlserver$outboundSchema;
-  /** @deprecated use `Sqlserver$Outbound` instead. */
-  export type Outbound = Sqlserver$Outbound;
-}
-
-export function sqlserverToJSON(sqlserver: Sqlserver): string {
-  return JSON.stringify(Sqlserver$outboundSchema.parse(sqlserver));
-}
-
-export function sqlserverFromJSON(
-  jsonString: string,
-): SafeParseResult<Sqlserver, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => Sqlserver$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'Sqlserver' from JSON`,
-  );
-}
-
-/** @internal */
-export const Mysql$inboundSchema: z.ZodType<Mysql, z.ZodTypeDef, unknown> = z
-  .object({});
-
-/** @internal */
-export type Mysql$Outbound = {};
-
-/** @internal */
-export const Mysql$outboundSchema: z.ZodType<
-  Mysql$Outbound,
-  z.ZodTypeDef,
-  Mysql
-> = z.object({});
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace Mysql$ {
-  /** @deprecated use `Mysql$inboundSchema` instead. */
-  export const inboundSchema = Mysql$inboundSchema;
-  /** @deprecated use `Mysql$outboundSchema` instead. */
-  export const outboundSchema = Mysql$outboundSchema;
-  /** @deprecated use `Mysql$Outbound` instead. */
-  export type Outbound = Mysql$Outbound;
-}
-
-export function mysqlToJSON(mysql: Mysql): string {
-  return JSON.stringify(Mysql$outboundSchema.parse(mysql));
-}
-
-export function mysqlFromJSON(
-  jsonString: string,
-): SafeParseResult<Mysql, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => Mysql$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'Mysql' from JSON`,
-  );
-}
-
-/** @internal */
-export const Postgresql$inboundSchema: z.ZodType<
-  Postgresql,
-  z.ZodTypeDef,
-  unknown
-> = z.object({});
-
-/** @internal */
-export type Postgresql$Outbound = {};
-
-/** @internal */
-export const Postgresql$outboundSchema: z.ZodType<
-  Postgresql$Outbound,
-  z.ZodTypeDef,
-  Postgresql
-> = z.object({});
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace Postgresql$ {
-  /** @deprecated use `Postgresql$inboundSchema` instead. */
-  export const inboundSchema = Postgresql$inboundSchema;
-  /** @deprecated use `Postgresql$outboundSchema` instead. */
-  export const outboundSchema = Postgresql$outboundSchema;
-  /** @deprecated use `Postgresql$Outbound` instead. */
-  export type Outbound = Postgresql$Outbound;
-}
-
-export function postgresqlToJSON(postgresql: Postgresql): string {
-  return JSON.stringify(Postgresql$outboundSchema.parse(postgresql));
-}
-
-export function postgresqlFromJSON(
-  jsonString: string,
-): SafeParseResult<Postgresql, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => Postgresql$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'Postgresql' from JSON`,
-  );
-}
-
-/** @internal */
-export const Sqlite$inboundSchema: z.ZodType<Sqlite, z.ZodTypeDef, unknown> = z
-  .object({});
-
-/** @internal */
-export type Sqlite$Outbound = {};
-
-/** @internal */
-export const Sqlite$outboundSchema: z.ZodType<
-  Sqlite$Outbound,
-  z.ZodTypeDef,
-  Sqlite
-> = z.object({});
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace Sqlite$ {
-  /** @deprecated use `Sqlite$inboundSchema` instead. */
-  export const inboundSchema = Sqlite$inboundSchema;
-  /** @deprecated use `Sqlite$outboundSchema` instead. */
-  export const outboundSchema = Sqlite$outboundSchema;
-  /** @deprecated use `Sqlite$Outbound` instead. */
-  export type Outbound = Sqlite$Outbound;
-}
-
-export function sqliteToJSON(sqlite: Sqlite): string {
-  return JSON.stringify(Sqlite$outboundSchema.parse(sqlite));
-}
-
-export function sqliteFromJSON(
-  jsonString: string,
-): SafeParseResult<Sqlite, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => Sqlite$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'Sqlite' from JSON`,
-  );
-}
-
-/** @internal */
 export const TargetSQLTableMappings$inboundSchema: z.ZodType<
   TargetSQLTableMappings,
   z.ZodTypeDef,
   unknown
 > = z.object({
-  sqlserver: z.lazy(() => Sqlserver$inboundSchema).optional(),
-  mysql: z.lazy(() => Mysql$inboundSchema).optional(),
-  postgresql: z.lazy(() => Postgresql$inboundSchema).optional(),
-  sqlite: z.lazy(() => Sqlite$inboundSchema).optional(),
+  sqlserver: z.record(z.any()).optional(),
+  mysql: z.record(z.any()).optional(),
+  postgresql: z.record(z.any()).optional(),
+  sqlite: z.record(z.any()).optional(),
 });
 
 /** @internal */
 export type TargetSQLTableMappings$Outbound = {
-  sqlserver?: Sqlserver$Outbound | undefined;
-  mysql?: Mysql$Outbound | undefined;
-  postgresql?: Postgresql$Outbound | undefined;
-  sqlite?: Sqlite$Outbound | undefined;
+  sqlserver?: { [k: string]: any } | undefined;
+  mysql?: { [k: string]: any } | undefined;
+  postgresql?: { [k: string]: any } | undefined;
+  sqlite?: { [k: string]: any } | undefined;
 };
 
 /** @internal */
@@ -270,10 +92,10 @@ export const TargetSQLTableMappings$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   TargetSQLTableMappings
 > = z.object({
-  sqlserver: z.lazy(() => Sqlserver$outboundSchema).optional(),
-  mysql: z.lazy(() => Mysql$outboundSchema).optional(),
-  postgresql: z.lazy(() => Postgresql$outboundSchema).optional(),
-  sqlite: z.lazy(() => Sqlite$outboundSchema).optional(),
+  sqlserver: z.record(z.any()).optional(),
+  mysql: z.record(z.any()).optional(),
+  postgresql: z.record(z.any()).optional(),
+  sqlite: z.record(z.any()).optional(),
 });
 
 /**
