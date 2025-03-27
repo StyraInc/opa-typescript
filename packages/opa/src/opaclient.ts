@@ -79,7 +79,7 @@ export interface FiltersRequestOptions extends FiltersOptions {
   /**
    * The compilation target for translating a policy into queries.
    */
-  target: FilterCompileTargetsEnum;
+  target: Target;
   /*
    * Table and column name mappings for the translation.
    */
@@ -93,13 +93,12 @@ export interface MultipleFiltersRequestOptions extends FiltersOptions {
   /**
    * The compilation targets for translating a policy into queries.
    */
-  targets: Exclude<FilterCompileTargetsEnum, FilterCompileTargetsEnum.multi>[];
+  targets: Exclude<Target, "multi">[];
   /*
    * Table and column name mappings for the translation, keyed by target.
    */
-  tableMappings?: Record<
-    FilterCompileTargetsEnum[keyof FilterCompileTargetsEnum & number],
-    Record<string, Record<string, string>>
+  tableMappings?: Partial<
+    Record<Exclude<Target, "multi">, Record<string, Record<string, string>>>
   >;
 }
 
@@ -127,57 +126,42 @@ export type Filters = {
 };
 
 export type MultipleFilters = {
-  targets?: { [k: string]: Filters } | undefined; // TODO(sr): refine type
+  targets?: Record<Exclude<Target, "multi">, Filters>;
 };
 
-export enum FilterCompileTargetsEnum {
-  multi,
-  mysql,
-  postgresql,
-  sqlserver,
-  sqlite,
-  ucastALL,
-  ucastLinq,
-  ucastMinimal,
-  ucastPrisma,
-}
-
-const enumMap: Record<
-  FilterCompileTargetsEnum,
-  CompileQueryWithPartialEvaluationAcceptEnum
-> = {
-  [FilterCompileTargetsEnum.multi]:
+const CompileTargets = {
+  multi:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraMultitargetPlusJson,
-  [FilterCompileTargetsEnum.mysql]:
+  mysql:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraSqlMysqlPlusJson,
-  [FilterCompileTargetsEnum.postgresql]:
+  postgresql:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraSqlPostgresqlPlusJson,
-  [FilterCompileTargetsEnum.sqlserver]:
+  sqlserver:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraSqlSqlserverPlusJson,
-  [FilterCompileTargetsEnum.sqlite]:
+  sqlite:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraSqlSqlitePlusJson,
-  [FilterCompileTargetsEnum.ucastALL]:
+  ucastALL:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastAllPlusJson,
-  [FilterCompileTargetsEnum.ucastLinq]:
+  ucastLinq:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastLinqPlusJson,
-  [FilterCompileTargetsEnum.ucastMinimal]:
+  ucastMinimal:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastMinimalPlusJson,
-  [FilterCompileTargetsEnum.ucastPrisma]:
+  ucastPrisma:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastPrismaPlusJson,
-};
+} as const;
 
-const shortNameMap: Record<
-  Exclude<FilterCompileTargetsEnum, FilterCompileTargetsEnum.multi>,
-  TargetDialects
-> = {
-  [FilterCompileTargetsEnum.mysql]: TargetDialects.SqlPlusMysql,
-  [FilterCompileTargetsEnum.postgresql]: TargetDialects.SqlPlusPostgresql,
-  [FilterCompileTargetsEnum.sqlserver]: TargetDialects.SqlPlusSqlserver,
-  [FilterCompileTargetsEnum.sqlite]: TargetDialects.SqlPlusSqlite,
-  [FilterCompileTargetsEnum.ucastALL]: TargetDialects.UcastPlusAll,
-  [FilterCompileTargetsEnum.ucastLinq]: TargetDialects.UcastPlusLinq,
-  [FilterCompileTargetsEnum.ucastMinimal]: TargetDialects.UcastPlusMinimal,
-  [FilterCompileTargetsEnum.ucastPrisma]: TargetDialects.UcastPlusPrisma,
+export type Target = keyof typeof CompileTargets;
+export type SingleTarget = Exclude<Target, "multi">;
+
+const shortNameMap: Record<SingleTarget, TargetDialects> = {
+  mysql: TargetDialects.SqlPlusMysql,
+  postgresql: TargetDialects.SqlPlusPostgresql,
+  sqlserver: TargetDialects.SqlPlusSqlserver,
+  sqlite: TargetDialects.SqlPlusSqlite,
+  ucastALL: TargetDialects.UcastPlusAll,
+  ucastLinq: TargetDialects.UcastPlusLinq,
+  ucastMinimal: TargetDialects.UcastPlusMinimal,
+  ucastPrisma: TargetDialects.UcastPlusPrisma,
 };
 
 /** Extra per-request options for using the high-level SDK's
@@ -409,6 +393,9 @@ export class OPAClient {
     if (!target) {
       throw new Error("target option is required");
     }
+    if (target === "multi") {
+      throw new Error("multi target is not supported (use getMultipleFilters)");
+    }
     const targetSQLTableMappings: Record<
       string,
       Record<string, Record<string, string>>
@@ -430,7 +417,7 @@ export class OPAClient {
           unknowns: opts?.unknowns,
         },
       },
-      { ...opts.fetchOptions, acceptHeaderOverride: enumMap[target] },
+      { ...opts.fetchOptions, acceptHeaderOverride: CompileTargets[target] },
     );
     return byTarget(res, opts?.target) as Filters;
   }
@@ -461,6 +448,8 @@ export class OPAClient {
       throw new Error("targets option is required");
     }
     const targetDialects = opts?.targets.map((t) => shortNameMap[t]);
+    const targetSQLTableMappings = opts?.tableMappings;
+
     const res = await this.opa.compileQueryWithPartialEvaluation(
       {
         requestBody: {
@@ -468,6 +457,7 @@ export class OPAClient {
           input: inp,
           options: {
             targetDialects,
+            targetSQLTableMappings,
             additionalProperties: {}, // TODO(sr): fix our OpenAPI spec
             ...opts?.compileOptions,
           },
@@ -476,10 +466,10 @@ export class OPAClient {
       },
       {
         ...opts.fetchOptions,
-        acceptHeaderOverride: enumMap[FilterCompileTargetsEnum.multi],
+        acceptHeaderOverride: CompileTargets["multi"],
       },
     );
-    return byTarget(res, FilterCompileTargetsEnum.multi) as MultipleFilters;
+    return byTarget(res, "multi") as MultipleFilters;
   }
 }
 
@@ -510,7 +500,7 @@ function queryFromPath(p: string): string {
 
 async function byTarget(
   res: CompileQueryWithPartialEvaluationResponse,
-  target: FilterCompileTargetsEnum,
+  target: Target,
 ): Promise<Filters | MultipleFilters> {
   const result:
     | undefined
@@ -519,30 +509,30 @@ async function byTarget(
     | CompileResultMultitargetResult = res[targetType(target)]?.result;
   if (!result) throw new Error(`No result for target ${target}`);
 
-  if (target === FilterCompileTargetsEnum.multi) {
+  if (target === "multi") {
     return result.additionalProperties as MultipleFilters;
   }
   return result as Filters;
 }
 
 function targetType(
-  t: FilterCompileTargetsEnum,
+  t: Target,
 ): Exclude<
   keyof CompileQueryWithPartialEvaluationResponse,
   "httpMeta" | "compileResultJSON"
 > {
   switch (t) {
-    case FilterCompileTargetsEnum.multi:
+    case "multi":
       return "compileResultMultitarget";
-    case FilterCompileTargetsEnum.postgresql:
-    case FilterCompileTargetsEnum.mysql:
-    case FilterCompileTargetsEnum.sqlserver:
-    case FilterCompileTargetsEnum.sqlite:
+    case "postgresql":
+    case "mysql":
+    case "sqlserver":
+    case "sqlite":
       return "compileResultSQL";
-    case FilterCompileTargetsEnum.ucastALL:
-    case FilterCompileTargetsEnum.ucastPrisma:
-    case FilterCompileTargetsEnum.ucastLinq:
-    case FilterCompileTargetsEnum.ucastMinimal:
+    case "ucastALL":
+    case "ucastPrisma":
+    case "ucastLinq":
+    case "ucastMinimal":
       return "compileResultUCAST";
     default:
       throw new Error(`Unknown target type: ${t}`);

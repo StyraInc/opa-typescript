@@ -2,7 +2,7 @@ import { describe, before, after, it } from "node:test";
 import assert from "node:assert";
 import { GenericContainer, StartedTestContainer, Wait } from "testcontainers";
 
-import { FilterCompileTargetsEnum, Filters, OPAClient } from "../src";
+import { Filters, OPAClient } from "../src";
 import { OpaApiClientCore } from "../src/core.js";
 import { compileQueryWithPartialEvaluation } from "../src/funcs/compileQueryWithPartialEvaluation.js";
 import { CompileQueryWithPartialEvaluationAcceptEnum } from "../src/funcs/compileQueryWithPartialEvaluation.js";
@@ -59,7 +59,7 @@ include if {
               "filters/include",
               { fav_colours: ["red", "green"] },
               {
-                target: FilterCompileTargetsEnum.postgresql,
+                target: "postgresql",
               },
             );
             const { query, masks } = res as Filters;
@@ -72,7 +72,7 @@ include if {
               "filters/include",
               undefined,
               {
-                target: FilterCompileTargetsEnum.postgresql,
+                target: "postgresql",
               },
             );
             const { query, masks } = res as Filters;
@@ -85,7 +85,7 @@ include if {
               "filters_no_md/include",
               { fav_colours: ["red", "green"] },
               {
-                target: FilterCompileTargetsEnum.postgresql,
+                target: "postgresql",
                 unknowns: ["input.fruits"],
               },
             );
@@ -94,12 +94,12 @@ include if {
             assert.equal(query, "WHERE fruits.colour IN (E'red', E'green')");
           });
 
-          it.only("returns postgresql (with mappings)", async () => {
+          it("returns postgresql (with mappings)", async () => {
             const res = await new OPAClient(serverURL).getFilters(
               "filters/include",
               { fav_colours: ["red", "green"] },
               {
-                target: FilterCompileTargetsEnum.postgresql,
+                target: "postgresql",
                 tableMappings: {
                   fruits: { $self: "F", colour: "C" },
                 },
@@ -115,7 +115,7 @@ include if {
               "filters/include",
               { fav_colours: ["red", "green"] },
               {
-                target: FilterCompileTargetsEnum.ucastPrisma,
+                target: "ucastPrisma",
               },
             );
             const { query, masks } = res as Filters;
@@ -134,10 +134,7 @@ include if {
               "filters/include",
               { fav_colours: ["red", "green"] },
               {
-                targets: [
-                  FilterCompileTargetsEnum.ucastPrisma,
-                  FilterCompileTargetsEnum.postgresql,
-                ],
+                targets: ["ucastPrisma", "postgresql"],
               },
             );
             assert.deepStrictEqual(res, {
@@ -160,15 +157,12 @@ include if {
               "filters/include",
               { fav_colours: ["red", "green"] },
               {
-                targets: [
-                  FilterCompileTargetsEnum.mysql,
-                  FilterCompileTargetsEnum.postgresql,
-                ],
+                targets: ["mysql", "postgresql"],
                 tableMappings: {
-                  [FilterCompileTargetsEnum.postgresql]: {
+                  postgresql: {
                     fruits: { $self: "fruits_pg", colour: "colour_pg" },
                   },
-                  [FilterCompileTargetsEnum.mysql]: {
+                  mysql: {
                     fruits: { $self: "fruits_mysql", colour: "colour_mysql" },
                   },
                 },
@@ -176,10 +170,10 @@ include if {
             );
             assert.deepStrictEqual(res, {
               postgresql: {
-                query: "WHERE fruits.colour IN (E'red', E'green')",
+                query: "WHERE fruits_pg.colour_pg IN (E'red', E'green')",
               },
               mysql: {
-                query: "WHERE fruits.colour IN (E'red', E'green')",
+                query: "WHERE fruits_mysql.colour_mysql IN ('red', 'green')",
               },
             });
           });
