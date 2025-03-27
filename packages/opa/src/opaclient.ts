@@ -83,7 +83,7 @@ export interface FiltersRequestOptions extends FiltersOptions {
   /*
    * Table and column name mappings for the translation.
    */
-  tableMappings?: Record<string, string>;
+  tableMappings?: Record<string, Record<string, string>>;
 }
 
 /** Per-request options for using the high-level SDK's
@@ -98,8 +98,8 @@ export interface MultipleFiltersRequestOptions extends FiltersOptions {
    * Table and column name mappings for the translation, keyed by target.
    */
   tableMappings?: Record<
-    Exclude<FilterCompileTargetsEnum, FilterCompileTargetsEnum.multi>,
-    Record<string, string>
+    FilterCompileTargetsEnum[keyof FilterCompileTargetsEnum & number],
+    Record<string, Record<string, string>>
   >;
 }
 
@@ -409,15 +409,21 @@ export class OPAClient {
     if (!target) {
       throw new Error("target option is required");
     }
+    const targetSQLTableMappings: Record<
+      string,
+      Record<string, Record<string, string>>
+    > = {};
+    if (opts?.tableMappings) {
+      const key = shortNameMap[target].split("+")[1];
+      targetSQLTableMappings[key as string] = opts.tableMappings;
+    }
     const res = await this.opa.compileQueryWithPartialEvaluation(
       {
         requestBody: {
           query: queryFromPath(path),
           input: inp,
           options: {
-            // targetSQLTableMappings: {
-            //   postgresql: { foo: { $self: "foo" } },
-            // },
+            targetSQLTableMappings,
             additionalProperties: {}, // TODO(sr): fix our OpenAPI spec
             ...opts?.compileOptions,
           },
@@ -426,7 +432,6 @@ export class OPAClient {
       },
       { ...opts.fetchOptions, acceptHeaderOverride: enumMap[target] },
     );
-    // console.log({ res });
     return byTarget(res, opts?.target) as Filters;
   }
 

@@ -94,8 +94,7 @@ include if {
             assert.equal(query, "WHERE fruits.colour IN (E'red', E'green')");
           });
 
-          // TODO(sr): Support table mappings (needs OpenAPI spec fixes)
-          it.skip("returns postgresql (with mappings)", async () => {
+          it.only("returns postgresql (with mappings)", async () => {
             const res = await new OPAClient(serverURL).getFilters(
               "filters/include",
               { fav_colours: ["red", "green"] },
@@ -108,7 +107,7 @@ include if {
             );
             const { query, masks } = res as Filters;
             assert.equal(masks, undefined);
-            assert.equal(query, "WHERE fruits.colour IN (E'red', E'green')");
+            assert.equal(query, "WHERE F.C IN (E'red', E'green')");
           });
 
           it("returns ucast-prisma (with input)", async () => {
@@ -152,6 +151,35 @@ include if {
                   type: "field",
                   value: ["red", "green"],
                 },
+              },
+            });
+          });
+
+          it("supports mappings, too", async () => {
+            const res = await new OPAClient(serverURL).getMultipleFilters(
+              "filters/include",
+              { fav_colours: ["red", "green"] },
+              {
+                targets: [
+                  FilterCompileTargetsEnum.mysql,
+                  FilterCompileTargetsEnum.postgresql,
+                ],
+                tableMappings: {
+                  [FilterCompileTargetsEnum.postgresql]: {
+                    fruits: { $self: "fruits_pg", colour: "colour_pg" },
+                  },
+                  [FilterCompileTargetsEnum.mysql]: {
+                    fruits: { $self: "fruits_mysql", colour: "colour_mysql" },
+                  },
+                },
+              },
+            );
+            assert.deepStrictEqual(res, {
+              postgresql: {
+                query: "WHERE fruits.colour IN (E'red', E'green')",
+              },
+              mysql: {
+                query: "WHERE fruits.colour IN (E'red', E'green')",
               },
             });
           });
