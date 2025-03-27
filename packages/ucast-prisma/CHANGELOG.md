@@ -1,5 +1,16 @@
 # @styra/ucast-prisma
 
+## 0.1.0
+
+### Minor Changes
+
+- ceb250e: add helper methods for column masking in filter results
+
+  A new `mask` method for masking column values in database lookup results,
+  according to mask rules provided by the Compile API, has been added.
+
+  Also, an `Adapter` class was added to make calls for filtering and masking with Prisma more streamlined.
+
 ## 0.0.9
 
 ### Patch Changes
