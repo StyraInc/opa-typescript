@@ -33,7 +33,7 @@ export type Ucast = {
   masks?: { [k: string]: MaskingRule } | undefined;
 };
 
-export type CompileResultMultitargetSqlserver = {
+export type Sqlserver = {
   /**
    * String representing the SQL equivalent of the conditions under which the query is true.
    */
@@ -44,7 +44,7 @@ export type CompileResultMultitargetSqlserver = {
   masks?: { [k: string]: MaskingRule } | undefined;
 };
 
-export type CompileResultMultitargetMysql = {
+export type Mysql = {
   /**
    * String representing the SQL equivalent of the conditions under which the query is true.
    */
@@ -55,7 +55,7 @@ export type CompileResultMultitargetMysql = {
   masks?: { [k: string]: MaskingRule } | undefined;
 };
 
-export type CompileResultMultitargetPostgresql = {
+export type Postgresql = {
   /**
    * String representing the SQL equivalent of the conditions under which the query is true
    */
@@ -66,7 +66,7 @@ export type CompileResultMultitargetPostgresql = {
   masks?: { [k: string]: MaskingRule } | undefined;
 };
 
-export type CompileResultMultitargetSqlite = {
+export type Sqlite = {
   /**
    * String representing the SQL equivalent of the conditions under which the query is true
    */
@@ -79,10 +79,10 @@ export type CompileResultMultitargetSqlite = {
 
 export type Targets = {
   ucast?: Ucast | undefined;
-  sqlserver?: CompileResultMultitargetSqlserver | undefined;
-  mysql?: CompileResultMultitargetMysql | undefined;
-  postgresql?: CompileResultMultitargetPostgresql | undefined;
-  sqlite?: CompileResultMultitargetSqlite | undefined;
+  sqlserver?: Sqlserver | undefined;
+  mysql?: Mysql | undefined;
+  postgresql?: Postgresql | undefined;
+  sqlite?: Sqlite | undefined;
 };
 
 /**
@@ -204,8 +204,8 @@ export function ucastFromJSON(
 }
 
 /** @internal */
-export const CompileResultMultitargetSqlserver$inboundSchema: z.ZodType<
-  CompileResultMultitargetSqlserver,
+export const Sqlserver$inboundSchema: z.ZodType<
+  Sqlserver,
   z.ZodTypeDef,
   unknown
 > = z.object({
@@ -214,16 +214,16 @@ export const CompileResultMultitargetSqlserver$inboundSchema: z.ZodType<
 });
 
 /** @internal */
-export type CompileResultMultitargetSqlserver$Outbound = {
+export type Sqlserver$Outbound = {
   query?: string | undefined;
   masks?: { [k: string]: MaskingRule$Outbound } | undefined;
 };
 
 /** @internal */
-export const CompileResultMultitargetSqlserver$outboundSchema: z.ZodType<
-  CompileResultMultitargetSqlserver$Outbound,
+export const Sqlserver$outboundSchema: z.ZodType<
+  Sqlserver$Outbound,
   z.ZodTypeDef,
-  CompileResultMultitargetSqlserver
+  Sqlserver
 > = z.object({
   query: z.string().optional(),
   masks: z.record(MaskingRule$outboundSchema).optional(),
@@ -233,57 +233,47 @@ export const CompileResultMultitargetSqlserver$outboundSchema: z.ZodType<
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
-export namespace CompileResultMultitargetSqlserver$ {
-  /** @deprecated use `CompileResultMultitargetSqlserver$inboundSchema` instead. */
-  export const inboundSchema = CompileResultMultitargetSqlserver$inboundSchema;
-  /** @deprecated use `CompileResultMultitargetSqlserver$outboundSchema` instead. */
-  export const outboundSchema =
-    CompileResultMultitargetSqlserver$outboundSchema;
-  /** @deprecated use `CompileResultMultitargetSqlserver$Outbound` instead. */
-  export type Outbound = CompileResultMultitargetSqlserver$Outbound;
+export namespace Sqlserver$ {
+  /** @deprecated use `Sqlserver$inboundSchema` instead. */
+  export const inboundSchema = Sqlserver$inboundSchema;
+  /** @deprecated use `Sqlserver$outboundSchema` instead. */
+  export const outboundSchema = Sqlserver$outboundSchema;
+  /** @deprecated use `Sqlserver$Outbound` instead. */
+  export type Outbound = Sqlserver$Outbound;
 }
 
-export function compileResultMultitargetSqlserverToJSON(
-  compileResultMultitargetSqlserver: CompileResultMultitargetSqlserver,
-): string {
-  return JSON.stringify(
-    CompileResultMultitargetSqlserver$outboundSchema.parse(
-      compileResultMultitargetSqlserver,
-    ),
-  );
+export function sqlserverToJSON(sqlserver: Sqlserver): string {
+  return JSON.stringify(Sqlserver$outboundSchema.parse(sqlserver));
 }
 
-export function compileResultMultitargetSqlserverFromJSON(
+export function sqlserverFromJSON(
   jsonString: string,
-): SafeParseResult<CompileResultMultitargetSqlserver, SDKValidationError> {
+): SafeParseResult<Sqlserver, SDKValidationError> {
   return safeParse(
     jsonString,
-    (x) => CompileResultMultitargetSqlserver$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'CompileResultMultitargetSqlserver' from JSON`,
+    (x) => Sqlserver$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Sqlserver' from JSON`,
   );
 }
 
 /** @internal */
-export const CompileResultMultitargetMysql$inboundSchema: z.ZodType<
-  CompileResultMultitargetMysql,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  query: z.string().optional(),
-  masks: z.record(MaskingRule$inboundSchema).optional(),
-});
+export const Mysql$inboundSchema: z.ZodType<Mysql, z.ZodTypeDef, unknown> = z
+  .object({
+    query: z.string().optional(),
+    masks: z.record(MaskingRule$inboundSchema).optional(),
+  });
 
 /** @internal */
-export type CompileResultMultitargetMysql$Outbound = {
+export type Mysql$Outbound = {
   query?: string | undefined;
   masks?: { [k: string]: MaskingRule$Outbound } | undefined;
 };
 
 /** @internal */
-export const CompileResultMultitargetMysql$outboundSchema: z.ZodType<
-  CompileResultMultitargetMysql$Outbound,
+export const Mysql$outboundSchema: z.ZodType<
+  Mysql$Outbound,
   z.ZodTypeDef,
-  CompileResultMultitargetMysql
+  Mysql
 > = z.object({
   query: z.string().optional(),
   masks: z.record(MaskingRule$outboundSchema).optional(),
@@ -293,38 +283,32 @@ export const CompileResultMultitargetMysql$outboundSchema: z.ZodType<
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
-export namespace CompileResultMultitargetMysql$ {
-  /** @deprecated use `CompileResultMultitargetMysql$inboundSchema` instead. */
-  export const inboundSchema = CompileResultMultitargetMysql$inboundSchema;
-  /** @deprecated use `CompileResultMultitargetMysql$outboundSchema` instead. */
-  export const outboundSchema = CompileResultMultitargetMysql$outboundSchema;
-  /** @deprecated use `CompileResultMultitargetMysql$Outbound` instead. */
-  export type Outbound = CompileResultMultitargetMysql$Outbound;
+export namespace Mysql$ {
+  /** @deprecated use `Mysql$inboundSchema` instead. */
+  export const inboundSchema = Mysql$inboundSchema;
+  /** @deprecated use `Mysql$outboundSchema` instead. */
+  export const outboundSchema = Mysql$outboundSchema;
+  /** @deprecated use `Mysql$Outbound` instead. */
+  export type Outbound = Mysql$Outbound;
 }
 
-export function compileResultMultitargetMysqlToJSON(
-  compileResultMultitargetMysql: CompileResultMultitargetMysql,
-): string {
-  return JSON.stringify(
-    CompileResultMultitargetMysql$outboundSchema.parse(
-      compileResultMultitargetMysql,
-    ),
-  );
+export function mysqlToJSON(mysql: Mysql): string {
+  return JSON.stringify(Mysql$outboundSchema.parse(mysql));
 }
 
-export function compileResultMultitargetMysqlFromJSON(
+export function mysqlFromJSON(
   jsonString: string,
-): SafeParseResult<CompileResultMultitargetMysql, SDKValidationError> {
+): SafeParseResult<Mysql, SDKValidationError> {
   return safeParse(
     jsonString,
-    (x) => CompileResultMultitargetMysql$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'CompileResultMultitargetMysql' from JSON`,
+    (x) => Mysql$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Mysql' from JSON`,
   );
 }
 
 /** @internal */
-export const CompileResultMultitargetPostgresql$inboundSchema: z.ZodType<
-  CompileResultMultitargetPostgresql,
+export const Postgresql$inboundSchema: z.ZodType<
+  Postgresql,
   z.ZodTypeDef,
   unknown
 > = z.object({
@@ -333,16 +317,16 @@ export const CompileResultMultitargetPostgresql$inboundSchema: z.ZodType<
 });
 
 /** @internal */
-export type CompileResultMultitargetPostgresql$Outbound = {
+export type Postgresql$Outbound = {
   query?: string | undefined;
   masks?: { [k: string]: MaskingRule$Outbound } | undefined;
 };
 
 /** @internal */
-export const CompileResultMultitargetPostgresql$outboundSchema: z.ZodType<
-  CompileResultMultitargetPostgresql$Outbound,
+export const Postgresql$outboundSchema: z.ZodType<
+  Postgresql$Outbound,
   z.ZodTypeDef,
-  CompileResultMultitargetPostgresql
+  Postgresql
 > = z.object({
   query: z.string().optional(),
   masks: z.record(MaskingRule$outboundSchema).optional(),
@@ -352,58 +336,47 @@ export const CompileResultMultitargetPostgresql$outboundSchema: z.ZodType<
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
-export namespace CompileResultMultitargetPostgresql$ {
-  /** @deprecated use `CompileResultMultitargetPostgresql$inboundSchema` instead. */
-  export const inboundSchema = CompileResultMultitargetPostgresql$inboundSchema;
-  /** @deprecated use `CompileResultMultitargetPostgresql$outboundSchema` instead. */
-  export const outboundSchema =
-    CompileResultMultitargetPostgresql$outboundSchema;
-  /** @deprecated use `CompileResultMultitargetPostgresql$Outbound` instead. */
-  export type Outbound = CompileResultMultitargetPostgresql$Outbound;
+export namespace Postgresql$ {
+  /** @deprecated use `Postgresql$inboundSchema` instead. */
+  export const inboundSchema = Postgresql$inboundSchema;
+  /** @deprecated use `Postgresql$outboundSchema` instead. */
+  export const outboundSchema = Postgresql$outboundSchema;
+  /** @deprecated use `Postgresql$Outbound` instead. */
+  export type Outbound = Postgresql$Outbound;
 }
 
-export function compileResultMultitargetPostgresqlToJSON(
-  compileResultMultitargetPostgresql: CompileResultMultitargetPostgresql,
-): string {
-  return JSON.stringify(
-    CompileResultMultitargetPostgresql$outboundSchema.parse(
-      compileResultMultitargetPostgresql,
-    ),
-  );
+export function postgresqlToJSON(postgresql: Postgresql): string {
+  return JSON.stringify(Postgresql$outboundSchema.parse(postgresql));
 }
 
-export function compileResultMultitargetPostgresqlFromJSON(
+export function postgresqlFromJSON(
   jsonString: string,
-): SafeParseResult<CompileResultMultitargetPostgresql, SDKValidationError> {
+): SafeParseResult<Postgresql, SDKValidationError> {
   return safeParse(
     jsonString,
-    (x) =>
-      CompileResultMultitargetPostgresql$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'CompileResultMultitargetPostgresql' from JSON`,
+    (x) => Postgresql$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Postgresql' from JSON`,
   );
 }
 
 /** @internal */
-export const CompileResultMultitargetSqlite$inboundSchema: z.ZodType<
-  CompileResultMultitargetSqlite,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  query: z.string().optional(),
-  masks: z.record(MaskingRule$inboundSchema).optional(),
-});
+export const Sqlite$inboundSchema: z.ZodType<Sqlite, z.ZodTypeDef, unknown> = z
+  .object({
+    query: z.string().optional(),
+    masks: z.record(MaskingRule$inboundSchema).optional(),
+  });
 
 /** @internal */
-export type CompileResultMultitargetSqlite$Outbound = {
+export type Sqlite$Outbound = {
   query?: string | undefined;
   masks?: { [k: string]: MaskingRule$Outbound } | undefined;
 };
 
 /** @internal */
-export const CompileResultMultitargetSqlite$outboundSchema: z.ZodType<
-  CompileResultMultitargetSqlite$Outbound,
+export const Sqlite$outboundSchema: z.ZodType<
+  Sqlite$Outbound,
   z.ZodTypeDef,
-  CompileResultMultitargetSqlite
+  Sqlite
 > = z.object({
   query: z.string().optional(),
   masks: z.record(MaskingRule$outboundSchema).optional(),
@@ -413,32 +386,26 @@ export const CompileResultMultitargetSqlite$outboundSchema: z.ZodType<
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
-export namespace CompileResultMultitargetSqlite$ {
-  /** @deprecated use `CompileResultMultitargetSqlite$inboundSchema` instead. */
-  export const inboundSchema = CompileResultMultitargetSqlite$inboundSchema;
-  /** @deprecated use `CompileResultMultitargetSqlite$outboundSchema` instead. */
-  export const outboundSchema = CompileResultMultitargetSqlite$outboundSchema;
-  /** @deprecated use `CompileResultMultitargetSqlite$Outbound` instead. */
-  export type Outbound = CompileResultMultitargetSqlite$Outbound;
+export namespace Sqlite$ {
+  /** @deprecated use `Sqlite$inboundSchema` instead. */
+  export const inboundSchema = Sqlite$inboundSchema;
+  /** @deprecated use `Sqlite$outboundSchema` instead. */
+  export const outboundSchema = Sqlite$outboundSchema;
+  /** @deprecated use `Sqlite$Outbound` instead. */
+  export type Outbound = Sqlite$Outbound;
 }
 
-export function compileResultMultitargetSqliteToJSON(
-  compileResultMultitargetSqlite: CompileResultMultitargetSqlite,
-): string {
-  return JSON.stringify(
-    CompileResultMultitargetSqlite$outboundSchema.parse(
-      compileResultMultitargetSqlite,
-    ),
-  );
+export function sqliteToJSON(sqlite: Sqlite): string {
+  return JSON.stringify(Sqlite$outboundSchema.parse(sqlite));
 }
 
-export function compileResultMultitargetSqliteFromJSON(
+export function sqliteFromJSON(
   jsonString: string,
-): SafeParseResult<CompileResultMultitargetSqlite, SDKValidationError> {
+): SafeParseResult<Sqlite, SDKValidationError> {
   return safeParse(
     jsonString,
-    (x) => CompileResultMultitargetSqlite$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'CompileResultMultitargetSqlite' from JSON`,
+    (x) => Sqlite$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Sqlite' from JSON`,
   );
 }
 
@@ -446,22 +413,19 @@ export function compileResultMultitargetSqliteFromJSON(
 export const Targets$inboundSchema: z.ZodType<Targets, z.ZodTypeDef, unknown> =
   z.object({
     ucast: z.lazy(() => Ucast$inboundSchema).optional(),
-    sqlserver: z.lazy(() => CompileResultMultitargetSqlserver$inboundSchema)
-      .optional(),
-    mysql: z.lazy(() => CompileResultMultitargetMysql$inboundSchema).optional(),
-    postgresql: z.lazy(() => CompileResultMultitargetPostgresql$inboundSchema)
-      .optional(),
-    sqlite: z.lazy(() => CompileResultMultitargetSqlite$inboundSchema)
-      .optional(),
+    sqlserver: z.lazy(() => Sqlserver$inboundSchema).optional(),
+    mysql: z.lazy(() => Mysql$inboundSchema).optional(),
+    postgresql: z.lazy(() => Postgresql$inboundSchema).optional(),
+    sqlite: z.lazy(() => Sqlite$inboundSchema).optional(),
   });
 
 /** @internal */
 export type Targets$Outbound = {
   ucast?: Ucast$Outbound | undefined;
-  sqlserver?: CompileResultMultitargetSqlserver$Outbound | undefined;
-  mysql?: CompileResultMultitargetMysql$Outbound | undefined;
-  postgresql?: CompileResultMultitargetPostgresql$Outbound | undefined;
-  sqlite?: CompileResultMultitargetSqlite$Outbound | undefined;
+  sqlserver?: Sqlserver$Outbound | undefined;
+  mysql?: Mysql$Outbound | undefined;
+  postgresql?: Postgresql$Outbound | undefined;
+  sqlite?: Sqlite$Outbound | undefined;
 };
 
 /** @internal */
@@ -471,13 +435,10 @@ export const Targets$outboundSchema: z.ZodType<
   Targets
 > = z.object({
   ucast: z.lazy(() => Ucast$outboundSchema).optional(),
-  sqlserver: z.lazy(() => CompileResultMultitargetSqlserver$outboundSchema)
-    .optional(),
-  mysql: z.lazy(() => CompileResultMultitargetMysql$outboundSchema).optional(),
-  postgresql: z.lazy(() => CompileResultMultitargetPostgresql$outboundSchema)
-    .optional(),
-  sqlite: z.lazy(() => CompileResultMultitargetSqlite$outboundSchema)
-    .optional(),
+  sqlserver: z.lazy(() => Sqlserver$outboundSchema).optional(),
+  mysql: z.lazy(() => Mysql$outboundSchema).optional(),
+  postgresql: z.lazy(() => Postgresql$outboundSchema).optional(),
+  sqlite: z.lazy(() => Sqlite$outboundSchema).optional(),
 });
 
 /**

@@ -10,9 +10,9 @@ let value: TargetSQLTableMappings = {};
 
 ## Fields
 
-| Field                                                                 | Type                                                                  | Required                                                              | Description                                                           |
-| --------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `sqlserver`                                                           | [components.Sqlserver](../../../sdk/models/components/sqlserver.md)   | :heavy_minus_sign:                                                    | N/A                                                                   |
-| `mysql`                                                               | [components.Mysql](../../../sdk/models/components/mysql.md)           | :heavy_minus_sign:                                                    | N/A                                                                   |
-| `postgresql`                                                          | [components.Postgresql](../../../sdk/models/components/postgresql.md) | :heavy_minus_sign:                                                    | N/A                                                                   |
-| `sqlite`                                                              | [components.Sqlite](../../../sdk/models/components/sqlite.md)         | :heavy_minus_sign:                                                    | N/A                                                                   |
+| Field                 | Type                  | Required              | Description           |
+| --------------------- | --------------------- | --------------------- | --------------------- |
+| `sqlserver`           | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
+| `mysql`               | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
+| `postgresql`          | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
+| `sqlite`              | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
