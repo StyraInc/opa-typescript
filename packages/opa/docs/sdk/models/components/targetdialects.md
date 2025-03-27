@@ -5,7 +5,7 @@
 ```typescript
 import { TargetDialects } from "@styra/opa/sdk/models/components";
 
-let value: TargetDialects = TargetDialects.UcastPlusLinq;
+let value: TargetDialects = TargetDialects.SqlPlusSqlserver;
 ```
 
 ## Values
@@ -19,3 +19,4 @@ let value: TargetDialects = TargetDialects.UcastPlusLinq;
 | `SqlPlusSqlserver`  | sql+sqlserver       |
 | `SqlPlusMysql`      | sql+mysql           |
 | `SqlPlusPostgresql` | sql+postgresql      |
+| `SqlPlusSqlite`     | sql+sqlite          |
