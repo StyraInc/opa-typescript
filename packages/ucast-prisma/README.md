@@ -3,93 +3,40 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![NPM Version](https://img.shields.io/npm/v/%40styra%2Fucast-prisma?style=flat&color=%2324b6e0)](https://www.npmjs.com/package/@styra/ucast-prisma)
 
-This package contains helpers for using ucast conditions with Prisma queries.
+This package contains helpers for using the Enterprise OPA Compile API with Prisma queries.
 
 > [!WARNING]
 > This is an experimental package and is subject to change.
 
 ## Usage
 
-This package can be used to add filtering to Prisma queries from ucast conditions.
+This package can be used to add filtering and masking to Prisma queries from the
+[Enterprise OPA Compile API](https://docs.styra.com/enterprise-opa/reference/api-reference/partial-evaluation-api).
+It wraps [`@styra/opa`](https://www.npmjs.com/package/@styra/opa) and provides all the settings required to work with Prisma:
 
 ```diff
-+ import { ucastToPrisma } from "@styra/ucast-prisma";
++ import { Adapter } from "@styra/ucast-prisma";
+
++ const opa = new Adapter("http://127.0.0.1:8181");
 
   router.get("/tickets", async (req, res) => {
--   const { allow, reason } = await authz.authorized(
-+   const { allow, reason, conditions } = await authz.authorized(path, { action: "list" }, req);
-    if (!allow) return res.status(FORBIDDEN).json({ reason });
++   const { query, mask } = opa.filters("filters/include", "tickets", { action: "list" });
++   if (!query) return res.status(FORBIDDEN).json({ reason: "not authorized" });
 
-+   const filters = ucastToPrisma(conditions, "tickets");
     const tickets = (
       await prisma.tickets.findMany({
-+       where: filters,
++       where: query,
         include: {
           customers: true,
           users: true,
         },
       })
-      ).map((ticket) => toTicket(ticket));
+-     ).map((ticket) => toTicket(ticket));
++     ).map((ticket) => toTicket(mask(ticket)));
     return res.status(OK).json({ tickets });
   });
 ```
 
-The conditions returned by the OPA policy evaluation look like this:
-
-```json
-{
-  "conditions": {
-    "or": [{ "tickets.resolved": false }, { "users.name": "caesar" }]
-  }
-}
-```
-
-Note that an expanded, more verbose format is supported, too:
-
-```json
-{
-  "conditions": {
-    "type": "compound",
-    "operator": "or",
-    "value": [
-      {
-        "type": "field",
-        "operator": "eq",
-        "field": "tickets.resolved",
-        "value": false
-      },
-      {
-        "type": "field",
-        "operator": "eq",
-        "field": "users.name",
-        "value": "caesar"
-      }
-    ]
-  }
-}
-```
-
-The call to `ucastToPrisma(conditions, "tickets")` turns both into this
-Prisma query:
-
-```json
-{
-  "OR": [
-    {
-      "resolved": {
-        "equals": false
-      }
-    },
-    {
-      "users": {
-        "name": {
-          "equals": "ceasar"
-        }
-      }
-    }
-  ]
-}
-```
 
 ## Community
 

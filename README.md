@@ -14,6 +14,12 @@ The Styra-supported driver to connect to Open Policy Agent (OPA) and Enterprise 
 Utilities for using [@styra/opa](https://www.npmjs.com/package/@styra/opa) from React.
 
 
+## [@styra/ucast-prisma](https://www.npmjs.com/package/@styra/ucast-prisma)
+
+Utilities for using [@styra/opa](https://www.npmjs.com/package/@styra/opa) and
+[Enterprise OPA's Compile API](https://docs.styra.com/enterprise-opa/reference/api-reference/partial-evaluation-api) with Prisma.
+
+
 ## Community
 
 For questions, discussions and announcements related to Styra products, services and open-source projects, please join
