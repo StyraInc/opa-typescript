@@ -1,5 +1,11 @@
 # @styra/ucast-prisma
 
+## 0.1.1
+
+### Patch Changes
+
+- 3ceaab0: ucast-prisma: add missing @styra/opa dependency
+
 ## 0.1.0
 
 ### Minor Changes
