@@ -3,11 +3,7 @@
  */
 
 import * as z from "zod";
-import { remap as remap$ } from "../../../lib/primitives.js";
-import {
-  collectExtraKeys as collectExtraKeys$,
-  safeParse,
-} from "../../../lib/schemas.js";
+import { safeParse } from "../../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
@@ -42,7 +38,6 @@ export type CompileOptions = {
    */
   targetDialects?: Array<TargetDialects> | undefined;
   targetSQLTableMappings?: TargetSQLTableMappings | undefined;
-  additionalProperties?: { [k: string]: any };
 };
 
 /** @internal */
@@ -134,23 +129,18 @@ export const CompileOptions$inboundSchema: z.ZodType<
   CompileOptions,
   z.ZodTypeDef,
   unknown
-> = collectExtraKeys$(
-  z.object({
-    disableInlining: z.array(z.string()).optional(),
-    targetDialects: z.array(TargetDialects$inboundSchema).optional(),
-    targetSQLTableMappings: z.lazy(() => TargetSQLTableMappings$inboundSchema)
-      .optional(),
-  }).catchall(z.any()),
-  "additionalProperties",
-  true,
-);
+> = z.object({
+  disableInlining: z.array(z.string()).optional(),
+  targetDialects: z.array(TargetDialects$inboundSchema).optional(),
+  targetSQLTableMappings: z.lazy(() => TargetSQLTableMappings$inboundSchema)
+    .optional(),
+});
 
 /** @internal */
 export type CompileOptions$Outbound = {
   disableInlining?: Array<string> | undefined;
   targetDialects?: Array<string> | undefined;
   targetSQLTableMappings?: TargetSQLTableMappings$Outbound | undefined;
-  [additionalProperties: string]: unknown;
 };
 
 /** @internal */
@@ -163,14 +153,6 @@ export const CompileOptions$outboundSchema: z.ZodType<
   targetDialects: z.array(TargetDialects$outboundSchema).optional(),
   targetSQLTableMappings: z.lazy(() => TargetSQLTableMappings$outboundSchema)
     .optional(),
-  additionalProperties: z.record(z.any()),
-}).transform((v) => {
-  return {
-    ...v.additionalProperties,
-    ...remap$(v, {
-      additionalProperties: null,
-    }),
-  };
 });
 
 /**
