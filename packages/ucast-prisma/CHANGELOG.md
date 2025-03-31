@@ -1,5 +1,13 @@
 # @styra/ucast-prisma
 
+## 0.1.3
+
+### Patch Changes
+
+- 1aed1ae: back out of 'Adapter' addition (see @styra/opa)
+
+  This functionality is now part of @styra/opa, which automatically provides adaptation for Prisma if requested.
+
 ## 0.1.2
 
 ### Patch Changes
