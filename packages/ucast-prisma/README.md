@@ -3,39 +3,80 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![NPM Version](https://img.shields.io/npm/v/%40styra%2Fucast-prisma?style=flat&color=%2324b6e0)](https://www.npmjs.com/package/@styra/ucast-prisma)
 
-This package contains helpers for using the Enterprise OPA Compile API with Prisma queries.
+This package contains helpers for using UCAST conditions with Prisma queries.
 
-> [!WARNING]
-> This is an experimental package and is subject to change.
 
 ## Usage
 
-This package can be used to add filtering and masking to Prisma queries from the
-[Enterprise OPA Compile API](https://docs.styra.com/enterprise-opa/reference/api-reference/partial-evaluation-api).
-It wraps [`@styra/opa`](https://www.npmjs.com/package/@styra/opa) and provides all the settings required to work with Prisma:
+This package can be used to add filtering to Prisma queries from UCAST conditions.
+The conditions returned by the [Enterprise OPA Compile API](https://docs.styra.com/enterprise-opa/reference/api-reference/partial-evaluation-api)
+look like this:
 
-```diff
-+ import { Adapter } from "@styra/ucast-prisma";
-
-+ const opa = new Adapter("http://127.0.0.1:8181");
-
-  router.get("/tickets", async (req, res) => {
-+   const { query, mask } = opa.filters("filters/include", "tickets", { action: "list" });
-+   if (!query) return res.status(FORBIDDEN).json({ reason: "not authorized" });
-
-    const tickets = (
-      await prisma.tickets.findMany({
-+       where: query,
-        include: {
-          customers: true,
-          users: true,
-        },
-      })
--     ).map((ticket) => toTicket(ticket));
-+     ).map((ticket) => toTicket(mask(ticket)));
-    return res.status(OK).json({ tickets });
-  });
+```json
+{
+  "conditions": {
+    "or": [
+      { "tickets.resolved": false },
+      { "users.name": "ceasar" }
+    ]
+  }
+}
 ```
+
+A call to `ucastToPrisma(conditions, "tickets")` turns it into this
+Prisma query:
+
+```json
+{
+  "OR": [
+    {
+      "resolved": {
+        "equals": false
+      }
+    },
+    {
+      "users": {
+        "name": {
+          "equals": "ceasar"
+        }
+      }
+    }
+  ]
+}
+```
+
+A similar translation for _masking rules_ is provided through the `mask` helper:
+E.g. the mask rules returned from the Compile API,
+
+```json
+{
+  "tickets.assignee": {
+    "replace": {
+      "value": "***"
+    }
+  },
+  "users.name": {
+    "replace": {
+      "value": "<username>"
+    }
+  }
+}
+```
+
+can be applied to a Prisma-returned object like
+
+```json
+{
+  "id": 200,
+  "assignee": "bob",
+  "users": {
+    "id": 10,
+    "name": "bobby"
+  }
+}
+```
+
+via `mask(maskRules, obj, "tickets")`, masking the appropriate fields.
 
 
 ## Community
