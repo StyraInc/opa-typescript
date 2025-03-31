@@ -1,7 +1,11 @@
 {
   "name": "@styra/opa",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "author": "Styra",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "OPA",
     "Open Policy Agent",
@@ -11,10 +15,6 @@
     "rbac",
     "role based access control"
   ],
-  "license": "Apache-2.0",
-  "publishConfig": {
-    "access": "public"
-  },
   "type": "module",
   "tshy": {
     "sourceDialects": [
@@ -47,13 +47,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
-    "@types/node": "^22.5.5",
+    "@types/node": "^22.13.14",
     "eslint": "^9.19.0",
     "globals": "^15.14.0",
-    "prettier": "3.2.5",
     "testcontainers": "^10.23.0",
     "tshy": "^2.0.0",
-    "tsx": "^4.16.2",
+    "tsx": "^4.19.3",
     "typedoc": "^0.26.5",
     "typedoc-plugin-extras": "^3.1.0",
     "typedoc-plugin-replace-text": "^4.0.0",
