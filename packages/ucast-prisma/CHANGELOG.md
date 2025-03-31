@@ -1,5 +1,11 @@
 # @styra/ucast-prisma
 
+## 0.1.4
+
+### Patch Changes
+
+- 2b81f22: update README.md
+
 ## 0.1.3
 
 ### Patch Changes
