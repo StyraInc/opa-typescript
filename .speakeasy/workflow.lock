@@ -2,20 +2,20 @@ speakeasyVersion: 1.526.1
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:93d8ff0efdaf0a516ef892c553943c2b5a6d143d878c8cbfce018bfa019d6ec9
+        sourceRevisionDigest: sha256:1ddd7b143c6c79753bbc215ea70f865c1c3fa8fe48a252453b55177fc370510b
         sourceBlobDigest: sha256:2aa328c885cea466280067d8540a06d364d3e137e4a54ad35797675909c852ef
         tags:
             - latest
-            - speakeasy-sdk-regen-1743422205
+            - speakeasy-sdk-regen-1743424877
             - 0.2.0
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:93d8ff0efdaf0a516ef892c553943c2b5a6d143d878c8cbfce018bfa019d6ec9
+        sourceRevisionDigest: sha256:1ddd7b143c6c79753bbc215ea70f865c1c3fa8fe48a252453b55177fc370510b
         sourceBlobDigest: sha256:2aa328c885cea466280067d8540a06d364d3e137e4a54ad35797675909c852ef
         codeSamplesNamespace: openapi-typescript-code-samples
-        codeSamplesRevisionDigest: sha256:9edb726484244ee410f1f1eb753bd1046489d1edcfa00e7b6b13490f968415ba
+        codeSamplesRevisionDigest: sha256:0e0c0008836b5251adf3a110eb192d9fa81bedca7e961b5162fa2df3dd231115
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
