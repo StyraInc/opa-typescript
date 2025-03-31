@@ -13,6 +13,7 @@ permissions:
         default: false
   schedule:
     - cron: 0 0 * * *
+
 jobs:
   init:
     name: Prereqs
