@@ -1,3 +1,4 @@
+import { MaskRule, mask, ucastToPrisma } from "@styra/ucast-prisma";
 import { SDKOptions } from "./lib/config.js";
 import { HTTPClient } from "./lib/http.js";
 import { RequestOptions as FetchOptions } from "./lib/sdks.js";
@@ -77,14 +78,26 @@ export interface RequestOptions<Res> extends FetchOptions {
  */
 export interface FiltersRequestOptions extends FiltersOptions {
   /**
-   * The compilation target for translating a policy into queries.
+   * The compilation target for translating a policy into queries. Optional if TargetOptions are provided.
    */
-  target: Target;
+  target?: Target;
   /*
    * Table and column name mappings for the translation.
    */
   tableMappings?: Record<string, Record<string, string>>;
 }
+
+/**
+ * Per-target options for translating a policy into Prisma query conditions and an adapted mask function.
+ */
+export interface PrismaOptions {
+  /**
+   * The primary table of the Prisma query, used for translation and masking.
+   */
+  primary: PrismaPrimary;
+}
+
+type PrismaPrimary = string;
 
 /** Per-request options for using the high-level SDK's
  * filter method {@link OPAClient.getMultipleFilters | getMultipleFilters }.
@@ -125,9 +138,28 @@ export type Filters = {
   masks?: { [k: string]: any } | undefined;
 };
 
+export type PrismaMask = {
+  mask<T extends Record<string, any>>(obj: T): T;
+};
+
 export type MultipleFilters = {
   targets?: Record<Exclude<Target, "multi">, Filters>;
 };
+
+/**
+ * Target represents the known targets of translation.
+ */
+export type Target = keyof typeof CompileTargets;
+
+/**
+ * SingleTarget is a convenience type, representing all known targets of translation, except "multi".
+ */
+export type SingleTarget = Exclude<Target, "multi">;
+
+/**
+ * TargetOptions encodes extra translation options for each target.
+ */
+export type TargetOptions = Record<"ucastPrisma", PrismaOptions>; // | Record<"ucastMinimal", MinimalOptions>, etc
 
 const CompileTargets = {
   multi:
@@ -149,9 +181,6 @@ const CompileTargets = {
   ucastPrisma:
     CompileQueryWithPartialEvaluationAcceptEnum.applicationVndStyraUcastPrismaPlusJson,
 } as const;
-
-export type Target = keyof typeof CompileTargets;
-export type SingleTarget = Exclude<Target, "multi">;
 
 const shortNameMap: Record<SingleTarget, TargetDialects> = {
   mysql: TargetDialects.SqlPlusMysql,
@@ -379,7 +408,7 @@ export class OPAClient {
   async getFilters<In extends Input | ToInput>(
     path: string,
     input?: In,
-    opts?: FiltersRequestOptions,
+    opts?: (FiltersRequestOptions & Partial<TargetOptions>) | PrismaPrimary,
   ): Promise<Filters> {
     let inp: Input | undefined = undefined;
     if (input !== undefined) {
@@ -389,7 +418,14 @@ export class OPAClient {
         inp = input;
       }
     }
-    const target = opts?.target;
+    // Special shortcut for prisma usage, "getFilters(path, input, primary)"
+    if (typeof opts === "string") {
+      opts = { ucastPrisma: { primary: opts } };
+    }
+    let target = opts?.target;
+    if (opts && "ucastPrisma" in opts) {
+      target = "ucastPrisma";
+    }
     if (!target) {
       throw new Error("target option is required");
     }
@@ -416,9 +452,13 @@ export class OPAClient {
           unknowns: opts?.unknowns,
         },
       },
-      { ...opts.fetchOptions, acceptHeaderOverride: CompileTargets[target] },
+      { ...opts?.fetchOptions, acceptHeaderOverride: CompileTargets[target] },
     );
-    return byTarget(res, opts?.target) as Filters;
+    return byTarget(
+      res,
+      target,
+      target == "ucastPrisma" ? opts?.[target] : undefined,
+    ) as Filters;
   }
 
   /** `getMultipleFilters` is used to translate the policy at the specified path into query filters of
@@ -499,7 +539,8 @@ function queryFromPath(p: string): string {
 async function byTarget(
   res: CompileQueryWithPartialEvaluationResponse,
   target: Target,
-): Promise<Filters | MultipleFilters> {
+  opts?: PrismaOptions,
+): Promise<(Filters & Partial<PrismaMask>) | MultipleFilters> {
   const result:
     | undefined
     | CompileResultSQLResult
@@ -507,10 +548,40 @@ async function byTarget(
     | CompileResultMultitargetResult = res[targetType(target)]?.result;
   if (!result) throw new Error(`No result for target ${target}`);
 
+  if (target === "ucastPrisma") {
+    if (!opts) throw new Error(`Missing options for target ${target}`);
+
+    const { query, masks } = result as CompileResultUCASTResult;
+    const { primary } = opts;
+    const mask = optionalPrismaMask(
+      primary,
+      masks as Record<string, MaskRule | Record<string, MaskRule>>,
+    );
+    return {
+      masks,
+      query: ucastToPrisma(query as Record<string, any>, primary),
+      mask,
+    };
+  }
+
   if (target === "multi") {
     return result.additionalProperties as MultipleFilters;
   }
   return result as Filters;
+}
+
+function optionalPrismaMask(
+  primary: string,
+  masks: Record<string, MaskRule | Record<string, MaskRule>> | undefined,
+) {
+  if (!masks) {
+    return function <T extends Record<string, any>>(obj: T): T {
+      return obj;
+    };
+  }
+  return function <T extends Record<string, any>>(obj: T): T {
+    return mask(masks, obj, primary);
+  };
 }
 
 function targetType(

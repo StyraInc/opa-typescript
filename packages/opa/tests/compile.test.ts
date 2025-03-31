@@ -2,7 +2,7 @@ import { describe, before, after, it } from "node:test";
 import assert from "node:assert";
 import { GenericContainer, StartedTestContainer, Wait } from "testcontainers";
 
-import { Filters, OPAClient } from "../src";
+import { Filters, OPAClient, PrismaMask } from "../src";
 import { OpaApiClientCore } from "../src/core.js";
 import { compileQueryWithPartialEvaluation } from "../src/funcs/compileQueryWithPartialEvaluation.js";
 import { CompileQueryWithPartialEvaluationAcceptEnum } from "../src/funcs/compileQueryWithPartialEvaluation.js";
@@ -116,18 +116,62 @@ include if {
               { fav_colours: ["red", "green"] },
               {
                 target: "ucastPrisma",
+                ucastPrisma: {
+                  primary: "fruits",
+                },
               },
             );
-            const { query, masks } = res as Filters;
+            const { query, masks, mask } = res as Filters & PrismaMask;
             assert.equal(masks, undefined);
+            assert.notEqual(mask, undefined);
             assert.deepEqual(query, {
-              field: "fruits.colour",
-              operator: "in",
-              type: "field",
-              value: ["red", "green"],
+              colour: {
+                in: ["red", "green"],
+              },
+            });
+
+            // assert that the mask function is a noop here
+            const fruit = { id: 1, colour: "red", name: "apple" };
+            assert.deepEqual(fruit, mask(fruit));
+          });
+
+          it("returns ucast-prisma (without target)", async () => {
+            const res = await new OPAClient(serverURL).getFilters(
+              "filters/include",
+              { fav_colours: ["red", "green"] },
+              {
+                ucastPrisma: {
+                  primary: "fruits",
+                },
+              },
+            );
+            const { query, masks, mask } = res as Filters & PrismaMask;
+            assert.equal(masks, undefined);
+            assert.notEqual(mask, undefined);
+            assert.deepEqual(query, {
+              colour: {
+                in: ["red", "green"],
+              },
+            });
+          });
+
+          it("returns ucast-prisma (only with primary)", async () => {
+            const res = await new OPAClient(serverURL).getFilters(
+              "filters/include",
+              { fav_colours: ["red", "green"] },
+              "fruits",
+            );
+            const { query, masks, mask } = res as Filters & PrismaMask;
+            assert.equal(masks, undefined);
+            assert.notEqual(mask, undefined);
+            assert.deepEqual(query, {
+              colour: {
+                in: ["red", "green"],
+              },
             });
           });
         });
+
         describe("multi-target", () => {
           it("returns postgresql (with input)", async () => {
             const res = await new OPAClient(serverURL).getMultipleFilters(
