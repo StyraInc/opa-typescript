@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
-  docChecksum: fc9b6d1d95999507f2e7369867a5d48b
+  docChecksum: 86b3d59890a099e8c99b4cd3a1ccd705
   docVersion: 0.2.0
-  speakeasyVersion: 1.526.1
-  generationVersion: 2.563.0
-  releaseVersion: 1.7.7
-  configChecksum: 027af4ed72ee58ec0913278925671c38
+  speakeasyVersion: 1.526.6
+  generationVersion: 2.563.1
+  releaseVersion: 1.7.8
+  configChecksum: 78ab96d0259aeaa25b764672a3c6dc25
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa

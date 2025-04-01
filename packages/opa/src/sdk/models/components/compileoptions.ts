@@ -38,6 +38,10 @@ export type CompileOptions = {
    */
   targetDialects?: Array<TargetDialects> | undefined;
   targetSQLTableMappings?: TargetSQLTableMappings | undefined;
+  /**
+   * The Rego rule to evaluate for generating column masks.
+   */
+  maskRule?: string | undefined;
 };
 
 /** @internal */
@@ -134,6 +138,7 @@ export const CompileOptions$inboundSchema: z.ZodType<
   targetDialects: z.array(TargetDialects$inboundSchema).optional(),
   targetSQLTableMappings: z.lazy(() => TargetSQLTableMappings$inboundSchema)
     .optional(),
+  maskRule: z.string().optional(),
 });
 
 /** @internal */
@@ -141,6 +146,7 @@ export type CompileOptions$Outbound = {
   disableInlining?: Array<string> | undefined;
   targetDialects?: Array<string> | undefined;
   targetSQLTableMappings?: TargetSQLTableMappings$Outbound | undefined;
+  maskRule?: string | undefined;
 };
 
 /** @internal */
@@ -153,6 +159,7 @@ export const CompileOptions$outboundSchema: z.ZodType<
   targetDialects: z.array(TargetDialects$outboundSchema).optional(),
   targetSQLTableMappings: z.lazy(() => TargetSQLTableMappings$outboundSchema)
     .optional(),
+  maskRule: z.string().optional(),
 });
 
 /**

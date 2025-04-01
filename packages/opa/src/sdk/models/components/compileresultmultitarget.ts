@@ -30,7 +30,7 @@ export type Ucast = {
   /**
    * Column masking functions, where the key is the column name, and the value describes which masking function to use.
    */
-  masks?: { [k: string]: MaskingRule } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule } } | undefined;
 };
 
 export type Sqlserver = {
@@ -41,7 +41,7 @@ export type Sqlserver = {
   /**
    * Column masking functions, where the key is the column name, and the value describes which masking function to use.
    */
-  masks?: { [k: string]: MaskingRule } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule } } | undefined;
 };
 
 export type Mysql = {
@@ -52,7 +52,7 @@ export type Mysql = {
   /**
    * Column masking functions, where the key is the column name, and the value describes which masking function to use.
    */
-  masks?: { [k: string]: MaskingRule } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule } } | undefined;
 };
 
 export type Postgresql = {
@@ -63,7 +63,7 @@ export type Postgresql = {
   /**
    * Column masking functions, where the key is the column name, and the value describes which masking function to use.
    */
-  masks?: { [k: string]: MaskingRule } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule } } | undefined;
 };
 
 export type Sqlite = {
@@ -74,7 +74,7 @@ export type Sqlite = {
   /**
    * Column masking functions, where the key is the column name, and the value describes which masking function to use.
    */
-  masks?: { [k: string]: MaskingRule } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule } } | undefined;
 };
 
 export type Targets = {
@@ -157,13 +157,13 @@ export function compileResultMultitargetQueryFromJSON(
 export const Ucast$inboundSchema: z.ZodType<Ucast, z.ZodTypeDef, unknown> = z
   .object({
     query: z.lazy(() => CompileResultMultitargetQuery$inboundSchema).optional(),
-    masks: z.record(MaskingRule$inboundSchema).optional(),
+    masks: z.record(z.record(MaskingRule$inboundSchema)).optional(),
   });
 
 /** @internal */
 export type Ucast$Outbound = {
   query?: CompileResultMultitargetQuery$Outbound | undefined;
-  masks?: { [k: string]: MaskingRule$Outbound } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule$Outbound } } | undefined;
 };
 
 /** @internal */
@@ -173,7 +173,7 @@ export const Ucast$outboundSchema: z.ZodType<
   Ucast
 > = z.object({
   query: z.lazy(() => CompileResultMultitargetQuery$outboundSchema).optional(),
-  masks: z.record(MaskingRule$outboundSchema).optional(),
+  masks: z.record(z.record(MaskingRule$outboundSchema)).optional(),
 });
 
 /**
@@ -210,13 +210,13 @@ export const Sqlserver$inboundSchema: z.ZodType<
   unknown
 > = z.object({
   query: z.string().optional(),
-  masks: z.record(MaskingRule$inboundSchema).optional(),
+  masks: z.record(z.record(MaskingRule$inboundSchema)).optional(),
 });
 
 /** @internal */
 export type Sqlserver$Outbound = {
   query?: string | undefined;
-  masks?: { [k: string]: MaskingRule$Outbound } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule$Outbound } } | undefined;
 };
 
 /** @internal */
@@ -226,7 +226,7 @@ export const Sqlserver$outboundSchema: z.ZodType<
   Sqlserver
 > = z.object({
   query: z.string().optional(),
-  masks: z.record(MaskingRule$outboundSchema).optional(),
+  masks: z.record(z.record(MaskingRule$outboundSchema)).optional(),
 });
 
 /**
@@ -260,13 +260,13 @@ export function sqlserverFromJSON(
 export const Mysql$inboundSchema: z.ZodType<Mysql, z.ZodTypeDef, unknown> = z
   .object({
     query: z.string().optional(),
-    masks: z.record(MaskingRule$inboundSchema).optional(),
+    masks: z.record(z.record(MaskingRule$inboundSchema)).optional(),
   });
 
 /** @internal */
 export type Mysql$Outbound = {
   query?: string | undefined;
-  masks?: { [k: string]: MaskingRule$Outbound } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule$Outbound } } | undefined;
 };
 
 /** @internal */
@@ -276,7 +276,7 @@ export const Mysql$outboundSchema: z.ZodType<
   Mysql
 > = z.object({
   query: z.string().optional(),
-  masks: z.record(MaskingRule$outboundSchema).optional(),
+  masks: z.record(z.record(MaskingRule$outboundSchema)).optional(),
 });
 
 /**
@@ -313,13 +313,13 @@ export const Postgresql$inboundSchema: z.ZodType<
   unknown
 > = z.object({
   query: z.string().optional(),
-  masks: z.record(MaskingRule$inboundSchema).optional(),
+  masks: z.record(z.record(MaskingRule$inboundSchema)).optional(),
 });
 
 /** @internal */
 export type Postgresql$Outbound = {
   query?: string | undefined;
-  masks?: { [k: string]: MaskingRule$Outbound } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule$Outbound } } | undefined;
 };
 
 /** @internal */
@@ -329,7 +329,7 @@ export const Postgresql$outboundSchema: z.ZodType<
   Postgresql
 > = z.object({
   query: z.string().optional(),
-  masks: z.record(MaskingRule$outboundSchema).optional(),
+  masks: z.record(z.record(MaskingRule$outboundSchema)).optional(),
 });
 
 /**
@@ -363,13 +363,13 @@ export function postgresqlFromJSON(
 export const Sqlite$inboundSchema: z.ZodType<Sqlite, z.ZodTypeDef, unknown> = z
   .object({
     query: z.string().optional(),
-    masks: z.record(MaskingRule$inboundSchema).optional(),
+    masks: z.record(z.record(MaskingRule$inboundSchema)).optional(),
   });
 
 /** @internal */
 export type Sqlite$Outbound = {
   query?: string | undefined;
-  masks?: { [k: string]: MaskingRule$Outbound } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule$Outbound } } | undefined;
 };
 
 /** @internal */
@@ -379,7 +379,7 @@ export const Sqlite$outboundSchema: z.ZodType<
   Sqlite
 > = z.object({
   query: z.string().optional(),
-  masks: z.record(MaskingRule$outboundSchema).optional(),
+  masks: z.record(z.record(MaskingRule$outboundSchema)).optional(),
 });
 
 /**
