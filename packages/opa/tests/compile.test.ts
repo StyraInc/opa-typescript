@@ -14,11 +14,14 @@ describe("compile-api", async () => {
 # scope: document
 # custom:
 #   unknowns: [input.fruits]
+#   mask_rule: data.filters.mask
 include if input.fruits.colour in input.fav_colours
 include if {
   not input.fav_colours
   endswith(input.fruits.name, "apple")
 }
+
+mask.fruits.owner.replace.value := "***"
 `,
     filters_sans_metadata: `package filters_no_md
 include if input.fruits.colour in input.fav_colours
@@ -26,6 +29,21 @@ include if {
   not input.fav_colours
   endswith(input.fruits.name, "apple")
 }
+`,
+    filters_extra_masks: `package filters_extra_masks
+# METADATA
+# scope: document
+# custom:
+#   unknowns: [input.fruits]
+#   mask_rule: data.filters_extra_masks.mask
+include if input.fruits.colour in input.fav_colours
+include if {
+  not input.fav_colours
+  endswith(input.fruits.name, "apple")
+}
+
+mask.fruits.price.replace.value := 0
+mask.owner.phone.replace.value := "000-000"
 `,
   };
 
@@ -45,7 +63,7 @@ include if {
 
       before(async () => {
         const opa = await prepareOPA(
-          "ghcr.io/styrainc/enterprise-opa:1.37.0",
+          "ghcr.io/styrainc/enterprise-opa:edge",
           policies,
         );
         container = opa.container;
@@ -63,7 +81,9 @@ include if {
               },
             );
             const { query, masks } = res as Filters;
-            assert.equal(masks, undefined);
+            assert.deepStrictEqual(masks, {
+              fruits: { owner: { replace: { value: "***" } } },
+            });
             assert.equal(query, "WHERE fruits.colour IN (E'red', E'green')");
           });
 
@@ -76,7 +96,9 @@ include if {
               },
             );
             const { query, masks } = res as Filters;
-            assert.equal(masks, undefined);
+            assert.deepStrictEqual(masks, {
+              fruits: { owner: { replace: { value: "***" } } },
+            });
             assert.equal(query, "WHERE fruits.name LIKE E'%apple'");
           });
 
@@ -106,7 +128,9 @@ include if {
               },
             );
             const { query, masks } = res as Filters;
-            assert.equal(masks, undefined);
+            assert.deepStrictEqual(masks, {
+              fruits: { owner: { replace: { value: "***" } } },
+            });
             assert.equal(query, "WHERE F.C IN (E'red', E'green')");
           });
 
@@ -122,8 +146,10 @@ include if {
               },
             );
             const { query, masks, mask } = res as Filters & PrismaMask;
-            assert.equal(masks, undefined);
             assert.notEqual(mask, undefined);
+            assert.deepStrictEqual(masks, {
+              fruits: { owner: { replace: { value: "***" } } },
+            });
             assert.deepEqual(query, {
               colour: {
                 in: ["red", "green"],
@@ -146,7 +172,9 @@ include if {
               },
             );
             const { query, masks, mask } = res as Filters & PrismaMask;
-            assert.equal(masks, undefined);
+            assert.deepStrictEqual(masks, {
+              fruits: { owner: { replace: { value: "***" } } },
+            });
             assert.notEqual(mask, undefined);
             assert.deepEqual(query, {
               colour: {
@@ -162,13 +190,47 @@ include if {
               "fruits",
             );
             const { query, masks, mask } = res as Filters & PrismaMask;
-            assert.equal(masks, undefined);
+            assert.deepStrictEqual(masks, {
+              fruits: { owner: { replace: { value: "***" } } },
+            });
             assert.notEqual(mask, undefined);
             assert.deepEqual(query, {
               colour: {
                 in: ["red", "green"],
               },
             });
+          });
+
+          it("returns ucast-prisma and supports direct and related masks", async () => {
+            const res = await new OPAClient(serverURL).getFilters(
+              "filters_extra_masks/include",
+              { fav_colours: ["red", "green"] },
+              "fruits",
+            );
+            const { masks, mask } = res as Filters & PrismaMask;
+            assert.deepStrictEqual(masks, {
+              fruits: { price: { replace: { value: 0 } } },
+              owner: { phone: { replace: { value: "000-000" } } },
+            });
+
+            const fruit = {
+              id: 1,
+              name: "Apple",
+              colour: "red",
+              price: 100,
+              owner: {
+                name: "Jane",
+                phone: "123",
+              },
+            };
+            assert.deepEqual(
+              {
+                ...fruit,
+                price: 0,
+                owner: { ...fruit.owner, phone: "000-000" },
+              },
+              mask(fruit),
+            );
           });
         });
 
@@ -184,6 +246,9 @@ include if {
             assert.deepStrictEqual(res, {
               postgresql: {
                 query: "WHERE fruits.colour IN (E'red', E'green')",
+                masks: {
+                  fruits: { owner: { replace: { value: "***" } } },
+                },
               },
               ucast: {
                 query: {
@@ -191,6 +256,9 @@ include if {
                   operator: "in",
                   type: "field",
                   value: ["red", "green"],
+                },
+                masks: {
+                  fruits: { owner: { replace: { value: "***" } } },
                 },
               },
             });
@@ -215,9 +283,15 @@ include if {
             assert.deepStrictEqual(res, {
               postgresql: {
                 query: "WHERE fruits_pg.colour_pg IN (E'red', E'green')",
+                masks: {
+                  fruits: { owner: { replace: { value: "***" } } },
+                },
               },
               mysql: {
                 query: "WHERE fruits_mysql.colour_mysql IN ('red', 'green')",
+                masks: {
+                  fruits: { owner: { replace: { value: "***" } } },
+                },
               },
             });
           });
@@ -249,6 +323,9 @@ include if {
             const result = res?.value?.compileResultSQL?.result;
             assert.deepEqual(result, {
               query: "WHERE fruits.colour IN (E'red', E'green')",
+              masks: {
+                fruits: { owner: { replace: { value: "***" } } },
+              },
             });
           });
         });
