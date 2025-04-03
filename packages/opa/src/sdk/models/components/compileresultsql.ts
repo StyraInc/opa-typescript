@@ -28,7 +28,7 @@ export type CompileResultSQLResult = {
   /**
    * Column masking functions, where the key is the column name, and the value describes which masking function to use.
    */
-  masks?: { [k: string]: MaskingRule } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule } } | undefined;
   additionalProperties?: { [k: string]: any };
 };
 
@@ -50,7 +50,7 @@ export const CompileResultSQLResult$inboundSchema: z.ZodType<
 > = collectExtraKeys$(
   z.object({
     query: z.string().optional(),
-    masks: z.record(MaskingRule$inboundSchema).optional(),
+    masks: z.record(z.record(MaskingRule$inboundSchema)).optional(),
   }).catchall(z.any()),
   "additionalProperties",
   true,
@@ -59,7 +59,7 @@ export const CompileResultSQLResult$inboundSchema: z.ZodType<
 /** @internal */
 export type CompileResultSQLResult$Outbound = {
   query?: string | undefined;
-  masks?: { [k: string]: MaskingRule$Outbound } | undefined;
+  masks?: { [k: string]: { [k: string]: MaskingRule$Outbound } } | undefined;
   [additionalProperties: string]: unknown;
 };
 
@@ -70,7 +70,7 @@ export const CompileResultSQLResult$outboundSchema: z.ZodType<
   CompileResultSQLResult
 > = z.object({
   query: z.string().optional(),
-  masks: z.record(MaskingRule$outboundSchema).optional(),
+  masks: z.record(z.record(MaskingRule$outboundSchema)).optional(),
   additionalProperties: z.record(z.any()),
 }).transform((v) => {
   return {
