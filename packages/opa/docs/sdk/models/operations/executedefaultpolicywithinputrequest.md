@@ -6,7 +6,12 @@
 import { ExecuteDefaultPolicyWithInputRequest } from "@styra/opa/sdk/models/operations";
 
 let value: ExecuteDefaultPolicyWithInputRequest = {
-  input: 7151.9,
+  input: {
+    "user": "alice",
+    "action": "read",
+    "object": "id123",
+    "type": "dog",
+  },
 };
 ```
 

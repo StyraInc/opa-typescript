@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
-  docChecksum: c15c25bde92e16e474c88c2f43dc4769
+  docChecksum: 570e993691cf873277c421a8a92bc4b4
   docVersion: 0.2.0
-  speakeasyVersion: 1.528.1
-  generationVersion: 2.565.1
-  releaseVersion: 1.7.8
-  configChecksum: 78ab96d0259aeaa25b764672a3c6dc25
+  speakeasyVersion: 1.529.1
+  generationVersion: 2.566.5
+  releaseVersion: 1.7.9
+  configChecksum: e2e80846a3b9835b00364f05b9922c3f
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
@@ -16,7 +16,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.1
     constsAndDefaults: 0.1.11
-    core: 3.21.4
+    core: 3.21.5
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
@@ -214,7 +214,7 @@ examples:
         application/json: {"input": true}
       responses:
         "200":
-          application/json: {"result": true}
+          application/json: {"result": false}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
@@ -232,15 +232,20 @@ examples:
         "200":
           application/json: {"batch_decision_id": "1bef6b7d-cd13-4890-bfe1-fd2e8de32189", "responses": {"key": {"result": "<value>"}, "key1": {"result": 8210.24}}}
         "207":
-          application/json: {"responses": {"key": {"http_status_code": "200", "result": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}, "key1": {"http_status_code": "200", "result": 6919.52, "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}}}
+          application/json: {"responses": {"key": {"http_status_code": "200", "code": "<value>", "message": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}, "key1": {"http_status_code": "200", "code": "<value>", "message": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}}}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
           application/json: {"responses": {"key": {"code": "<value>", "message": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}}}
   compileQueryWithPartialEvaluation:
     speakeasy-default-compile-query-with-partial-evaluation:
+      parameters:
+        path:
+          path: "app/rbac"
+        query: {}
+        header: {}
       requestBody:
-        application/json: {"query": "<value>", "input": []}
+        application/json: {"input": []}
       responses:
         "200":
           application/json: {}
@@ -251,8 +256,8 @@ examples:
           application/vnd.styra.ucast.prisma+json: {}
           application/vnd.styra.sql.mysql+json: {}
           application/vnd.styra.sql.postgresql+json: {}
-          application/vnd.styra.sql.sqlserver+json: {}
           application/vnd.styra.sql.sqlite+json: {}
+          application/vnd.styra.sql.sqlserver+json: {}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
@@ -268,5 +273,5 @@ examples:
           application/json: {}
         "500":
           application/json: {"code": "<value>"}
-examplesVersion: 1.0.0
+examplesVersion: 1.0.1
 generatedTests: {}

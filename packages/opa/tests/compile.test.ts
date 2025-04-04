@@ -307,8 +307,8 @@ mask.owner.phone.replace.value := "000-000"
             const res = await compileQueryWithPartialEvaluation(
               client,
               {
+                path: "filters/include",
                 requestBody: {
-                  query: "data.filters.include",
                   input: { fav_colours: ["red", "green"] },
                 },
               },

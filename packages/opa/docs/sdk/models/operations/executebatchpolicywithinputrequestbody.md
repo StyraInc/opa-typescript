@@ -9,7 +9,7 @@ import { ExecuteBatchPolicyWithInputRequestBody } from "@styra/opa/sdk/models/op
 
 let value: ExecuteBatchPolicyWithInputRequestBody = {
   inputs: {
-    "key": "<value>",
+    "key": false,
   },
 };
 ```

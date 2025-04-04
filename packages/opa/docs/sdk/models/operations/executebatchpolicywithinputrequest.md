@@ -9,9 +9,7 @@ let value: ExecuteBatchPolicyWithInputRequest = {
   path: "app/rbac",
   requestBody: {
     inputs: {
-      "key": [
-        "<value>",
-      ],
+      "key": 7997.04,
     },
   },
 };

@@ -2,7 +2,7 @@
 
 {
   "name": "@styra/opa",
-  "version": "1.7.8",
+  "version": "1.7.9",
   "exports": {
     ".": "./src/index.ts",    
     "./sdk/models/errors": "./src/sdk/models/errors/index.ts",    
