@@ -1,28 +1,28 @@
-speakeasyVersion: 1.528.1
+speakeasyVersion: 1.529.1
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:06256b9e2efb7fdb76c33f3e1b31a05dc52af6bd48de870f12808ae21f1593f4
-        sourceBlobDigest: sha256:a9712fffb3cc95dfd5f48856b5b2c1daf571383d94c342d634ce1a35eb2579ac
+        sourceRevisionDigest: sha256:35e2a844943c2cda5321f86714fe5e0a0c2f463a5c3147414285df65292176fc
+        sourceBlobDigest: sha256:1bdc6c2aee625cd0cda67bd3556c1599ae6ffe6b031b33933c8abf1e535c713f
         tags:
             - latest
-            - speakeasy-sdk-regen-1743553564
+            - speakeasy-sdk-regen-1743752418
             - 0.2.0
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:06256b9e2efb7fdb76c33f3e1b31a05dc52af6bd48de870f12808ae21f1593f4
-        sourceBlobDigest: sha256:a9712fffb3cc95dfd5f48856b5b2c1daf571383d94c342d634ce1a35eb2579ac
+        sourceRevisionDigest: sha256:35e2a844943c2cda5321f86714fe5e0a0c2f463a5c3147414285df65292176fc
+        sourceBlobDigest: sha256:1bdc6c2aee625cd0cda67bd3556c1599ae6ffe6b031b33933c8abf1e535c713f
         codeSamplesNamespace: openapi-typescript-code-samples
-        codeSamplesRevisionDigest: sha256:012345b36774c4a3e905d1ba626bece5bcbc1e38273444b805d942b2cc77d92f
+        codeSamplesRevisionDigest: sha256:54f8d1b57824f457d9a1977cecde22d6b6f3c19cc53a594f9d103986d33534b9
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
     sources:
         openapi:
             inputs:
-                - location: https://raw.githubusercontent.com/StyraInc/enterprise-opa/main/openapi/openapi.yaml
+                - location: https://raw.githubusercontent.com/StyraInc/enterprise-opa/chendrix/update-compile-api-path/openapi/openapi.yaml
             overlays:
                 - location: ./.speakeasy/overlay.yaml
             registry:

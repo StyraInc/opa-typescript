@@ -337,8 +337,8 @@ const opaApiClient = new OpaApiClient();
 
 async function run() {
   const result = await opaApiClient.compileQueryWithPartialEvaluation({
+    path: "app/rbac",
     requestBody: {
-      query: "<value>",
       input: [
 
       ],
@@ -366,8 +366,8 @@ const opaApiClient = new OpaApiClientCore();
 
 async function run() {
   const res = await compileQueryWithPartialEvaluation(opaApiClient, {
+    path: "app/rbac",
     requestBody: {
-      query: "<value>",
       input: [
   
       ],
