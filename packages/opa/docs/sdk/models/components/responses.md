@@ -8,7 +8,11 @@
 ```typescript
 const value: components.SuccessfulPolicyResponseWithStatusCode = {
   httpStatusCode: "200",
-  result: false,
+  result: {
+    "allow": true,
+    "user_is_admin": true,
+    "user_is_granted": [],
+  },
 };
 ```
 
