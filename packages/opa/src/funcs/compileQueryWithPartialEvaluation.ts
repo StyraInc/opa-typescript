@@ -111,7 +111,14 @@ async function $do(
   const payload = parsed.value;
   const body = encodeJSON("body", payload.RequestBody, { explode: true });
 
-  const path = pathToFunc("/v1/compile")();
+  const pathParams = {
+    path: encodeSimple("path", payload.path, {
+      explode: false,
+      charEncoding: "percent",
+    }),
+  };
+
+  const path = pathToFunc("/v1/compile/{path}")(pathParams);
 
   const query = encodeFormQuery({
     "explain": payload.explain,
