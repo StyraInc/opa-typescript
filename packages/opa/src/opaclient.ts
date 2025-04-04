@@ -241,7 +241,7 @@ export class OPAClient {
   async evaluate<In extends Input | ToInput, Res>(
     path: string,
     input?: In,
-    opts?: RequestOptions<Res>,
+    opts?: RequestOptions<Res>
   ): Promise<Res> {
     let result: ExecutePolicyWithInputResponse | ExecutePolicyResponse;
 
@@ -259,7 +259,7 @@ export class OPAClient {
           path,
           requestBody: { input: inp },
         },
-        opts,
+        opts
       );
     }
     if (!result.successfulPolicyResponse) throw `no result in API response`;
@@ -277,7 +277,7 @@ export class OPAClient {
    */
   async evaluateDefault<In extends Input | ToInput, Res>(
     input?: In,
-    opts?: RequestOptions<Res>,
+    opts?: RequestOptions<Res>
   ): Promise<Res> {
     let inp = input ?? {};
     if (implementsToInput(inp)) {
@@ -287,7 +287,7 @@ export class OPAClient {
       inp,
       undefined, // pretty
       undefined, // gzipEncoding
-      opts,
+      opts
     );
     if (!resp.result) throw `no result in API response`;
 
@@ -306,13 +306,13 @@ export class OPAClient {
   async evaluateBatch<In extends Input | ToInput, Res>(
     path: string,
     inputs: { [k: string]: In },
-    opts?: BatchRequestOptions<Res>,
+    opts?: BatchRequestOptions<Res>
   ): Promise<{ [k: string]: Res | ServerErrorWithStatusCode }> {
     const inps = Object.fromEntries(
       Object.entries(inputs).map(([k, inp]) => [
         k,
         implementsToInput(inp) ? inp.toInput() : inp,
-      ]),
+      ])
     );
     let res: BatchMixedResults | BatchSuccessfulPolicyEvaluation | undefined;
 
@@ -324,7 +324,7 @@ export class OPAClient {
       try {
         const resp = await this.opa.executeBatchPolicyWithInput(
           { path, requestBody: { inputs: inps } },
-          opts,
+          opts
         );
 
         res = resp.batchMixedResults || resp.batchSuccessfulPolicyEvaluation;
@@ -356,7 +356,7 @@ export class OPAClient {
   async fallbackBatch<Res>(
     path: string,
     inputs: { [k: string]: Input },
-    opts?: BatchRequestOptions<Res>,
+    opts?: BatchRequestOptions<Res>
   ): Promise<{
     [k: string]: ServerErrorWithStatusCode | SuccessfulPolicyResponse;
   }> {
@@ -365,7 +365,7 @@ export class OPAClient {
     const ps = Object.values(inputs).map((input) =>
       this.opa
         .executePolicyWithInput({ path, requestBody: { input } })
-        .then(({ successfulPolicyResponse: res }) => res),
+        .then(({ successfulPolicyResponse: res }) => res)
     );
     if (opts?.rejectMixed) {
       items = await Promise.all(ps).then((results) =>
@@ -375,7 +375,7 @@ export class OPAClient {
             keys[i] as string, // can't be undefined
             result,
           ];
-        }),
+        })
       );
     } else {
       const settled = await Promise.allSettled(ps).then((results) => {
@@ -408,7 +408,7 @@ export class OPAClient {
   async getFilters<In extends Input | ToInput>(
     path: string,
     input?: In,
-    opts?: (FiltersRequestOptions & Partial<TargetOptions>) | PrismaPrimary,
+    opts?: (FiltersRequestOptions & Partial<TargetOptions>) | PrismaPrimary
   ): Promise<Filters> {
     let inp: Input | undefined = undefined;
     if (input !== undefined) {
@@ -442,8 +442,8 @@ export class OPAClient {
     }
     const res = await this.opa.compileQueryWithPartialEvaluation(
       {
+        path,
         requestBody: {
-          query: queryFromPath(path),
           input: inp,
           options: {
             targetSQLTableMappings,
@@ -452,12 +452,12 @@ export class OPAClient {
           unknowns: opts?.unknowns,
         },
       },
-      { ...opts?.fetchOptions, acceptHeaderOverride: CompileTargets[target] },
+      { ...opts?.fetchOptions, acceptHeaderOverride: CompileTargets[target] }
     );
     return byTarget(
       res,
       target,
-      target == "ucastPrisma" ? opts?.[target] : undefined,
+      target == "ucastPrisma" ? opts?.[target] : undefined
     ) as Filters;
   }
 
@@ -472,7 +472,7 @@ export class OPAClient {
   async getMultipleFilters<In extends Input | ToInput>(
     path: string,
     input?: In,
-    opts?: MultipleFiltersRequestOptions,
+    opts?: MultipleFiltersRequestOptions
   ): Promise<MultipleFilters> {
     let inp: Input | undefined = undefined;
     if (input !== undefined) {
@@ -491,8 +491,8 @@ export class OPAClient {
 
     const res = await this.opa.compileQueryWithPartialEvaluation(
       {
+        path,
         requestBody: {
-          query: queryFromPath(path),
           input: inp,
           options: {
             targetDialects,
@@ -505,7 +505,7 @@ export class OPAClient {
       {
         ...opts.fetchOptions,
         acceptHeaderOverride: CompileTargets["multi"],
-      },
+      }
     );
     return byTarget(res, "multi") as MultipleFilters;
   }
@@ -513,7 +513,7 @@ export class OPAClient {
 
 function processResult<Res>(
   res: SuccessfulPolicyResponse | ServerErrorWithStatusCode,
-  opts?: BatchRequestOptions<Res>,
+  opts?: BatchRequestOptions<Res>
 ): Promise<Res | ServerErrorWithStatusCode> {
   if (res && "code" in res) {
     if (opts?.rejectMixed)
@@ -530,16 +530,10 @@ function id<T>(x: any): T {
   return x as T;
 }
 
-function queryFromPath(p: string): string {
-  const t = p.split("/");
-  t.unshift("data");
-  return t.join(".");
-}
-
 async function byTarget(
   res: CompileQueryWithPartialEvaluationResponse,
   target: Target,
-  opts?: PrismaOptions,
+  opts?: PrismaOptions
 ): Promise<(Filters & Partial<PrismaMask>) | MultipleFilters> {
   const result:
     | undefined
@@ -555,7 +549,7 @@ async function byTarget(
     const { primary } = opts;
     const mask = optionalPrismaMask(
       primary,
-      masks as Record<string, MaskRule | Record<string, MaskRule>>,
+      masks as Record<string, MaskRule | Record<string, MaskRule>>
     );
     return {
       masks,
@@ -572,7 +566,7 @@ async function byTarget(
 
 function optionalPrismaMask(
   primary: string,
-  masks: Record<string, MaskRule | Record<string, MaskRule>> | undefined,
+  masks: Record<string, MaskRule | Record<string, MaskRule>> | undefined
 ) {
   if (!masks) {
     return function <T extends Record<string, any>>(obj: T): T {
@@ -585,7 +579,7 @@ function optionalPrismaMask(
 }
 
 function targetType(
-  t: Target,
+  t: Target
 ): Exclude<
   keyof CompileQueryWithPartialEvaluationResponse,
   "httpMeta" | "compileResultJSON"
