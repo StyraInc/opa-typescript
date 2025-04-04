@@ -7,7 +7,7 @@ import { SuccessfulPolicyResponseWithStatusCode } from "@styra/opa/sdk/models/co
 
 let value: SuccessfulPolicyResponseWithStatusCode = {
   httpStatusCode: "200",
-  result: 7805.29,
+  result: "<value>",
 };
 ```
 

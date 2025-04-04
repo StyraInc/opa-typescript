@@ -14,10 +14,6 @@ import { SDKValidationError } from "../errors/sdkvalidationerror.js";
  */
 export type CompileQueryWithPartialEvaluationRequestBody = {
   /**
-   * The query to partially evaluate and compile.
-   */
-  query: string;
-  /**
    * Additional options to use during partial evaluation. Only the disableInlining option is currently supported in OPA. Enterprise OPA may support additional options.
    */
   options?: components.CompileOptions | undefined;
@@ -32,6 +28,10 @@ export type CompileQueryWithPartialEvaluationRequestBody = {
 };
 
 export type CompileQueryWithPartialEvaluationRequest = {
+  /**
+   * The path separator is used to access values inside object and array documents. If the path indexes into an array, the server will attempt to convert the array index to an integer. If the path element cannot be converted to an integer, the server will respond with 404.
+   */
+  path?: string | undefined;
   /**
    * Indicates the server should respond with a gzip encoded body. The server will send the compressed response only if its length is above `server.encoding.gzip.min_length` value. See the configuration section
    */
@@ -89,7 +89,6 @@ export const CompileQueryWithPartialEvaluationRequestBody$inboundSchema:
     z.ZodTypeDef,
     unknown
   > = z.object({
-    query: z.string(),
     options: components.CompileOptions$inboundSchema.optional(),
     unknowns: z.array(z.string()).optional(),
     input: components.Input$inboundSchema.optional(),
@@ -97,7 +96,6 @@ export const CompileQueryWithPartialEvaluationRequestBody$inboundSchema:
 
 /** @internal */
 export type CompileQueryWithPartialEvaluationRequestBody$Outbound = {
-  query: string;
   options?: components.CompileOptions$Outbound | undefined;
   unknowns?: Array<string> | undefined;
   input?: components.Input$Outbound | undefined;
@@ -110,7 +108,6 @@ export const CompileQueryWithPartialEvaluationRequestBody$outboundSchema:
     z.ZodTypeDef,
     CompileQueryWithPartialEvaluationRequestBody
   > = z.object({
-    query: z.string(),
     options: components.CompileOptions$outboundSchema.optional(),
     unknowns: z.array(z.string()).optional(),
     input: components.Input$outboundSchema.optional(),
@@ -164,6 +161,7 @@ export const CompileQueryWithPartialEvaluationRequest$inboundSchema: z.ZodType<
   z.ZodTypeDef,
   unknown
 > = z.object({
+  path: z.string().default(""),
   "Accept-Encoding": components.GzipAcceptEncoding$inboundSchema.optional(),
   "Content-Encoding": components.GzipContentEncoding$inboundSchema.optional(),
   pretty: z.boolean().optional(),
@@ -183,6 +181,7 @@ export const CompileQueryWithPartialEvaluationRequest$inboundSchema: z.ZodType<
 
 /** @internal */
 export type CompileQueryWithPartialEvaluationRequest$Outbound = {
+  path: string;
   "Accept-Encoding"?: string | undefined;
   "Content-Encoding"?: string | undefined;
   pretty?: boolean | undefined;
@@ -198,6 +197,7 @@ export const CompileQueryWithPartialEvaluationRequest$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   CompileQueryWithPartialEvaluationRequest
 > = z.object({
+  path: z.string().default(""),
   acceptEncoding: components.GzipAcceptEncoding$outboundSchema.optional(),
   contentEncoding: components.GzipContentEncoding$outboundSchema.optional(),
   pretty: z.boolean().optional(),

@@ -13,11 +13,9 @@ let value: ExecutePolicyWithInputResponse = {
     request: new Request("https://example.com"),
   },
   successfulPolicyResponse: {
-    result: {
-      "allow": true,
-      "user_is_admin": true,
-      "user_is_granted": [],
-    },
+    result: [
+      "<value>",
+    ],
   },
   headers: {
     "key": [

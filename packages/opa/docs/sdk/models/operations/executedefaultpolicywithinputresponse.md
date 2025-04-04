@@ -12,9 +12,7 @@ let value: ExecuteDefaultPolicyWithInputResponse = {
     }),
     request: new Request("https://example.com"),
   },
-  result: [
-    "<value>",
-  ],
+  result: "<value>",
   headers: {
     "key": [
       "<value>",

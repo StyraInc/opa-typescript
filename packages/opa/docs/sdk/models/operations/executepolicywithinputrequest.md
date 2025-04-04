@@ -8,7 +8,7 @@ import { ExecutePolicyWithInputRequest } from "@styra/opa/sdk/models/operations"
 let value: ExecutePolicyWithInputRequest = {
   path: "app/rbac",
   requestBody: {
-    input: 8917.73,
+    input: false,
   },
 };
 ```
