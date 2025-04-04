@@ -502,3 +502,11 @@ Based on:
 - Speakeasy CLI 1.528.1 (2.565.1) https://github.com/speakeasy-api/speakeasy
 ### Generated
 - [typescript v1.7.8] packages/opa
+
+## 2025-04-04 09:11:39
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.529.1 (2.566.5) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v1.7.9] packages/opa

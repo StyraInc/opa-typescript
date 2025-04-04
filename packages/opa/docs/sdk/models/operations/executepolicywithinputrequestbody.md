@@ -8,9 +8,7 @@ The input document
 import { ExecutePolicyWithInputRequestBody } from "@styra/opa/sdk/models/operations";
 
 let value: ExecutePolicyWithInputRequestBody = {
-  input: [
-    "<value>",
-  ],
+  input: false,
 };
 ```
 

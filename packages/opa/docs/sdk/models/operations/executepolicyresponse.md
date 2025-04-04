@@ -13,7 +13,7 @@ let value: ExecutePolicyResponse = {
     request: new Request("https://example.com"),
   },
   successfulPolicyResponse: {
-    result: 4236.55,
+    result: "<value>",
   },
   headers: {
     "key": [
