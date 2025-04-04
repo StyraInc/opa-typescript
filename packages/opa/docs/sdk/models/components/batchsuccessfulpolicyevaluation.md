@@ -13,7 +13,9 @@ let value: BatchSuccessfulPolicyEvaluation = {
   batchDecisionId: "1bef6b7d-cd13-4890-bfe1-fd2e8de32189",
   responses: {
     "key": {
-      result: false,
+      result: [
+        "<value>",
+      ],
     },
   },
 };
