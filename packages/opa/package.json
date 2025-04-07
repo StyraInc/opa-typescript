@@ -46,7 +46,7 @@
     "zod": ">= 3"
   },
   "devDependencies": {
-    "@eslint/js": "^9.19.0",
+    "@eslint/js": "^9.24.0",
     "@types/node": "^22.13.14",
     "eslint": "^9.19.0",
     "globals": "^15.14.0",
