@@ -1,5 +1,11 @@
 # @styra/ucast-prisma
 
+## 0.1.5
+
+### Patch Changes
+
+- 4a1957f: use structuredClone() (instead of JSON roundtrip) in mask function
+
 ## 0.1.4
 
 ### Patch Changes
