@@ -25,7 +25,7 @@ export function mask<T extends Record<string, any>>(
   }
 
   // Create a deep clone of the target object to avoid mutating the original
-  const result = JSON.parse(JSON.stringify(targetObject)) as Record<
+  const result = structuredClone(targetObject) as Record<
     string,
     any
   >;
