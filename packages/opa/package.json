@@ -1,8 +1,7 @@
 {
   "name": "@styra/opa",
-  "version": "1.7.9",
+  "version": "1.7.10",
   "author": "Styra",
-  "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
   },
@@ -15,6 +14,7 @@
     "rbac",
     "role based access control"
   ],
+  "license": "Apache-2.0",
   "type": "module",
   "tshy": {
     "sourceDialects": [
@@ -56,7 +56,7 @@
     "typedoc": "^0.26.5",
     "typedoc-plugin-extras": "^3.1.0",
     "typedoc-plugin-replace-text": "^4.0.0",
-    "typescript": "^5.8.3",
+    "typescript": "^5.4.5",
     "typescript-eslint": "^8.22.0",
     "zod": "^3.23.4"
   },

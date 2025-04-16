@@ -12,20 +12,21 @@ import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 /**
  * The query, input, and other settings for partial evaluation.
  */
-export type CompileQueryWithPartialEvaluationRequestBody = {
-  /**
-   * Additional options to use during partial evaluation. Only the disableInlining option is currently supported in OPA. Enterprise OPA may support additional options.
-   */
-  options?: components.CompileOptions | undefined;
-  /**
-   * The terms to treat as unknown during partial evaluation.
-   */
-  unknowns?: Array<string> | undefined;
-  /**
-   * Arbitrary JSON used within your policies by accessing `input`
-   */
-  input?: components.Input | undefined;
-};
+export type CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody =
+  {
+    /**
+     * Additional options to use during partial evaluation. Only the disableInlining option is currently supported in OPA. Enterprise OPA may support additional options.
+     */
+    options?: components.CompileOptions | undefined;
+    /**
+     * The terms to treat as unknown during partial evaluation.
+     */
+    unknowns?: Array<string> | undefined;
+    /**
+     * Arbitrary JSON used within your policies by accessing `input`
+     */
+    input?: components.Input | undefined;
+  };
 
 export type CompileQueryWithPartialEvaluationRequest = {
   /**
@@ -59,7 +60,8 @@ export type CompileQueryWithPartialEvaluationRequest = {
   /**
    * The query, input, and other settings for partial evaluation.
    */
-  requestBody: CompileQueryWithPartialEvaluationRequestBody;
+  requestBody:
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody;
 };
 
 export type CompileQueryWithPartialEvaluationResponse = {
@@ -83,9 +85,9 @@ export type CompileQueryWithPartialEvaluationResponse = {
 };
 
 /** @internal */
-export const CompileQueryWithPartialEvaluationRequestBody$inboundSchema:
+export const CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$inboundSchema:
   z.ZodType<
-    CompileQueryWithPartialEvaluationRequestBody,
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody,
     z.ZodTypeDef,
     unknown
   > = z.object({
@@ -95,18 +97,19 @@ export const CompileQueryWithPartialEvaluationRequestBody$inboundSchema:
   });
 
 /** @internal */
-export type CompileQueryWithPartialEvaluationRequestBody$Outbound = {
-  options?: components.CompileOptions$Outbound | undefined;
-  unknowns?: Array<string> | undefined;
-  input?: components.Input$Outbound | undefined;
-};
+export type CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$Outbound =
+  {
+    options?: components.CompileOptions$Outbound | undefined;
+    unknowns?: Array<string> | undefined;
+    input?: components.Input$Outbound | undefined;
+  };
 
 /** @internal */
-export const CompileQueryWithPartialEvaluationRequestBody$outboundSchema:
+export const CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$outboundSchema:
   z.ZodType<
-    CompileQueryWithPartialEvaluationRequestBody$Outbound,
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$Outbound,
     z.ZodTypeDef,
-    CompileQueryWithPartialEvaluationRequestBody
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody
   > = z.object({
     options: components.CompileOptions$outboundSchema.optional(),
     unknowns: z.array(z.string()).optional(),
@@ -117,41 +120,42 @@ export const CompileQueryWithPartialEvaluationRequestBody$outboundSchema:
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
-export namespace CompileQueryWithPartialEvaluationRequestBody$ {
-  /** @deprecated use `CompileQueryWithPartialEvaluationRequestBody$inboundSchema` instead. */
+export namespace CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$ {
+  /** @deprecated use `CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$inboundSchema` instead. */
   export const inboundSchema =
-    CompileQueryWithPartialEvaluationRequestBody$inboundSchema;
-  /** @deprecated use `CompileQueryWithPartialEvaluationRequestBody$outboundSchema` instead. */
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$inboundSchema;
+  /** @deprecated use `CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$outboundSchema` instead. */
   export const outboundSchema =
-    CompileQueryWithPartialEvaluationRequestBody$outboundSchema;
-  /** @deprecated use `CompileQueryWithPartialEvaluationRequestBody$Outbound` instead. */
-  export type Outbound = CompileQueryWithPartialEvaluationRequestBody$Outbound;
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$outboundSchema;
+  /** @deprecated use `CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$Outbound` instead. */
+  export type Outbound =
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$Outbound;
 }
 
-export function compileQueryWithPartialEvaluationRequestBodyToJSON(
-  compileQueryWithPartialEvaluationRequestBody:
-    CompileQueryWithPartialEvaluationRequestBody,
+export function compileQueryWithPartialEvaluationRequestApplicationJSONRequestBodyToJSON(
+  compileQueryWithPartialEvaluationRequestApplicationJSONRequestBody:
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody,
 ): string {
   return JSON.stringify(
-    CompileQueryWithPartialEvaluationRequestBody$outboundSchema.parse(
-      compileQueryWithPartialEvaluationRequestBody,
-    ),
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$outboundSchema
+      .parse(
+        compileQueryWithPartialEvaluationRequestApplicationJSONRequestBody,
+      ),
   );
 }
 
-export function compileQueryWithPartialEvaluationRequestBodyFromJSON(
+export function compileQueryWithPartialEvaluationRequestApplicationJSONRequestBodyFromJSON(
   jsonString: string,
 ): SafeParseResult<
-  CompileQueryWithPartialEvaluationRequestBody,
+  CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody,
   SDKValidationError
 > {
   return safeParse(
     jsonString,
     (x) =>
-      CompileQueryWithPartialEvaluationRequestBody$inboundSchema.parse(
-        JSON.parse(x),
-      ),
-    `Failed to parse 'CompileQueryWithPartialEvaluationRequestBody' from JSON`,
+      CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody' from JSON`,
   );
 }
 
@@ -169,7 +173,7 @@ export const CompileQueryWithPartialEvaluationRequest$inboundSchema: z.ZodType<
   metrics: z.boolean().optional(),
   instrument: z.boolean().optional(),
   RequestBody: z.lazy(() =>
-    CompileQueryWithPartialEvaluationRequestBody$inboundSchema
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$inboundSchema
   ),
 }).transform((v) => {
   return remap$(v, {
@@ -188,7 +192,8 @@ export type CompileQueryWithPartialEvaluationRequest$Outbound = {
   explain?: string | undefined;
   metrics?: boolean | undefined;
   instrument?: boolean | undefined;
-  RequestBody: CompileQueryWithPartialEvaluationRequestBody$Outbound;
+  RequestBody:
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$Outbound;
 };
 
 /** @internal */
@@ -205,7 +210,7 @@ export const CompileQueryWithPartialEvaluationRequest$outboundSchema: z.ZodType<
   metrics: z.boolean().optional(),
   instrument: z.boolean().optional(),
   requestBody: z.lazy(() =>
-    CompileQueryWithPartialEvaluationRequestBody$outboundSchema
+    CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody$outboundSchema
   ),
 }).transform((v) => {
   return remap$(v, {
