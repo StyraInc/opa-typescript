@@ -1,17 +1,16 @@
-# CompileQueryWithPartialEvaluationRequestBody
+# CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody
 
 The query, input, and other settings for partial evaluation.
 
 ## Example Usage
 
 ```typescript
-import { CompileQueryWithPartialEvaluationRequestBody } from "@styra/opa/sdk/models/operations";
+import { CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody } from "@styra/opa/sdk/models/operations";
 
-let value: CompileQueryWithPartialEvaluationRequestBody = {
-  input: [
-    "<value>",
-  ],
-};
+let value: CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody =
+  {
+    input: false,
+  };
 ```
 
 ## Fields
