@@ -23,7 +23,7 @@ jobs:
 
   generate:
     needs: init
-    uses: speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@432149c1c20c8efa5d9b3fb96e33a9b6c6132378 # ratchet:speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@v15
+    uses: speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@b729bcda8a0650e7faf3da46ae199cb3668f45ba # ratchet:speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@v15
     with:
       force: ${{ github.event.inputs.force }}
       mode: pr
