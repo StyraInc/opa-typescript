@@ -42,7 +42,7 @@
     "@tanstack/react-query": "^5.74.7",
     "@yornaath/batshit": "^0.10.1",
     "lodash.merge": "^4.6.2",
-    "zod": "^3.23.8"
+    "zod": "^4.0.10"
   },
   "publishConfig": {
     "access": "public"
