@@ -6,7 +6,7 @@ The Styra-supported driver to connect to Open Policy Agent (OPA) and Enterprise 
 [![NPM Version](https://img.shields.io/npm/v/%40styra%2Fopa?style=flat&color=%2324b6e0)](https://www.npmjs.com/package/@styra/opa)
 [![JSR](https://jsr.io/badges/@styra/opa)](https://jsr.io/@styra/opa)
 
-> The documentation for this SDK lives at https://docs.styra.com/sdk, with reference documentation available at https://styrainc.github.io/opa-typescript
+> Reference documentation available at <https://styrainc.github.io/opa-typescript>
 
 You can use the Styra OPA SDK to connect to [Open Policy Agent](https://www.openpolicyagent.org/) and [Enterprise OPA](https://www.styra.com/enterprise-opa/) deployments.
 
@@ -71,145 +71,149 @@ For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
 
 ## SDK Example Usage (high-level)
 
-All the code examples that follow assume that the high-level SDK module has been imported, and that an `OPA` instance was created:
+The following examples assume an OPA server equipped with the following Rego policy:
 
-```ts
-import { OPAClient } from "@styra/opa";
+```rego
+package authz
+import rego.v1
 
-const serverURL = "http://opa-host:8181";
-const path = "authz/allow";
-const opa = new OPAClient(serverURL);
+default allow := false
+allow if input.subject == "alice"
 ```
 
-### Simple query
+and this data:
+
+```json
+{
+  "roles": {
+    "admin": ["read", "write"]
+  }
+}
+```
+
+### Simple Query
 
 For a simple boolean response without input, use the SDK as follows:
 
 ```ts
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "authz/allow";
+
 const allowed = await opa.evaluate(path);
 console.log(allowed ? "allowed!" : "denied!");
 ```
 
-Note that `allowed` will be of type `any`. You can change that by providing type parameters to `evaluate`:
+### Default Rule
+
+For evaluating the default rule (configured with your OPA service), use `evaluateDefault`. `input` is optional, and left out in this example:
 
 ```ts
-const allowed = await opa.evaluate<never, boolean>(path);
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+
+const allowed = await opa.evaluateDefault();
+console.log(allowed ? "allowed!" : "denied!");
 ```
-
-The first parameter is the type of `input` passed into `evaluate`; we don't have any in this example, so you can use anything for it (`any`, `unknown`, or `never`).
-
-<details><summary>HTTP Request</summary>
-
-```http
-POST /v1/data/authz/allow
-Content-Type: application/json
-
-{}
-```
-
-</details>
 
 ### Input
 
 Input is provided as a second (optional) argument to `evaluate`:
 
 ```ts
-const input = { user: "alice" };
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "authz/allow";
+
+const input = { subject: "alice" };
 const allowed = await opa.evaluate(path, input);
 console.log(allowed ? "allowed!" : "denied!");
 ```
 
-For providing types, use
+### Default Rule with Input
+
+Input is provided as an (optional) argument to `evaluateDefault`:
 
 ```ts
-interface myInput {
-  user: string;
-}
-const input: myInput = { user: "alice" };
-const allowed = await opa.evaluate<myInput, boolean>(path, input);
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+
+const input = { subject: "alice" };
+const allowed = await opa.evaluateDefault(input);
 console.log(allowed ? "allowed!" : "denied!");
 ```
 
-<details><summary>HTTP Request</summary>
+> [!NOTE]
+> Everything that follows applies in the same way to `evaluateDefault` and `evaluate`.
 
-```http
-POST /v1/data/authz/allow
-Content-Type: application/json
+### Input and Result Types
 
-{ "input": { "user": "alice" } }
-```
-
-</details>
-
-### Result Types
-
-When the result of the policy evaluation is more complex, you can pass its type to `evaluate` and get a typed result:
+It's possible to provide your own types for input and results.
+The `evaluate` function will then return a typed result, and TypeScript will ensure that you pass the proper types (as declared) to `evaluated`.
 
 ```ts
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "authz";
+
 interface myInput {
-  user: string;
+  subject: string;
 }
 interface myResult {
-  authorized: boolean;
-  details: string[];
+  allow: boolean;
 }
-const input: myInput = { user: "alice" };
+const input: myInput = { subject: "alice" };
 const result = await opa.evaluate<myInput, myResult>(path, input);
-console.log(result.evaluated ? "allowed!" : "denied!");
+console.log(result);
 ```
-
-### Input Transformations
 
 If you pass in an arbitrary object as input, it'll be stringified (`JSON.stringify`):
 
 ```ts
-class A {
-  // With these names, JSON.stringify() returns the right thing.
-  name: string;
-  list: any[];
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "authz/allow";
 
-  constructor(name: string, list: any[]) {
-    this.name = name;
-    this.list = list;
+class User {
+  subject: string;
+  constructor(name: string) {
+    this.subject = name;
   }
 }
-const inp = new A("alice", [1, 2, true]);
-const allowed = await opa.evaluate<myInput, boolean>(path, inp);
-console.log(allowed ? "allowed!" : "denied!");
+
+const inp = new User("alice");
+const allowed = await opa.evaluate<User, boolean>(path, inp);
+console.log(allowed);
 ```
 
 You can control the input that's constructed from an object by implementing `ToInput`:
 
 ```ts
-class A implements ToInput {
-  // With these names, JSON.stringify() doesn't return the right thing.
+import { OPAClient, ToInput } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "authz/allow";
+
+class User implements ToInput {
   private n: string;
-  private l: any[];
-
-  constructor(name: string, list: any[]) {
+  constructor(name: string) {
     this.n = name;
-    this.l = list;
   }
-
   toInput(): Input {
-    return { name: this.n, list: this.l };
+    return { subject: this.n };
   }
 }
-const inp = new A("alice", [1, 2, true]);
-const allowed = await opa.evaluate<myInput, boolean>(path, inp);
-console.log(allowed ? "allowed!" : "denied!");
+
+const inp = new User("alice");
+const allowed = await opa.evaluate<User, boolean>(path, inp);
+console.log(allowed);
 ```
-
-<details><summary>HTTP Request</summary>
-
-```http
-POST /v1/data/authz/allow
-Content-Type: application/json
-
-{ "input": { "name": "alice", "list": [ 1, 2, true ] } }
-```
-
-</details>
 
 ### Result Transformations
 
@@ -220,17 +224,246 @@ Assuming that the policy evaluates to
 ```json
 {
   "allowed": true,
-  "details": ["property-a is OK", "property-B is OK"]
+  "details": ["input.a is OK", "input.b is OK"]
 }
+```
+
+like this (contrived) example:
+
+```rego
+package authz
+import rego.v1
+good_a := ["a", "A", "A!"]
+good_b := ["b"]
+response.allowed if input.subject == "alice"
+response.details contains "input.a is OK" if input.a in good_a
+response.details contains "input.b is OK" if input.b in good_b
 ```
 
 you can turn it into a boolean result like this:
 
 ```ts
-const allowed = await opa.evaluate<any, boolean>(path, undefined, {
-  fromResult: (r?: Result) => (r as Record<string, any>)["allowed"] ?? false,
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "authz/response";
+const input = { subject: "alice", a: "A", b: "b" };
+
+const allowed = await opa.evaluate<any, boolean>(
+  path,
+  input,
+  {
+    fromResult: (r?: Result) => (r as Record<string, any>)["allowed"] ?? false,
+  },
+);
+console.log(allowed);
+```
+
+### Batched Queries
+
+```ts
+import { OPAClient } from "@styra/opa";
+
+const serverURL = "http://localhost:8181";
+const path = "authz/allow";
+const opa = new OPAClient(serverURL);
+
+const alice = { subject: "alice" };
+const bob = { subject: "bob" };
+const inputs = { alice: alice, bob: bob };
+const responses = await opa.evaluateBatch(path, inputs);
+
+for (const key in responses) {
+    console.log(key + ": " + (responses[key] ? "allowed!" : "denied!"));   // Logic here
+}
+```
+
+<details>
+  <summary>Result</summary>
+
+```txt
+alice: allowed!
+bob: denied!
+```
+
+</details>
+
+## Get Filters
+
+To use the translation of Rego data filter policies into SQL or UCAST expressions, you need to use Enterprise OPA.
+These examples assume you run Enterprise OPA with the following Rego policy:
+
+```rego
+package filters
+
+# METADATA
+# scope: document
+# custom:
+#   unknowns: ["input.fruits"]
+#   mask_rule: masks
+include if input.fruits.colour in input.fav_colours
+
+masks.fruits.supplier.replace.value := "<supplier>"
+```
+
+### For Prisma
+
+```ts
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "filters/include";
+const input = { fav_colours: ["red", "green"] };
+const primary = "fruits";
+
+const { query, mask } = await opa.getFilters(path, input, primary);
+console.log(query);
+```
+
+Here, `query` is an object that can readly be used in a Prisma lookup's `where` field:
+
+```ts
+{ colour: { in: [ "red", "green" ] } }
+```
+
+`mask` is a function that can be applied to the values returned by that lookup.
+
+For example:
+
+```ts
+const { query, mask } = await opa.getFilters(path, input, primary);
+const fruits = (
+  await prisma.fruits.findMany({
+    where: query,
+  })
+).map((fruit) => mask(fruit));
+```
+
+### For SQL
+
+```ts
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "filters/include";
+const input = { fav_colours: ["red", "green"] };
+const opts = { target: "postgresql" };
+
+const { query, masks } = await opa.getFilters(path, input, opts);
+console.log({ query, masks });
+```
+
+Here we get a SQL WHERE clause as `query`,
+
+```sql
+WHERE fruits.colour IN (E'red', E'green')
+```
+
+and `masks` contains the evaluated mask rule:
+
+```ts
+{ fruits: { supplier: { replace: { value: "<supplier>" } } } }
+```
+
+#### Table name mappings
+
+Generate a SQL filter with different column and table names via `tableMappings`:
+
+```ts
+const opts = {
+  target: "postgresql",
+  tableMappings: {
+    "fruits": { $self: "f", colour: "col"}
+  }
+};
+```
+
+this will generate the SQL clause
+
+```sql
+WHERE f.col IN (E'red', E'green')
+```
+
+### For multiple data sources
+
+```ts
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL);
+const path = "filters/include";
+const input = { fav_colours: ["red", "green"] };
+const opts = { targets: ["postgresql", "mysql", "ucastPrisma"] };
+
+const result = await opa.getMultipleFilters(path, input, opts);
+console.dir(result, {depth: null});
+```
+
+This produces an object keyed by the requested targets:
+
+```ts
+{
+  ucast: {
+    query: {
+      type: "field",
+      operator: "in",
+      field: "fruits.colour",
+      value: [ "red", "green" ]
+    },
+    masks: {
+      fruits: { supplier: { replace: { value: "<supplier>" } } }
+    }
+  },
+  postgresql: {
+    query: "WHERE fruits.colour IN (E'red', E'green')",
+    masks: {
+      fruits: { supplier: { replace: { value: "<supplier>" } } }
+    }
+  },
+  mysql: {
+    query: "WHERE fruits.colour IN ('red', 'green')",
+    masks: {
+      fruits: { supplier: { replace: { value: "<supplier>" } } }
+    }
+  }
+}
+```
+
+## Advanced options
+
+### Request Headers
+
+You can provide your custom headers -- for example for bearer authorization -- via an option argument to the `OPAClient` constructor.
+
+```ts
+import { OPAClient } from "@styra/opa";
+const serverURL = "http://localhost:8181";
+const opa = new OPAClient(serverURL, { headers: { authorization: "Bearer opensesame" } });
+const path = "authz/allow";
+const allowed = await opa.evaluate(path);
+console.log(allowed);
+```
+
+### HTTPClient
+
+You can supply an instance of `HTTPClient` to supply your own hooks, for example to examine the request sent to OPA:
+
+```ts
+import { OPAClient } from "@styra/opa";
+import { HTTPClient } from "@styra/opa/lib/http";
+const httpClient = new HTTPClient({});
+httpClient.addHook("response", (response, request) => {
+  console.group("Request Debugging");
+  console.log(request.headers);
+  console.log(`${request.method} ${request.url} => ${response.status} ${response.statusText}`);
+  console.groupEnd();
 });
-console.log(allowed ? "allowed!" : "denied!");
+const serverURL = "http://localhost:8181";
+const headers = { authorization: "Bearer opensesame" };
+const opa = new OPAClient(serverURL, { sdk: { httpClient }, headers });
+const path = "authz/allow";
+
+const allowed = await opa.evaluate(path);
+console.log(allowed);
 ```
 
 ### Example Projects
@@ -256,7 +489,7 @@ router.get("/tickets/:id", [param("id").isInt().toInt()], async (req, res) => {
 
 #### NestJS
 
-In [StyraInc/opa-typescript-example-nestjs](https://github.com/StyraInc/opa-typescript-example-nestjs), we have an decorator-based API authorization example using `@styra/opa`:
+In [StyraInc/opa-sdk-demos/nestjs-demo](https://github.com/StyraInc/opa-sdk-demos/tree/main/nestjs-demo), we have an decorator-based API authorization example using `@styra/opa`:
 
 ```ts
 @Controller("cats")
@@ -284,9 +517,10 @@ export class CatsController {
 }
 ```
 
-Please refer to [the repository's README.md](https://github.com/StyraInc/opa-typescript-example-nestjs/tree/main#opa-typescript-nestjs-example) for more details.
+Please refer to [the repository's README.md](https://github.com/StyraInc/opa-sdk-demos/tree/main/nestjs-demo) for more details.
 
-> **Note**: For low-level SDK usage, see the sections below.
+> [!NOTE]
+> For low-level SDK usage, see the sections below.
 
 ---
 
@@ -328,6 +562,7 @@ We've removed most of the auto-generated Speakeasy examples because they generat
 Some of the endpoints in this SDK support retries.  If you use the SDK without any configuration, it will fall back to the default retry strategy provided by the API.  However, the default retry strategy can be overridden on a per-operation basis, or across the entire SDK.
 
 To change the default retry strategy for a single API call, simply provide a retryConfig object to the call:
+
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
@@ -356,6 +591,7 @@ run();
 ```
 
 If you'd like to override the default retry strategy for all operations that support retries, you can provide a retryConfig at SDK initialization:
+
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
@@ -396,6 +632,7 @@ This SDK supports the following security scheme globally:
 | `bearerAuth` | http | HTTP Bearer |
 
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
+
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
@@ -447,12 +684,12 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [`compileQueryWithPartialEvaluation`](docs/sdks/opaapiclient/README.md#compilequerywithpartialevaluation) - Partially evaluate a query
-- [`executeBatchPolicyWithInput`](docs/sdks/opaapiclient/README.md#executebatchpolicywithinput) - Execute a policy given a batch of inputs
-- [`executeDefaultPolicyWithInput`](docs/sdks/opaapiclient/README.md#executedefaultpolicywithinput) - Execute the default decision  given an input
-- [`executePolicy`](docs/sdks/opaapiclient/README.md#executepolicy) - Execute a policy
-- [`executePolicyWithInput`](docs/sdks/opaapiclient/README.md#executepolicywithinput) - Execute a policy given an input
-- [`health`](docs/sdks/opaapiclient/README.md#health) - Verify the server is operational
+* [`compileQueryWithPartialEvaluation`](docs/sdks/opaapiclient/README.md#compilequerywithpartialevaluation) - Partially evaluate a query
+* [`executeBatchPolicyWithInput`](docs/sdks/opaapiclient/README.md#executebatchpolicywithinput) - Execute a policy given a batch of inputs
+* [`executeDefaultPolicyWithInput`](docs/sdks/opaapiclient/README.md#executedefaultpolicywithinput) - Execute the default decision  given an input
+* [`executePolicy`](docs/sdks/opaapiclient/README.md#executepolicy) - Execute a policy
+* [`executePolicyWithInput`](docs/sdks/opaapiclient/README.md#executepolicywithinput) - Execute a policy given an input
+* [`health`](docs/sdks/opaapiclient/README.md#health) - Verify the server is operational
 
 </details>
 <!-- End Standalone functions [standalone-funcs] -->
