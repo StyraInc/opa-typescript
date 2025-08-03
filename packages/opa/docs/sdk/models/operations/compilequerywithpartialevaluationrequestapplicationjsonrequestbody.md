@@ -9,7 +9,12 @@ import { CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody } fr
 
 let value: CompileQueryWithPartialEvaluationRequestApplicationJSONRequestBody =
   {
-    input: false,
+    input: {
+      "user": "alice",
+      "action": "read",
+      "object": "id123",
+      "type": "dog",
+    },
   };
 ```
 

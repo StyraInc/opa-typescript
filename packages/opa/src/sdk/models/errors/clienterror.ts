@@ -5,6 +5,7 @@
 import * as z from "zod";
 import { safeParse } from "../../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../../types/fp.js";
+import { OpaAPIClientError } from "./opaapiclienterror.js";
 import { SDKValidationError } from "./sdkvalidationerror.js";
 
 export type Location = {
@@ -31,20 +32,20 @@ export type ClientErrorData = {
 /**
  * Bad Request
  */
-export class ClientError extends Error {
+export class ClientError extends OpaAPIClientError {
   code: string;
   errors?: Array<Errors> | undefined;
 
   /** The original data that was passed to this error instance. */
   data$: ClientErrorData;
 
-  constructor(err: ClientErrorData) {
-    const message = "message" in err && typeof err.message === "string"
-      ? err.message
-      : `API error occurred: ${JSON.stringify(err)}`;
-    super(message);
+  constructor(
+    err: ClientErrorData,
+    httpMeta: { response: Response; request: Request; body: string },
+  ) {
+    const message = err.message || `API error occurred: ${JSON.stringify(err)}`;
+    super(message, httpMeta);
     this.data$ = err;
-
     this.code = err.code;
     if (err.errors != null) this.errors = err.errors;
 
@@ -170,9 +171,16 @@ export const ClientError$inboundSchema: z.ZodType<
   code: z.string(),
   message: z.string(),
   errors: z.array(z.lazy(() => Errors$inboundSchema)).optional(),
+  request$: z.instanceof(Request),
+  response$: z.instanceof(Response),
+  body$: z.string(),
 })
   .transform((v) => {
-    return new ClientError(v);
+    return new ClientError(v, {
+      request: v.request$,
+      response: v.response$,
+      body: v.body$,
+    });
   });
 
 /** @internal */
