@@ -6,20 +6,7 @@
 import { ExecutePolicyResponse } from "@styra/opa/sdk/models/operations";
 
 let value: ExecutePolicyResponse = {
-  httpMeta: {
-    response: new Response("{\"message\": \"hello world\"}", {
-      headers: { "Content-Type": "application/json" },
-    }),
-    request: new Request("https://example.com"),
-  },
-  successfulPolicyResponse: {
-    result: "<value>",
-  },
-  headers: {
-    "key": [
-      "<value>",
-    ],
-  },
+  headers: {},
 };
 ```
 

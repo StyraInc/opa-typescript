@@ -20,15 +20,20 @@ Execute the default decision  given an input
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="executeDefaultPolicyWithInput" method="post" path="/" -->
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput(4963.69);
+  const result = await opaApiClient.executeDefaultPolicyWithInput({
+    "user": "alice",
+    "action": "read",
+    "object": "id123",
+    "type": "dog",
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -48,16 +53,18 @@ import { executeDefaultPolicyWithInput } from "@styra/opa/funcs/executeDefaultPo
 const opaApiClient = new OpaApiClientCore();
 
 async function run() {
-  const res = await executeDefaultPolicyWithInput(opaApiClient, 4963.69);
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await executeDefaultPolicyWithInput(opaApiClient, {
+    "user": "alice",
+    "action": "read",
+    "object": "id123",
+    "type": "dog",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("executeDefaultPolicyWithInput failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -92,6 +99,7 @@ Execute a policy
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="executePolicy" method="get" path="/v1/data/{path}" -->
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
@@ -102,7 +110,6 @@ async function run() {
     path: "app/rbac",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -125,15 +132,12 @@ async function run() {
   const res = await executePolicy(opaApiClient, {
     path: "app/rbac",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("executePolicy failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -166,6 +170,7 @@ Execute a policy given an input
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="executePolicyWithInput" method="post" path="/v1/data/{path}" -->
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
@@ -175,11 +180,15 @@ async function run() {
   const result = await opaApiClient.executePolicyWithInput({
     path: "app/rbac",
     requestBody: {
-      input: true,
+      input: {
+        "user": "alice",
+        "action": "read",
+        "object": "id123",
+        "type": "dog",
+      },
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -202,18 +211,20 @@ async function run() {
   const res = await executePolicyWithInput(opaApiClient, {
     path: "app/rbac",
     requestBody: {
-      input: true,
+      input: {
+        "user": "alice",
+        "action": "read",
+        "object": "id123",
+        "type": "dog",
+      },
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("executePolicyWithInput failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -246,6 +257,7 @@ Execute a policy given a batch of inputs
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="executeBatchPolicyWithInput" method="post" path="/v1/batch/data/{path}" -->
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
@@ -256,12 +268,11 @@ async function run() {
     path: "app/rbac",
     requestBody: {
       inputs: {
-        "key": 6919.52,
+
       },
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -285,19 +296,16 @@ async function run() {
     path: "app/rbac",
     requestBody: {
       inputs: {
-        "key": 6919.52,
+  
       },
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("executeBatchPolicyWithInput failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -330,6 +338,7 @@ Partially evaluate a query
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="compileQueryWithPartialEvaluation" method="post" path="/v1/compile/{path}" -->
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
@@ -339,13 +348,15 @@ async function run() {
   const result = await opaApiClient.compileQueryWithPartialEvaluation({
     path: "app/rbac",
     requestBody: {
-      input: [
-
-      ],
+      input: {
+        "user": "alice",
+        "action": "read",
+        "object": "id123",
+        "type": "dog",
+      },
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -368,20 +379,20 @@ async function run() {
   const res = await compileQueryWithPartialEvaluation(opaApiClient, {
     path: "app/rbac",
     requestBody: {
-      input: [
-  
-      ],
+      input: {
+        "user": "alice",
+        "action": "read",
+        "object": "id123",
+        "type": "dog",
+      },
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("compileQueryWithPartialEvaluation failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -414,6 +425,7 @@ The health API endpoint executes a simple built-in policy query to verify that t
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="health" method="get" path="/health" -->
 ```typescript
 import { OpaApiClient } from "@styra/opa";
 
@@ -422,7 +434,6 @@ const opaApiClient = new OpaApiClient();
 async function run() {
   const result = await opaApiClient.health();
 
-  // Handle the result
   console.log(result);
 }
 
@@ -443,15 +454,12 @@ const opaApiClient = new OpaApiClientCore();
 
 async function run() {
   const res = await health(opaApiClient);
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("health failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

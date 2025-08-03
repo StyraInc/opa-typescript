@@ -6,7 +6,7 @@
 ### `boolean`
 
 ```typescript
-const value: boolean = false;
+const value: boolean = true;
 ```
 
 ### `string`
@@ -25,7 +25,9 @@ const value: number = 1284.03;
 
 ```typescript
 const value: any[] = [
-  "<value>",
+  "<value 1>",
+  "<value 2>",
+  "<value 3>",
 ];
 ```
 
@@ -34,6 +36,8 @@ const value: any[] = [
 ```typescript
 const value: { [k: string]: any } = {
   "key": "<value>",
+  "key1": "<value>",
+  "key2": "<value>",
 };
 ```
 

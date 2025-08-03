@@ -7,7 +7,11 @@ import { SuccessfulPolicyResponseWithStatusCode } from "@styra/opa/sdk/models/co
 
 let value: SuccessfulPolicyResponseWithStatusCode = {
   httpStatusCode: "200",
-  result: "<value>",
+  result: {
+    "allow": true,
+    "user_is_admin": true,
+    "user_is_granted": [],
+  },
 };
 ```
 
