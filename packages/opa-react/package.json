@@ -27,7 +27,7 @@
     "@types/lodash.merge": "^4.6.9",
     "@types/react": ">=19.1.0",
     "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^5.0.0",
     "jsdom": "^26.0.0",
     "tshy": "^3.0.2",
     "typescript": "^5.8.3",
