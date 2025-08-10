@@ -6,16 +6,14 @@
 import { ExecuteDefaultPolicyWithInputResponse } from "@styra/opa/sdk/models/operations";
 
 let value: ExecuteDefaultPolicyWithInputResponse = {
-  httpMeta: {
-    response: new Response("{\"message\": \"hello world\"}", {
-      headers: { "Content-Type": "application/json" },
-    }),
-    request: new Request("https://example.com"),
-  },
-  result: "<value>",
   headers: {
     "key": [
-      "<value>",
+      "<value 1>",
+    ],
+    "key1": [],
+    "key2": [
+      "<value 1>",
+      "<value 2>",
     ],
   },
 };

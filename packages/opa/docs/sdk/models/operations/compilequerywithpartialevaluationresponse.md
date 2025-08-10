@@ -5,14 +5,7 @@
 ```typescript
 import { CompileQueryWithPartialEvaluationResponse } from "@styra/opa/sdk/models/operations";
 
-let value: CompileQueryWithPartialEvaluationResponse = {
-  httpMeta: {
-    response: new Response("{\"message\": \"hello world\"}", {
-      headers: { "Content-Type": "application/json" },
-    }),
-    request: new Request("https://example.com"),
-  },
-};
+let value: CompileQueryWithPartialEvaluationResponse = {};
 ```
 
 ## Fields
