@@ -3,10 +3,10 @@ id: 078615ff-ff96-44f8-8aca-2f4d3e687bf0
 management:
   docChecksum: 333976f05de9e983392c5aff103b01a1
   docVersion: 0.2.0
-  speakeasyVersion: 1.533.0
-  generationVersion: 2.578.0
-  releaseVersion: 1.7.10
-  configChecksum: 0ba6ca8636f0927c578a36d1aa91350a
+  speakeasyVersion: 1.600.2
+  generationVersion: 2.677.3
+  releaseVersion: 1.8.0
+  configChecksum: 14d2af1862a40ef2509c43bd127f2c7d
   repoURL: https://github.com/StyraInc/opa-typescript.git
   repoSubDirectory: packages/opa
   installationURL: https://gitpkg.now.sh/StyraInc/opa-typescript/packages/opa
@@ -15,21 +15,21 @@ features:
     acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.1
-    constsAndDefaults: 0.1.11
-    core: 3.21.6
+    constsAndDefaults: 0.1.12
+    core: 3.21.20
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
-    examples: 2.81.5
+    examples: 2.82.2
     flattening: 2.82.1
     globalSecurity: 2.82.13
     globalSecurityCallbacks: 0.1.0
     globalSecurityFlattening: 0.1.0
-    globalServerURLs: 2.82.4
+    globalServerURLs: 2.82.5
     responseFormat: 0.2.3
     retries: 2.83.0
-    sdkHooks: 0.2.0
-    unions: 2.85.8
+    sdkHooks: 0.3.0
+    unions: 2.85.11
 generatedFiles:
   - .gitattributes
   - FUNCTIONS.md
@@ -103,6 +103,10 @@ generatedFiles:
   - docs/sdk/models/operations/healthresponse.md
   - docs/sdks/opaapiclient/README.md
   - eslint.config.mjs
+  - examples/.env.template
+  - examples/README.md
+  - examples/executeDefaultPolicyWithInput.example.ts
+  - examples/package.json
   - jsr.json
   - package.json
   - src/core.ts
@@ -155,6 +159,8 @@ generatedFiles:
   - src/sdk/models/errors/clienterror.ts
   - src/sdk/models/errors/httpclienterrors.ts
   - src/sdk/models/errors/index.ts
+  - src/sdk/models/errors/opaapiclienterror.ts
+  - src/sdk/models/errors/responsevalidationerror.ts
   - src/sdk/models/errors/sdkerror.ts
   - src/sdk/models/errors/sdkvalidationerror.ts
   - src/sdk/models/errors/servererror.ts
@@ -181,10 +187,10 @@ examples:
   executeDefaultPolicyWithInput:
     speakeasy-default-execute-default-policy-with-input:
       requestBody:
-        application/json: 4963.69
+        application/json: {"user": "alice", "action": "read", "object": "id123", "type": "dog"}
       responses:
         "200":
-          application/json: "<value>"
+          application/json: {"allow": true, "user_is_admin": true, "user_is_granted": []}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
@@ -194,11 +200,9 @@ examples:
       parameters:
         path:
           path: "app/rbac"
-        query: {}
-        header: {}
       responses:
         "200":
-          application/json: {"result": false}
+          application/json: {"result": {"allow": true, "user_is_admin": true, "user_is_granted": []}}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
@@ -208,13 +212,11 @@ examples:
       parameters:
         path:
           path: "app/rbac"
-        query: {}
-        header: {}
       requestBody:
-        application/json: {"input": true}
+        application/json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
       responses:
         "200":
-          application/json: {"result": true}
+          application/json: {"result": {"allow": true, "user_is_admin": true, "user_is_granted": []}}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
@@ -224,15 +226,13 @@ examples:
       parameters:
         path:
           path: "app/rbac"
-        query: {}
-        header: {}
       requestBody:
-        application/json: {"inputs": {"key": 6919.52}}
+        application/json: {"inputs": {}}
       responses:
         "200":
-          application/json: {"batch_decision_id": "1bef6b7d-cd13-4890-bfe1-fd2e8de32189", "responses": {"key": {"result": "<value>"}, "key1": {"result": 8210.24}}}
+          application/json: {"batch_decision_id": "1bef6b7d-cd13-4890-bfe1-fd2e8de32189", "responses": {"key": {"result": {"allow": true, "user_is_admin": true, "user_is_granted": []}}}}
         "207":
-          application/json: {"responses": {"key": {"http_status_code": "200", "result": "<value>", "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}, "key1": {"http_status_code": "200", "result": 6919.52, "decision_id": "b84cf736-213c-4932-a8e4-bb5c648f1b4d"}}}
+          application/json: {"responses": {"key": {"http_status_code": "200"}}}
         "400":
           application/json: {"code": "<value>", "message": "<value>"}
         "500":
@@ -242,19 +242,17 @@ examples:
       parameters:
         path:
           path: "app/rbac"
-        query: {}
-        header: {}
       requestBody:
-        application/json: {"input": []}
-        application/vnd.styra.multitarget+json: {"input": []}
-        application/vnd.styra.ucast.all+json: {"input": []}
-        application/vnd.styra.ucast.minimal+json: {"input": []}
-        application/vnd.styra.ucast.linq+json: {"input": []}
-        application/vnd.styra.ucast.prisma+json: {"input": []}
-        application/vnd.styra.sql.sqlserver+json: {"input": []}
-        application/vnd.styra.sql.mysql+json: {"input": []}
-        application/vnd.styra.sql.postgresql+json: {"input": []}
-        application/vnd.styra.sql.sqlite+json: {"input": []}
+        application/json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.multitarget+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.ucast.all+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.ucast.minimal+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.ucast.linq+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.ucast.prisma+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.sql.sqlserver+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.sql.mysql+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.sql.postgresql+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
+        application/vnd.styra.sql.sqlite+json: {"input": {"user": "alice", "action": "read", "object": "id123", "type": "dog"}}
       responses:
         "200":
           application/json: {}
@@ -282,5 +280,5 @@ examples:
           application/json: {}
         "500":
           application/json: {"code": "<value>"}
-examplesVersion: 1.0.1
+examplesVersion: 1.0.2
 generatedTests: {}

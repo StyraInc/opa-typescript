@@ -5,9 +5,13 @@ import { OpaApiClient } from "@styra/opa";
 const opaApiClient = new OpaApiClient();
 
 async function run() {
-  const result = await opaApiClient.executeDefaultPolicyWithInput(4963.69);
+  const result = await opaApiClient.executeDefaultPolicyWithInput({
+    "user": "alice",
+    "action": "read",
+    "object": "id123",
+    "type": "dog",
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -24,11 +28,15 @@ async function run() {
   const result = await opaApiClient.executePolicyWithInput({
     path: "app/rbac",
     requestBody: {
-      input: true,
+      input: {
+        "user": "alice",
+        "action": "read",
+        "object": "id123",
+        "type": "dog",
+      },
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -45,13 +53,10 @@ async function run() {
   const result = await opaApiClient.executeBatchPolicyWithInput({
     path: "app/rbac",
     requestBody: {
-      inputs: {
-        "key": 6919.52,
-      },
+      inputs: {},
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 

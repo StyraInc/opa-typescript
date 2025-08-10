@@ -8,9 +8,7 @@ import { ExecuteBatchPolicyWithInputRequest } from "@styra/opa/sdk/models/operat
 let value: ExecuteBatchPolicyWithInputRequest = {
   path: "app/rbac",
   requestBody: {
-    inputs: {
-      "key": 7997.04,
-    },
+    inputs: {},
   },
 };
 ```

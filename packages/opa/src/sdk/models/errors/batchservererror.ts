@@ -5,6 +5,7 @@
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
 import * as components from "../components/index.js";
+import { OpaAPIClientError } from "./opaapiclienterror.js";
 
 /**
  * Server Error. All requests returned a 500 error.
@@ -21,20 +22,22 @@ export type BatchServerErrorData = {
  *
  * @remarks
  */
-export class BatchServerError extends Error {
+export class BatchServerError extends OpaAPIClientError {
   batchDecisionId?: string | undefined;
   responses?: { [k: string]: components.ServerError } | undefined;
 
   /** The original data that was passed to this error instance. */
   data$: BatchServerErrorData;
 
-  constructor(err: BatchServerErrorData) {
+  constructor(
+    err: BatchServerErrorData,
+    httpMeta: { response: Response; request: Request; body: string },
+  ) {
     const message = "message" in err && typeof err.message === "string"
       ? err.message
       : `API error occurred: ${JSON.stringify(err)}`;
-    super(message);
+    super(message, httpMeta);
     this.data$ = err;
-
     if (err.batchDecisionId != null) this.batchDecisionId = err.batchDecisionId;
     if (err.responses != null) this.responses = err.responses;
 
@@ -50,13 +53,20 @@ export const BatchServerError$inboundSchema: z.ZodType<
 > = z.object({
   batch_decision_id: z.string().optional(),
   responses: z.record(components.ServerError$inboundSchema).optional(),
+  request$: z.instanceof(Request),
+  response$: z.instanceof(Response),
+  body$: z.string(),
 })
   .transform((v) => {
     const remapped = remap$(v, {
       "batch_decision_id": "batchDecisionId",
     });
 
-    return new BatchServerError(remapped);
+    return new BatchServerError(remapped, {
+      request: v.request$,
+      response: v.response$,
+      body: v.body$,
+    });
   });
 
 /** @internal */

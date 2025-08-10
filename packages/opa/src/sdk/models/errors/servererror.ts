@@ -6,6 +6,7 @@ import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
 import { safeParse } from "../../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../../types/fp.js";
+import { OpaAPIClientError } from "./opaapiclienterror.js";
 import { SDKValidationError } from "./sdkvalidationerror.js";
 
 export type ServerErrorLocation = {
@@ -33,7 +34,7 @@ export type ServerErrorData = {
 /**
  * Server Error
  */
-export class ServerError extends Error {
+export class ServerError extends OpaAPIClientError {
   code: string;
   errors?: Array<ServerErrorErrors> | undefined;
   decisionId?: string | undefined;
@@ -41,13 +42,13 @@ export class ServerError extends Error {
   /** The original data that was passed to this error instance. */
   data$: ServerErrorData;
 
-  constructor(err: ServerErrorData) {
-    const message = "message" in err && typeof err.message === "string"
-      ? err.message
-      : `API error occurred: ${JSON.stringify(err)}`;
-    super(message);
+  constructor(
+    err: ServerErrorData,
+    httpMeta: { response: Response; request: Request; body: string },
+  ) {
+    const message = err.message || `API error occurred: ${JSON.stringify(err)}`;
+    super(message, httpMeta);
     this.data$ = err;
-
     this.code = err.code;
     if (err.errors != null) this.errors = err.errors;
     if (err.decisionId != null) this.decisionId = err.decisionId;
@@ -186,13 +187,20 @@ export const ServerError$inboundSchema: z.ZodType<
   message: z.string(),
   errors: z.array(z.lazy(() => ServerErrorErrors$inboundSchema)).optional(),
   decision_id: z.string().optional(),
+  request$: z.instanceof(Request),
+  response$: z.instanceof(Response),
+  body$: z.string(),
 })
   .transform((v) => {
     const remapped = remap$(v, {
       "decision_id": "decisionId",
     });
 
-    return new ServerError(remapped);
+    return new ServerError(remapped, {
+      request: v.request$,
+      response: v.response$,
+      body: v.body$,
+    });
   });
 
 /** @internal */

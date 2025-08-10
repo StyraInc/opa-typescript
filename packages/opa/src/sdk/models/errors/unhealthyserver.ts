@@ -3,6 +3,7 @@
  */
 
 import * as z from "zod";
+import { OpaAPIClientError } from "./opaapiclienterror.js";
 
 /**
  * OPA service is not healthy. If the bundles option is specified this can mean any of the configured bundles have not yet been activated. If the plugins option is specified then at least one plugin is in a non-OK state.
@@ -16,20 +17,20 @@ export type UnhealthyServerData = {
 /**
  * OPA service is not healthy. If the bundles option is specified this can mean any of the configured bundles have not yet been activated. If the plugins option is specified then at least one plugin is in a non-OK state.
  */
-export class UnhealthyServer extends Error {
+export class UnhealthyServer extends OpaAPIClientError {
   code: string;
   error?: string | undefined;
 
   /** The original data that was passed to this error instance. */
   data$: UnhealthyServerData;
 
-  constructor(err: UnhealthyServerData) {
-    const message = "message" in err && typeof err.message === "string"
-      ? err.message
-      : `API error occurred: ${JSON.stringify(err)}`;
-    super(message);
+  constructor(
+    err: UnhealthyServerData,
+    httpMeta: { response: Response; request: Request; body: string },
+  ) {
+    const message = err.message || `API error occurred: ${JSON.stringify(err)}`;
+    super(message, httpMeta);
     this.data$ = err;
-
     this.code = err.code;
     if (err.error != null) this.error = err.error;
 
@@ -46,9 +47,16 @@ export const UnhealthyServer$inboundSchema: z.ZodType<
   code: z.string(),
   error: z.string().optional(),
   message: z.string().optional(),
+  request$: z.instanceof(Request),
+  response$: z.instanceof(Response),
+  body$: z.string(),
 })
   .transform((v) => {
-    return new UnhealthyServer(v);
+    return new UnhealthyServer(v, {
+      request: v.request$,
+      response: v.response$,
+      body: v.body$,
+    });
   });
 
 /** @internal */
